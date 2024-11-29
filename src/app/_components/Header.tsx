@@ -1,0 +1,146 @@
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';  // Import de Image de Next.js
+import { LucideBell, LucideLoader, LucideMail, LucideUser2, LucideLogIn, LucideMenu, LucideTrash2 } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import {
+NavigationMenu,
+NavigationMenuContent,
+NavigationMenuItem,
+NavigationMenuLink,
+NavigationMenuList,
+NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { Menu, MoveRight, X } from "lucide-react";
+
+// Composant Header principal
+const Header: React.FC = ({  }) => {
+
+    const navigationItems = [
+        
+        {
+            title: "ACCUEIL",
+            href: "/",
+            description: "",
+        },
+        {
+            title: "PRODUITS",
+            href: "/realisations",
+            description: "",
+        },
+        {
+            title: "REALISATIONS",
+            href: "/gallerie",
+            description: "",
+        },
+
+        {
+            title: "A PROPOS",
+            href: "/",
+            description: "",
+        },
+
+
+    ];
+
+    const [isOpen, setOpen] = useState(false);
+
+    return (
+
+        <header className="flex flex-col items-center fixed top-0 z-50 w-full shadow-sm">
+
+            <div className="py-4 md:py-2 items-center w-full bg-white">
+
+                <div className="max-w-7xl mx-4 px-4 lg:mx-auto flex justify-between items-center gap-x-10">
+
+                    <Link href="/">
+                        <Image
+                            src="/logos2.png"          // Chemin de l'image
+                            alt="Logo OCI"           // Texte alternatif
+                            width={300}               // Largeur de l'image
+                            height={0}              // Hauteur de l'image
+                            className="!max-w-40 h-10 md:h-14"   // Classes CSS supplémentaires
+                        />
+                    </Link>
+
+
+                    {/* Navigation pour les écrans plus grands */}
+                    <nav className="hidden md:flex gap-3">
+                        <NavigationMenu className="flex justify-start items-start">
+                            <NavigationMenuList className="flex justify-start gap-4 flex-row">
+                                {navigationItems.map((item) => (
+
+                                    <NavigationMenuItem key={item.title}>
+                                        {item.href ? (
+                                            <>
+                                                <NavigationMenuLink href={item.href}>
+                                                    {/* <Link href={item.href}> */}
+                                                        <Button variant="ghost" className="font-bold tracking-tight text-sm">{item.title}</Button>
+                                                    {/* </Link> */}
+                                                </NavigationMenuLink>
+                                            </>
+
+                                        ) : (
+
+                                            <>
+                                                <NavigationMenuTrigger className="font-medium text-sm font-bold tracking-tight text-lg">
+                                                    {item.title}
+                                                </NavigationMenuTrigger>
+                                            </>
+                                        )}
+                                    </NavigationMenuItem>
+                                ))}
+                            </NavigationMenuList>
+                        </NavigationMenu>
+                    </nav>
+
+                    <div className="flex items-center gap-x-2">
+                        {/* Icône du panier */}
+                        <div className="flex items-center gap-x-2">
+                            
+                            <div>
+                                <Link href="/auth/login" className="font-title flex">
+                                    <LucideUser2 className="w-6 h-6" />
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex w-12 shrink lg:hidden items-end justify-end">
+
+                        <Button variant="ghost" onClick={() => setOpen(!isOpen)}>
+                            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                        </Button>
+
+                        {isOpen && (
+                            <div className="absolute top-20 border-t flex flex-col w-full right-0 bg-background shadow-lg py-4 container gap-8">
+                                {navigationItems.map((item) => (
+                                    <div key={item.title}>
+                                        <div className="flex flex-col gap-2">
+                                            {item.href ? (
+                                                <Link  href={item.href}  className="flex justify-between items-center" >
+                                                    <span onClick={() => setOpen(!isOpen)} className="text-sm font-bold tracking-tighter">{item.title}</span>
+                                                    <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground" />
+                                                </Link>
+                                            ) : (
+                                                <p  onClick={() => setOpen(!isOpen)} className="text-sm font-bold tracking-tighter">{item.title}</p>
+                                            )}
+
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                    </div>
+
+                </div>
+
+            </div>
+        </header>
+    );
+};
+
+export default Header;
