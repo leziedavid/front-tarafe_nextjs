@@ -44,6 +44,20 @@ export function SkeletonDemo() {
                 <Skeleton className="h-6 w-[250px]" />
                 <Skeleton className="h-4 w-[200px]" />
             </div>
+            
+            {/* Carte 6 */}
+            <div className="flex flex-col gap-2">
+                <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
+                <Skeleton className="h-6 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+            </div>
+
+            {/* Carte 6 */}
+            <div className="flex flex-col gap-2">
+                <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
+                <Skeleton className="h-6 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+            </div>
         </div>
     );
 }

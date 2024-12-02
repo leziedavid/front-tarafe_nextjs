@@ -3,52 +3,51 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';  // Import de Image de Next.js
-import { LucideBell, LucideLoader, LucideMail, LucideUser2, LucideLogIn, LucideMenu, LucideTrash2 } from 'lucide-react';
+import { LucideBell, LucideLoader, LucideMail, LucideUser2, LucideLogIn, LucideMenu, LucideTrash2, LucideHome, LucidePackage, LucideImage, LucideInfo } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import {
-NavigationMenu,
-NavigationMenuContent,
-NavigationMenuItem,
-NavigationMenuLink,
-NavigationMenuList,
-NavigationMenuTrigger,
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Menu, MoveRight, X } from "lucide-react";
 
 // Composant Header principal
-const Header: React.FC = ({  }) => {
+const Header: React.FC = ({ }) => {
 
     const navigationItems = [
-        
         {
             title: "ACCUEIL",
             href: "/",
             description: "",
+            icon: <LucideHome className="w-4 h-4 mr-2" /> // Icône pour ACCUEIL
         },
         {
             title: "PRODUITS",
             href: "/realisations",
             description: "",
+            icon: <LucidePackage className="w-4 h-4 mr-2" /> // Icône pour PRODUITS
         },
         {
             title: "REALISATIONS",
             href: "/gallerie",
             description: "",
+            icon: <LucideImage className="w-4 h-4 mr-2" /> // Icône pour REALISATIONS
         },
-
         {
             title: "A PROPOS",
             href: "/",
             description: "",
+            icon: <LucideInfo className="w-4 h-4 mr-2" /> // Icône pour A PROPOS
         },
-
-
     ];
 
     const [isOpen, setOpen] = useState(false);
 
     return (
-
         <header className="flex flex-col items-center fixed top-0 z-50 w-full shadow-sm">
 
             <div className="py-4 md:py-2 items-center w-full bg-white">
@@ -76,16 +75,16 @@ const Header: React.FC = ({  }) => {
                                         {item.href ? (
                                             <>
                                                 <NavigationMenuLink href={item.href}>
-                                                    {/* <Link href={item.href}> */}
-                                                        <Button variant="ghost" className="font-bold tracking-tight text-sm">{item.title}</Button>
-                                                    {/* </Link> */}
+                                                    <Button variant="ghost" className="font-bold tracking-tight text-sm flex items-center">
+                                                        {item.icon}
+                                                        {item.title}
+                                                    </Button>
                                                 </NavigationMenuLink>
                                             </>
-
                                         ) : (
-
                                             <>
                                                 <NavigationMenuTrigger className="font-medium text-sm font-bold tracking-tight text-lg">
+                                                    {item.icon}
                                                     {item.title}
                                                 </NavigationMenuTrigger>
                                             </>
@@ -99,7 +98,6 @@ const Header: React.FC = ({  }) => {
                     <div className="flex items-center gap-x-2">
                         {/* Icône du panier */}
                         <div className="flex items-center gap-x-2">
-                            
                             <div>
                                 <Link href="/auth/login" className="font-title flex">
                                     <LucideUser2 className="w-6 h-6" />
@@ -120,14 +118,19 @@ const Header: React.FC = ({  }) => {
                                     <div key={item.title}>
                                         <div className="flex flex-col gap-2">
                                             {item.href ? (
-                                                <Link  href={item.href}  className="flex justify-between items-center" >
-                                                    <span onClick={() => setOpen(!isOpen)} className="text-sm font-bold tracking-tighter">{item.title}</span>
+                                                <Link href={item.href} className="flex justify-between items-center" >
+                                                    <span onClick={() => setOpen(!isOpen)} className="text-sm font-bold tracking-tighter flex items-center">
+                                                        {item.icon}
+                                                        {item.title}
+                                                    </span>
                                                     <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground" />
                                                 </Link>
                                             ) : (
-                                                <p  onClick={() => setOpen(!isOpen)} className="text-sm font-bold tracking-tighter">{item.title}</p>
+                                                <p onClick={() => setOpen(!isOpen)} className="text-sm font-bold tracking-tighter flex items-center">
+                                                    {item.icon}
+                                                    {item.title}
+                                                </p>
                                             )}
-
                                         </div>
                                     </div>
                                 ))}

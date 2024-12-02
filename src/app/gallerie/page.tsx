@@ -89,7 +89,7 @@ const Page: React.FC = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer data={[]} />
 
     </>
   );

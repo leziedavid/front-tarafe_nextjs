@@ -25,72 +25,83 @@ import { Label } from "@/components/ui/label"
 import AllProduct from "../_components/AllProduct";
 import {Filter, MoveRight, SearchIcon, Share2, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/Checkbox";
-
-
-// Définir le type pour une notification
-interface Notification {
-  id: number;
-  title: string;
-  message: string;
-  isRead: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Checkbox } from "@/components/ui/checkbox";
+import { ApiAllDataResponse, OptionRealisation, Realisation, RealisationData, Reglage } from "@/interfaces/HomeInterface";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner"
+import { getAllRealisations } from "@/servives/HomeService";
+import { getBaseUrlImg } from "@/servives/baseUrl";
+import SkeletonDemo from "../_components/SkeletonDemo";
+import { ApiResponse } from "@/interfaces/ApiResponse";
+import PaginationComponent from "@/components/pagination/paginationComponent"
+import CategoryFilter from "@/components/features/CategoryFilter"; // Importation du composant de filtre
 
 const Page: React.FC = () => {
 
-const options = [
-  {
-    "id_option_reaalisation": "13",
-    "stateOption_reaalisation": "1",
-    "libelleOption_reaalisation": "Communication",
-    "created_at": "2024-04-25 00:00:00",
-    "updated_at": null
-  },
-  {
-    "id_option_reaalisation": "12",
-    "stateOption_reaalisation": "1",
-    "libelleOption_reaalisation": "Lifestyle",
-    "created_at": "2024-04-25 00:00:00",
-    "updated_at": null
-  },
-  {
-    "id_option_reaalisation": "11",
-    "stateOption_reaalisation": "1",
-    "libelleOption_reaalisation": "Bijoux et accessoires",
-    "created_at": "2024-04-25 00:00:00",
-    "updated_at": null
-  },
-  {
-    "id_option_reaalisation": "10",
-    "stateOption_reaalisation": "1",
-    "libelleOption_reaalisation": "Packs et cadeaux",
-    "created_at": "2024-04-25 00:00:00",
-    "updated_at": null
-  },
-  {
-    "id_option_reaalisation": "6",
-    "stateOption_reaalisation": "1",
-    "libelleOption_reaalisation": "T-shirts et vêtements",
-    "created_at": "2024-03-09 00:00:00",
-    "updated_at": null
-  },
-  {
-    "id_option_reaalisation": "5",
-    "stateOption_reaalisation": "1",
-    "libelleOption_reaalisation": "Trousses et pochettes",
-    "created_at": "2024-03-09 00:00:00",
-    "updated_at": null
-  },
-  {
-    "id_option_reaalisation": "4",
-    "stateOption_reaalisation": "1",
-    "libelleOption_reaalisation": "Sacs et pochons",
-    "created_at": "2024-03-09 00:00:00",
-    "updated_at": null
-  }
-];
+  // Déclaration d'un état pour stocker les données
+  const [reglage, setReglages] = useState<Reglage []>([]);
+  const [realisation, setRealisation] = useState<RealisationData[]>([]);
+  const [option, setOption] = useState<OptionRealisation[]>([]);
+
+  const [realisations, setRealisations] = useState<Realisation[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null); // Catégorie sélectionnée
+
+  const fetchData = async () => {
+    const validCategoryId = selectedCategory ?? 0;
+    const result: ApiResponse<ApiAllDataResponse> = await getAllRealisations(currentPage,validCategoryId);
+
+    if (result.statusCode !== 200) {
+      toast.error(result.statusMessage);
+
+    } else {
+
+      setReglages(result.data.reglages);
+      setOption(result.data.OptionRealisation);
+      setRealisations(result.data.realisations.data);
+      setTotalPages(result.data.realisations.last_page); // Met à jour le nombre total de pages
+    }
+  };
+
+  // Fonction pour changer la page
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page); // Mettre à jour la page courante
+  };
+
+    // Appeler la fonction fetchData à chaque changement de page ou de catégorie
+    useEffect(() => {
+      fetchData();
+    }, [currentPage, selectedCategory]); // Dépendances mises à jour pour inclure selectedCategory
+  
+
+    const handleFilterChange = (categoryId: number | null) => {
+      // Si categoryId est null, on utilise une valeur par défaut (par exemple, 0)
+      const validCategoryId = categoryId ?? 0; // Si `categoryId` est `null`, on utilise 0 comme valeur par défaut.
+      setSelectedCategory(validCategoryId); // Mettre à jour la catégorie sélectionnée
+      setCurrentPage(1); // Réinitialiser la page à 1 lors du changement de catégorie
+    };
+
+const isDataEmpty = !realisations || realisations.length <= 0;
+
+  // Fonction pour tronquer la description HTML
+  const truncateDescription = (htmlContent: string, maxLength: number) => {
+    // Crée un élément DOM temporaire pour manipuler le HTML
+    const doc = new DOMParser().parseFromString(htmlContent, "text/html");
+    let textContent = doc.body.textContent || ""; // On récupère juste le texte brut
+
+    // Si le texte est trop long, on le tronque et on ajoute "..."
+    if (textContent.length > maxLength) {
+      textContent = textContent.substring(0, maxLength) + "...";
+    }
+
+    // On réutilise le contenu tronqué dans un élément HTML
+    const truncatedDoc = document.createElement("div");
+    truncatedDoc.textContent = textContent;
+    return truncatedDoc.innerHTML; // Retourne le texte HTML tronqué
+  };
+
+
 
   return (
 
@@ -109,8 +120,10 @@ const options = [
           />
         </div>
 
+
         <div className="w-full py-20 lg:py-20">
-          <div className="container mx-auto flex flex-col gap-14">
+
+          <div className="md:container md:mx-auto flex flex-col gap-14">
 
             <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
               <h4 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-bold">
@@ -119,49 +132,71 @@ const options = [
 
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {/* Filtre des catégories */}
+            <CategoryFilter options={option} onFilterChange={handleFilterChange} />
 
-              <div className="flex flex-col gap-2 hover:opacity-75 cursor-pointer">
-                <div className="bg-muted rounded-md aspect-video mb-4"></div>
-              </div>
+            {isDataEmpty ? (
+              <SkeletonDemo />
+            ) : (
 
-              <div className="flex flex-col gap-2 hover:opacity-75 cursor-pointer">
-                <div className="bg-muted rounded-md aspect-video mb-4"></div>
-              </div>
+              <>
+                  <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-4">
 
-              <div className="flex flex-col gap-2 hover:opacity-75 cursor-pointer">
-                <div className="bg-muted rounded-md aspect-video mb-4"></div>
-              </div>
+                    {realisations.map((item, index) => (
+                      <div key={index} className="flex flex-col gap-4">
 
-              <div className="flex flex-col gap-2 hover:opacity-75 cursor-pointer">
-                <div className="bg-muted rounded-md aspect-video mb-4"></div>
-              </div>
+                        <div className="bg-muted rounded-md aspect-video mb-0">
+                          <img src={`${getBaseUrlImg()}/${item.images_realisations}`}
+                            alt={item.libelle_realisations} width={500} height={300} className="object-cover rounded-md" />
+                        </div>
 
-              <div className="flex flex-col gap-2 hover:opacity-75 cursor-pointer">
-                <div className="bg-muted rounded-md aspect-video mb-4"></div>
-              </div>
+                        {/* Conteneur avec une taille maximale de titre et de description */}
+                        <div className="flex flex-col h-full">
+                          {/* Titre du produit - Limité à 2 lignes */}
+                          <h3 className="text-sm md:text-lg tracking-tight font-base line-clamp-2">
+                            {item.libelle_realisations}
+                          </h3>
 
-              <div className="flex flex-col gap-2 hover:opacity-75 cursor-pointer">
-                <div className="bg-muted rounded-md aspect-video mb-4"></div>
-              </div>
+                          {/* Description du produit tronquée */}
+                          <p
+                            className="text-muted-foreground text-sm md:text-base line-clamp-3"
+                            dangerouslySetInnerHTML={{
+                              __html: truncateDescription(item.descript_real, 20), // 150 caractères avant de tronquer
+                            }}
+                          ></p>
+                        </div>
 
-              <div className="flex flex-col gap-2 hover:opacity-75 cursor-pointer">
-                <div className="bg-muted rounded-md aspect-video mb-4"></div>
-              </div>
-              
-              <div className="flex flex-col gap-2 hover:opacity-75 cursor-pointer">
-                <div className="bg-muted rounded-md aspect-video mb-4"></div>
-              </div>
-              
+                        {/* Bouton de commande */}
+                        <Button size="sm" className="gap-4 px-1 py-2 text-sm sm:text-base md:text-lg sm:px-4 sm:py-3 sm:gap-6 md:px-6 md:py-4 md:gap-8">
+                          Commander <MoveRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                        </Button>
 
-            </div>
+                      </div>
+                    ))}
+
+                  </div>
+
+                  {/* Pagination */}
+                  <PaginationComponent
+                    currentPage={currentPage}
+                    lastPage={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+
+                </>
+            )}
+
+
           </div>
+
         </div>
 
       </div>
-      <Footer />
+
+      <Footer data={reglage} />
 
     </>
+
   );
 };
 
