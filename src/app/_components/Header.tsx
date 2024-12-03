@@ -39,7 +39,7 @@ const Header: React.FC = ({ }) => {
         },
         {
             title: "A PROPOS",
-            href: "/",
+            href: "/apropos",
             description: "",
             icon: <LucideInfo className="w-4 h-4 mr-2" /> // Icône pour A PROPOS
         },

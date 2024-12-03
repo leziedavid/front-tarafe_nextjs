@@ -19,6 +19,8 @@ import { Realisation, Reglage } from "@/interfaces/HomeInterface";
 
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
+import Partenaire from "./_components/Partenaire";
+import Pub from "./_components/Pub";
 
 const Home: React.FC = () => {
 
@@ -68,6 +70,8 @@ useEffect(() => {
       <div className={`min-h-[calc(100vh_-_56px)] py-5 px-3 lg:px-6 mt-[4rem] md:mt-[4rem]`}>
         <Hero3 data={reglages} />
         <Feature5 data={realisation} reglage={reglages}/>
+        <Pub data={[]}/>
+        <Partenaire data={[]}/>
         <ContactForm data={reglages} />
       </div>
       <Footer data={reglages}/>
