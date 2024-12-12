@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react'; // Assurez-vous d'importer Loader2 depuis lucide-react ou autre package d'icônes
 

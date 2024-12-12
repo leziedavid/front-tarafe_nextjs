@@ -74,7 +74,7 @@ const Hero3: React.FC<Props> = ({ data }) => {
                                                 <h1 className="text-4xl font-bold text-white tracking-tighter sm:text-7xl z-10">
                                                     {data[0]?.texte_banner1}
                                                 </h1>
-                                                <p className="z-10 text-xl leading-relaxed text-white tracking-tight text-muted-foreground max-w-md text-left">
+                                                <p className="z-10 text-xl leading-relaxed text-white bg-[#ffb44b] tracking-tight text-muted-foreground max-w-md text-left">
                                                     {data[0]?.titre_banner1}
                                                 </p>
                                             </div>

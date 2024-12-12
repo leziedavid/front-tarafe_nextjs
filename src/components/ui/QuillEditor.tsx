@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useEffect } from 'react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css'; // styles Quill

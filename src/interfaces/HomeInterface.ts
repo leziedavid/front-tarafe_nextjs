@@ -9,7 +9,7 @@ export interface Data {
     politique: Politique[];
     realisations: Realisation[];  // Ajout de la section "realisations"
     blogs: Blog[];  // Ajout de la section "blogs"
-    partenaires: Partenaire[];  // Ajout de la section "partenaires"
+    partenaires: Partenaires[];  // Ajout de la section "partenaires"
 }
 
 // Définition d'une interface qui représente l'objet contenant les données de la réalisation
@@ -188,7 +188,7 @@ export interface Blog {
 }
 
 // Ajout de l'interface Partenaire
-export interface Partenaire {
+export interface Partenaires {
     id_partenaires: number;
     libelle_partenaires: string;
     Path_partenaires: string;
@@ -250,4 +250,47 @@ export interface DetailRealisation {
     id: string;
     realisations: Realisation[];
     reglages: Reglage[];
+}
+
+// Définir l'interface pour l'image dans la galerie
+export interface GallerieImage {
+    id_gallerie_images: string; // Identifiant de l'image
+    files_gallerie_images: string; // Chemin du fichier d'image
+    libelle_gallerie_images: string | null; // Libellé de l'image (peut être nul)
+    created_at: string; // Date de création de l'image
+    updated_at: string | null; // Date de mise à jour de l'image (peut être nul)
+    }
+
+// Définir l'interface pour la réponse complète avec pagination
+export interface GallerieImagesResponse {
+
+    data: {
+        current_page: number;
+        data: GallerieImage[];  // Liste des réalisations
+        first_page_url: string;
+        from: number;
+        last_page: number;
+        last_page_url: string;
+        links: PaginationLinks[];
+        next_page_url: string | null;
+        path: string;
+        per_page: number;
+        prev_page_url: string | null;
+        to: number;
+        total: number;
+    };
+    reglages: Reglage[];
+}
+
+export interface ApiData {
+    reglages: Reglage[];
+    equipes: Equipe[];
+}
+
+export interface Equipe {
+    id_equipe: number;
+    nomPren_equipe: string;
+    fonction_equipe: string;
+    email_equipe: string;
+    photo_equipe: string;
 }

@@ -4,7 +4,7 @@ import React, { useState,useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, Heart, Share2, ShoppingCart, Check } from 'lucide-react';
+import { Star, Heart, Share2, ShoppingCart, Check, Pen } from 'lucide-react';
 import Image from 'next/image';
 import { OrderSheet } from './OrderSheet';
 import {Realisation,Images} from "@/interfaces/HomeInterface";
@@ -213,25 +213,11 @@ const LuxuryWatchProductPage: React.FC<Props> = ({ data,image }) => {
 
                                 <p className="text-gray-600 mb-6" dangerouslySetInnerHTML={{ __html: data && data[0] ? data[0].descript_real : '' }} />
 
-                                <Tabs defaultValue="features" className="mb-6">
-                                    <TabsList>
-                                        <TabsTrigger value="features">Features</TabsTrigger>
-                                        <TabsTrigger value="warranty">Warranty</TabsTrigger>
-                                    </TabsList>
-                                    <TabsContent value="features">
-                                        <ul className="list-disc pl-5 text-sm text-gray-600">
-                                            {product.features.map((feature, index) => (  <li key={index}>{feature}</li>  ))}
-                                        </ul>
-                                    </TabsContent>
-                                    <TabsContent value="warranty">
-                                        <p className="text-sm text-gray-600">{product.warranty}</p>
-                                    </TabsContent>
-                                </Tabs>
                                 <div className="mt-auto">
                                     <div className="flex items-center justify-between mb-4">
                                         <div className="flex space-x-2">
-                                            <Button onClick={handleAddToCart} className="w-full  hover:bg-gray-800 text-white" size="lg">
-                                                <ShoppingCart className="mr-2 h-5 w-5" />  Passer une commande
+                                            <Button onClick={handleAddToCart} className="w-full  hover:bg-[#ffb44b] text-white" size="lg">
+                                                <Pen className="mr-2 h-5 w-5" />  Je personnalise
                                             </Button>
                                             <Button variant="outline" size="icon">
                                                 <Share2 className="h-5 w-5" />

@@ -6,7 +6,7 @@ const nextConfig = {
             {
                 protocol: 'http',
                 hostname: 'localhost',
-                pathname: '**', // Remarque: tu peux utiliser ** pour autoriser tous les sous-dossiers
+                pathname: '**',
             },
             {
                 protocol: 'http',

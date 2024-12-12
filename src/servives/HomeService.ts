@@ -1,13 +1,10 @@
 
-import { ApiAllDataResponse, Data, DataAllProduct,Realisation,DetailRealisation } from "@/interfaces/HomeInterface";
+import { ApiAllDataResponse, GallerieImagesResponse, Data, DataAllProduct, Realisation, DetailRealisation,ApiData } from "@/interfaces/HomeInterface";
 import { getBaseUrl } from "./baseUrl";
 import { ApiResponse } from "@/interfaces/ApiResponse";
 
-// Remplacer 'your_token' par la logique de récupération du token
-const token = localStorage.getItem('token') || ''; // Exemple pour récupérer le token du localStorage
-
 // Fonction pour récupérer toutes les données de la page d'accueil
-export const getAllHomeData = async (): Promise<Data | { error: string }> => {
+export const getAllHomeData = async (token: string | null): Promise<Data | { error: string }> => {
     try {
         const response = await fetch(`${getBaseUrl()}/homepage-data`, {
             method: 'GET',
@@ -32,9 +29,9 @@ export const getAllHomeData = async (): Promise<Data | { error: string }> => {
 };
 
 // Service pour récupérer les réalisations
-export const getAllRealisations = async (page: number, selectedCategory: number): Promise<ApiResponse<ApiAllDataResponse>> => {
+export const getAllRealisations = async (token: string | null, page: number, selectedCategory: number): Promise<ApiResponse<ApiAllDataResponse>> => {
     try {
-        const response =  await fetch(`${getBaseUrl()}/realisations/status/${selectedCategory}?page=${page}`, {
+        const response = await fetch(`${getBaseUrl()}/realisations/status/${selectedCategory}?page=${page}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajout du token JWT
@@ -73,8 +70,81 @@ export const getAllRealisations = async (page: number, selectedCategory: number)
     }
 };
 
+// page apropos
+
+export const getreglages = async (token: string | null): Promise<ApiResponse<ApiData>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/reglages`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Ajout du token JWT
+                'Content-Type': 'application/json'   // Type de contenu JSON
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la récupération des données.');
+        }
+
+        const result: ApiResponse<ApiData> = await response.json();
+        return result;
+
+    } catch (error: any) {
+        console.error('Erreur dans la récupération des données:', error.message);
+        return {
+            statusCode: 500,
+            statusMessage: error.message,
+            data: {
+                reglages: [],
+                equipes: []
+            }
+        };
+    }
+};
+
+// Service pour récupérer les réalisations
+export const getAllImagesGallery = async (token: string | null, page: number): Promise<ApiResponse<GallerieImagesResponse>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/gallerie-images?page=${page}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Ajout du token JWT
+                'Content-Type': 'application/json'   // Type de contenu JSON
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la récupération des données.');
+        }
+
+        const result: ApiResponse<GallerieImagesResponse> = await response.json();
+        return result;
+
+    } catch (error: any) {
+        console.error('Erreur dans la récupération des données:', error.message);
+        return {
+            statusCode: 500,
+            statusMessage: error.message,
+            data: {
+                data: {
+                    data: [], current_page: 1, last_page: 1, total: 0, links: [],
+                    first_page_url: "",
+                    from: 0,
+                    last_page_url: "",
+                    next_page_url: null,
+                    path: "",
+                    per_page: 0,
+                    prev_page_url: null,
+                    to: 0
+                },
+                reglages: [],
+            }
+        }
+    };
+}
+
 // Ajoutez un paramètre `token` pour le passer à la fonction
-export const getRealisationsByLaballe = async (labelle: string): Promise<ApiResponse<DetailRealisation>> => {
+export const getRealisationsByLaballe = async (token: string | null, labelle: string): Promise<ApiResponse<DetailRealisation>> => {
     try {
         const response = await fetch(`${getBaseUrl()}/realisation/libelle/${labelle}`, {
             method: 'GET',

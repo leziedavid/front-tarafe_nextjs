@@ -12,7 +12,7 @@ import * as z from "zod";
 import { ImageUploader } from "@/components/ui/ImageUploader";
 import { PhoneInput } from "@/components/ui/phone-input";
 import dynamic from "next/dynamic";
-import { CircleX, Terminal } from "lucide-react";
+import { CircleX, Pen, Terminal } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 const QuillEditor = dynamic(() => import("@/components/ui/QuillEditor"), { ssr: false });
@@ -179,9 +179,11 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
 
         <Sheet open={isOpen}>
             <SheetContent className="flex flex-col h-full overflow-y-auto md:max-w-full w-full md:w-1/3">
-                <SheetHeader className="relative flex items-center">
+                <SheetHeader className="relative flex mb-6">
                     <CircleX onClick={onClose} size={30} className="absolute right-0 cursor-pointer" />
-                    <SheetTitle>Commander le produit</SheetTitle>
+                    <SheetTitle className="flex">
+                        <Pen className="mr-2 h-5 w-5" />  Personnalisé le produit
+                    </SheetTitle>
                 </SheetHeader>
 
                 <form onSubmit={handleSubmit(handleOrder)} className="w-full flex flex-col gap-4">
@@ -200,23 +202,13 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
 
 
                    {/* Aperçu du texte */}
-                    <Alert>
+                    {/* <Alert>
                         <Terminal className="h-4 w-4" />
                         <AlertTitle>Aperçu de votre texte</AlertTitle>
-                        <AlertDescription className="font-bold" style={{
-                            color: previewColor,
-                            fontFamily: previewFont,
-                        }}>
+                        <AlertDescription className="font-bold" style={{  color: previewColor, fontFamily: previewFont, }}>
                             {previewText}
                         </AlertDescription>
-                    </Alert>
-
-                    {/* Aperçu du texte */}
-                    <Alert>
-                        <Terminal className="h-4 w-4" />
-                        <AlertTitle>Aperçu de votre texte</AlertTitle>
-                        <AlertDescription className="font-bold"> ... Tdllezie ...</AlertDescription>
-                    </Alert>
+                    </Alert> */}
 
 
                     {/* Sélection de la police d'écriture */}
@@ -259,25 +251,6 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
                         </Select>
                     </div>
 
-                    {/* Sélection de la position */}
-                    <div className="grid w-full items-center gap-1">
-                        <Label className="font-bold" htmlFor="position">Sélectionner l'emplacement de l'image</Label>
-                        <Select
-                            onValueChange={value => setValue('position', value)}
-                            defaultValue={getValues('position')}
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Sélectionner la position" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {imagePositions.map((option) => (
-                                    <SelectItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
 
                     {/* Champ nom et prénom */}
                     <div className="grid w-full items-center gap-1">
@@ -331,8 +304,28 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
                         <ImageUploader onFilesChange={onFilesChange} multiple={true} />
                     </div>
 
-                    {/* Champ télécharger autre support */}
+                    {/* Sélection de la position */}
                     <div className="grid w-full items-center gap-1">
+                        <Label className="font-bold" htmlFor="position">Sélectionner l'emplacement de l'image</Label>
+                        <Select
+                            onValueChange={value => setValue('position', value)}
+                            defaultValue={getValues('position')}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Sélectionner la position" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {imagePositions.map((option) => (
+                                    <SelectItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {/* Champ télécharger autre support */}
+                    <div className="grid w-full items-center gap-1 mb-3">
                         <Label className="font-bold" htmlFor="otherFiles">Télécharger un autre support (png, jpg, jpeg) (facultatif)</Label>
                         <ImageUploader onFilesChange={onOtherFilesChange} multiple={true} />
                     </div>

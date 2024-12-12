@@ -1,4 +1,6 @@
 // src/components/ui/file-upload.tsx
+"use client";
+
 import { useState } from 'react';
 import { XCircle } from 'lucide-react'; // Import de l'icône de suppression de lucide-react
 

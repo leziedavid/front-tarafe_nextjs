@@ -33,10 +33,13 @@ import { toast } from "sonner"
 import {DetailRealisation,Reglage,Realisation,Images} from "@/interfaces/HomeInterface";
 import { getRealisationsByLaballe } from "@/servives/HomeService";
 import { ApiResponse } from "@/interfaces/ApiResponse";
+import useAuth from "@/servives/useAuth";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 
 const Page: React.FC = () => {
-
+  
+  const token = useAuth();  // Récupérer le token à l'aide du hook
   const { id } = useParams<{ id: string }>();
   const [realisations, setRealisations] = useState<Realisation[]>([]);
   const [images, setImages] = useState<Images[]>([]);
@@ -47,7 +50,7 @@ const Page: React.FC = () => {
     const libelleModified = id.substring(id.lastIndexOf('/') + 1);
     const libelle = libelleModified.replace(/-/g, ' ');
 
-    const result: ApiResponse<DetailRealisation> = await getRealisationsByLaballe(libelle);
+    const result: ApiResponse<DetailRealisation> = await getRealisationsByLaballe(token,libelle);
 
     if (result.statusCode !== 200) {
       toast.error(result.statusMessage);
@@ -69,15 +72,15 @@ const Page: React.FC = () => {
 
     }, [id]);
 
-    console.log(realisations);
-
 
   return (
     <>
       <Header />
 
       <div className={`min-h-[calc(100vh_-_56px)] py-5 px-3 lg:px-6 mt-[4rem] md:mt-[4rem]`}>
-          <BreadcrumbDemo />
+          <div className="flex items-center gap-2 px-4">
+            <Breadcrumbs />
+          </div>
           <LuxuryWatchProductPage data={realisations} image={images}  />
       </div>
 

@@ -75,8 +75,8 @@ const Header: React.FC = ({ }) => {
                                         {item.href ? (
                                             <>
                                                 <NavigationMenuLink href={item.href}>
-                                                    <Button variant="ghost" className="font-bold tracking-tight text-sm flex items-center">
-                                                        {item.icon}
+                                                    <Button variant="ghost" className="font-bold tracking-tight text-sm flex items-center hover:bg-[#ffb44b]">
+                                                        {/* {item.icon} */}
                                                         {item.title}
                                                     </Button>
                                                 </NavigationMenuLink>
@@ -84,7 +84,7 @@ const Header: React.FC = ({ }) => {
                                         ) : (
                                             <>
                                                 <NavigationMenuTrigger className="font-medium text-sm font-bold tracking-tight text-lg">
-                                                    {item.icon}
+                                                    {/* {item.icon} */}
                                                     {item.title}
                                                 </NavigationMenuTrigger>
                                             </>
@@ -120,14 +120,14 @@ const Header: React.FC = ({ }) => {
                                             {item.href ? (
                                                 <Link href={item.href} className="flex justify-between items-center" >
                                                     <span onClick={() => setOpen(!isOpen)} className="text-sm font-bold tracking-tighter flex items-center">
-                                                        {item.icon}
+                                                        {/* {item.icon} */}
                                                         {item.title}
                                                     </span>
                                                     <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground" />
                                                 </Link>
                                             ) : (
                                                 <p onClick={() => setOpen(!isOpen)} className="text-sm font-bold tracking-tighter flex items-center">
-                                                    {item.icon}
+                                                    {/* {item.icon} */}
                                                     {item.title}
                                                 </p>
                                             )}

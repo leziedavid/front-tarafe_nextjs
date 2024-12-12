@@ -33,7 +33,7 @@ const PaginationComponent: React.FC<PaginationProps> = ({ currentPage, lastPage,
             className={`${
               currentPage === 1 ? 'cursor-not-allowed opacity-50' : 'text-muted-foreground'
             }`}
-            aria-disabled={currentPage === 1}  // Utilisation de `aria-disabled` pour l'accessibilité
+            aria-disabled={currentPage === 1}
           />
         </PaginationItem>
 
@@ -45,11 +45,7 @@ const PaginationComponent: React.FC<PaginationProps> = ({ currentPage, lastPage,
               isActive={index + 1 === currentPage}
               onClick={() => handlePageChange(index + 1)}
               className={`${
-                index + 1 === currentPage
-                  ? 'bg-primary text-white'  // Couleur active
-                  : 'text-muted-foreground hover:bg-muted'
-              } rounded-md p-2`}
-            >
+                index + 1 === currentPage ? 'bg-primary text-white': 'text-muted-foreground hover:bg-muted' } rounded-md p-2`} >
               {index + 1}
             </PaginationLink>
           </PaginationItem>

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import { Trash2, File, FileText, Image as ImageIcon } from "lucide-react"; // Importation des icônes

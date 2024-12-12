@@ -2,30 +2,14 @@
 
 import { Auth } from "@/components/auth";
 import { Logo } from "@/components/logo";
-import ProductCard from "../_components/productCard";
 import Image from 'next/image';
 
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import Header from '../_components/Header';
 import Footer from "../_components/Footer";
 
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import AllProduct from "../_components/AllProduct";
-import {Filter, MoveRight, SearchIcon, Share2, ShoppingCart } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import {MoveRight} from "lucide-react";
 import { ApiAllDataResponse, OptionRealisation, Realisation, RealisationData, Reglage } from "@/interfaces/HomeInterface";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
@@ -35,9 +19,11 @@ import SkeletonDemo from "../_components/SkeletonDemo";
 import { ApiResponse } from "@/interfaces/ApiResponse";
 import PaginationComponent from "@/components/pagination/paginationComponent"
 import CategoryFilter from "@/components/features/CategoryFilter"; // Importation du composant de filtre
+import useAuth from "@/servives/useAuth";
 
 const Page: React.FC = () => {
 
+  const token = useAuth();  // Récupérer le token à l'aide du hook
   // Déclaration d'un état pour stocker les données
   const [reglage, setReglages] = useState<Reglage []>([]);
   const [realisation, setRealisation] = useState<RealisationData[]>([]);
@@ -50,7 +36,7 @@ const Page: React.FC = () => {
 
   const fetchData = async () => {
     const validCategoryId = selectedCategory ?? 0;
-    const result: ApiResponse<ApiAllDataResponse> = await getAllRealisations(currentPage,validCategoryId);
+    const result: ApiResponse<ApiAllDataResponse> = await getAllRealisations(token,currentPage,validCategoryId);
 
     if (result.statusCode !== 200) {
       toast.error(result.statusMessage);
@@ -120,17 +106,16 @@ const isDataEmpty = !realisations || realisations.length <= 0;
           />
         </div>
 
-
-        <div className="w-full py-20 lg:py-20">
+        <div className="w-full py-10 lg:py-10">
 
           <div className="md:container md:mx-auto flex flex-col gap-14">
 
             <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
-              <h4 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-bold">
-                  NOS REALISATIONS
+              <h4 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-bold whitespace-nowrap">
+                DÉCOUVRIR NOS CRÉATIONS
               </h4>
-
             </div>
+
 
             {/* Filtre des catégories */}
             <CategoryFilter options={option} onFilterChange={handleFilterChange} />

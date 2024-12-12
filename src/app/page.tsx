@@ -15,38 +15,28 @@ import Hero3 from "./_components/Hero3";
 import Contact1 from "./_components/Contact1";
 import ContactForm from "./_components/ContactForm";
 import { getAllHomeData } from "@/servives/HomeService";
-import { Realisation, Reglage } from "@/interfaces/HomeInterface";
+import { Realisation, Reglage,Partenaires } from "@/interfaces/HomeInterface";
 
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
 import Partenaire from "./_components/Partenaire";
 import Pub from "./_components/Pub";
+import useAuth from "@/servives/useAuth";
 
 const Home: React.FC = () => {
+  const token = useAuth();  // Récupérer le token à l'aide du hook
 
   // Déclaration d'un état pour stocker les données
   const [result, setResult] = useState<any>(null);
   const [reglages, setReglages] = useState<Reglage []>([]);
+  const [partenaire , setPartenaire] = useState<Partenaires []>([]);
   const [realisation, setRealisation] = useState<Realisation[]>([]);
-
-const CARROUSSEL_BANNER = [
-  {
-    image: "/images.jpg",
-    config: { point: true },
-    content: ["Content 1", "Content 2", "Content 3"],
-  },
-  {
-    image: "/images.jpg",
-    config: {},
-    content: ["Content A", "Content B"],
-  },
-];
 
 
 useEffect(() => {
   const fetchData = async () => {
     
-      const result = await getAllHomeData();
+      const result = await getAllHomeData(token);
       // Vérification si l'objet retourné est une erreur
       if ('error' in result) {
           // Affichage de l'erreur avec `toast.error`
@@ -56,6 +46,7 @@ useEffect(() => {
           toast.success("Données récupérées avec succès !");
           setReglages(result.reglages)
           setRealisation(result.realisations)
+          setPartenaire(result.partenaires)
       }
   };
 
@@ -71,7 +62,7 @@ useEffect(() => {
         <Hero3 data={reglages} />
         <Feature5 data={realisation} reglage={reglages}/>
         <Pub data={[]}/>
-        <Partenaire data={[]}/>
+        <Partenaire data={partenaire}/>
         <ContactForm data={reglages} />
       </div>
       <Footer data={reglages}/>

@@ -57,7 +57,7 @@ const Feature5: React.FC<Feature5Props> = ({ data,reglage }) => {
                         {/* Section titre */}
                         <div className="flex gap-4 flex-col items-start">
                             <div>
-                                <Badge className="bg-[#242078]">Du nouveau !</Badge>
+                                <Badge className="bg-[#242078] hover:bg-[#ffb44b]">Du nouveau !</Badge>
                             </div>
                             <div className="flex gap-2 flex-col">
                                 <h2 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-bold text-left">
@@ -74,7 +74,7 @@ const Feature5: React.FC<Feature5Props> = ({ data,reglage }) => {
                             {data.map((item, index) => (
                                 <div key={index} className="flex flex-col gap-4">
 
-                                    <div className="bg-muted rounded-md aspect-video mb-0">
+                                    <div className="bg-muted rounded-md aspect-video">
                                         <img src={`${getBaseUrlImg()}/${item.images_realisations}`} alt={item.libelle_realisations}
                                             width={500}
                                             height={300}
