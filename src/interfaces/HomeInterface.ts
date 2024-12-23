@@ -174,6 +174,7 @@ export interface Realisation {
     position: number;
     created_at: string;
     updated_at: string | null;
+    // bq*N25QsxYnrw@7
 }
 
 // Ajout de l'interface Blog

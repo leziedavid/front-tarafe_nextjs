@@ -3,10 +3,7 @@
 import { Auth } from "@/components/auth";
 import { Logo } from "@/components/logo";
 import ProductCard from "../_components/productCard";
-import Image from 'next/image';
 
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import Header from '../_components/Header';
 import Footer from "../_components/Footer";
@@ -19,6 +16,7 @@ import SkeletonDemo from "../_components/SkeletonDemo";
 import { ApiResponse } from "@/interfaces/ApiResponse";
 import PaginationComponent from "@/components/pagination/paginationComponent"
 import useAuth from "@/servives/useAuth";
+import { Filters } from "@/interfaces/Filters";
 
 const Page: React.FC = () => {
 
@@ -31,9 +29,12 @@ const Page: React.FC = () => {
   const [dataImages, setImage] = useState<GallerieImage[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [search, setSearch] = useState(''); // Recherche
 
-  const fetchData = async () => {
-    const result: ApiResponse<GallerieImagesResponse> = await getAllImagesGallery(token, currentPage);
+  const fetchData = async () => { const filters: Filters = {  page: currentPage, limit: 10, search: search || undefined,};
+
+    const result: ApiResponse<GallerieImagesResponse> = await getAllImagesGallery(token, filters);
+
 
     if (result.statusCode !== 200) {
       toast.error(result.statusMessage);
@@ -55,7 +56,7 @@ const Page: React.FC = () => {
   // Appeler la fonction fetchData à chaque changement de page ou de catégorie
   useEffect(() => {
     fetchData();
-  }, [currentPage]); // Dépendances mises à jour pour inclure selectedCategory
+  }, [currentPage,search]); // Dépendances mises à jour pour inclure selectedCategory
 
 
 

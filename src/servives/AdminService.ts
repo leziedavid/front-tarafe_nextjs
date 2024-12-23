@@ -11,7 +11,7 @@ export const getAllRealisations = async (
 ): Promise<ApiResponse<RealisationData>> => {
     try {
         // Construction de l'URL avec les paramètres de filtre
-        const url = new URL(`${getBaseUrl()}/getAllRealisations`);
+        const url = new URL(`${getBaseUrl()}/realisations`);
         url.searchParams.append('page', filters.page.toString());
         url.searchParams.append('limit', filters.limit.toString());
 
