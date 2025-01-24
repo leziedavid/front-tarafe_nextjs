@@ -2,11 +2,11 @@
 
 
 import { useState, useEffect, useTransition } from 'react';
-import { Transaction } from '@/interfaces/AdminInterface'; // Assurez-vous d'importer le type `Order` si nécessaire
+import { TotalTransaction, Transaction } from '@/interfaces/AdminInterface'; // Assurez-vous d'importer le type `Order` si nécessaire
 import { DataTable as TransactionsTable } from '@/components/ui/table/data-table'; // Composant du tableau des commandes
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
-import { getAlltransactions } from "@/servives/AdminService";
+import { getAlltransactions, getAllTransactionTotals } from "@/servives/AdminService";
 import { ApiResponse } from "@/interfaces/ApiResponse";
 import { Filters } from '@/interfaces/Filters'; // Importation de l'interface Filters
 import useAuth from '@/servives/useAuth';
@@ -41,6 +41,7 @@ export default function TransactionslistePage({isDialogOpen,onDialogOpenChange}:
   const [totalPages, setTotalPages] = useState(1); // Nombre total de pages
   const [totalItems, setTotalItems] = useState(0); // Nombre total d'éléments
   const [donnees, setTransaction] = useState<Transaction[]>([]); // Données des commandes
+  const [total, setTotal] = useState<TotalTransaction | null>(null); // Initialiser avec null pour indiquer qu'il n'y a pas encore de données
   const [search, setSearch] = useState(''); // Recherche
   const [isLoading, startTransition] = useTransition();
   const token = useAuth();
@@ -94,7 +95,7 @@ const handleYearChange = (selected: string | null) => {
     const filters: Filters = {  page: currentPage, limit: 10, search: search || undefined, // Ajouter la recherche si elle est définie
     };
 
-    const result = await getAlltransactions(token, filters);
+    const result = await getAlltransactions(token, filters, category, payment, selectedYears);
     if (result.statusCode !== 200) {
       toast.error(result.statusMessage);
     } else {
@@ -104,12 +105,24 @@ const handleYearChange = (selected: string | null) => {
     }
   };
 
+  const getTransactionTotal = async () => {
+    const filters: Filters = {  page: currentPage, limit: 10, search: search || undefined, // Ajouter la recherche si elle est définie
+    };
+
+    const result = await getAllTransactionTotals(token, filters, category, payment, selectedYears);
+    if (result.statusCode !== 200) {
+      toast.error(result.statusMessage);
+    } else {
+      setTotal(result.data.totals); // Mettre à jour les commandes
+    }
+  };
+
   // Appeler la fonction fetchData chaque fois que la page courante ou la recherche change
   useEffect(() => {
-
     fetchData();
-
-  }, [currentPage, search]); // Lors de la modification de la page ou de la recherche, les données seront récupérées à nouveau
+    getTransactionTotal();
+  },
+  [currentPage,search,category,payment,selectedYears]); // Lors de la modification de la page ou de la recherche, les données seront récupérées à nouveau
 
   // Fonction pour changer la page
   const handlePageChange = (page: number) => {
@@ -119,7 +132,6 @@ const handleYearChange = (selected: string | null) => {
 
   // Callback pour mettre à jour `search` avec la plage de dates sélectionnée
   const handleDateRangeChange = (formattedDateRange: string) => {
-
     setSearch(formattedDateRange);
   };
 
@@ -159,7 +171,7 @@ const handleYearChange = (selected: string | null) => {
           </div>
 
           <div>
-            <Label className="font-bold mt-4" htmlFor="payment">Types de paiement</Label>
+            <Label className="font-bold mt-4" htmlFor="payment">Moyen de paiement</Label>
             <ComboboxSingleSelect
               options={paymentTypes}
               selectedItem={payment}  // Utilisation de selectedItem (singulier)
@@ -184,6 +196,18 @@ const handleYearChange = (selected: string | null) => {
 
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Solde Caisse
+                  </CardTitle>
+
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{total ? total.total_general.toLocaleString() : 0} FCFA</div>
+                </CardContent>
+              </Card>
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
@@ -192,7 +216,7 @@ const handleYearChange = (selected: string | null) => {
 
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">45,231.89 FCFA</div>
+                  <div className="text-2xl font-bold">{total ? total.total_sortie_caisse.toLocaleString() : 0} FCFA</div>
                 </CardContent>
               </Card>
               <Card>
@@ -202,7 +226,7 @@ const handleYearChange = (selected: string | null) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold"> 2350 FCFA</div>
+                  <div className="text-2xl font-bold"> {total ? total.total_sortie_banque.toLocaleString() : 0}  FCFA</div>
                 </CardContent>
               </Card>
               <Card>
@@ -210,7 +234,7 @@ const handleYearChange = (selected: string | null) => {
                   <CardTitle className="text-sm font-medium"> Total Entrée Caisse</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold"> 12,234 FCFA</div>
+                  <div className="text-2xl font-bold">  {total ? total.total_entree_caisse.toLocaleString() : 0}  FCFA</div>
                 </CardContent>
               </Card>
               <Card>
@@ -220,7 +244,7 @@ const handleYearChange = (selected: string | null) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">573 FCFA</div>
+                  <div className="text-2xl font-bold"> {total ? total.total_entree_banque.toLocaleString() : 0}  FCFA</div>
                 </CardContent>
               </Card>
             </div>

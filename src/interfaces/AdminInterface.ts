@@ -195,3 +195,18 @@ export interface TransactionData {
     total: number;
 }
 
+
+// Interface pour les totaux de transaction
+export interface TotalTransaction {
+    total_sortie_caisse: string;  // Montant total de la sortie caisse
+    total_sortie_banque: string;  // Montant total de la sortie banque
+    total_entree_caisse: string;  // Montant total de l'entrée caisse
+    total_entree_banque: string;  // Montant total de l'entrée banque
+    total_general: number;        // Total général de toutes les transactions
+}
+
+// Interface pour la structure des données retournées (incluant les totaux)
+export interface TransactionTotalsResponse {
+    totals: TotalTransaction; // Totaux des transactions
+}
+

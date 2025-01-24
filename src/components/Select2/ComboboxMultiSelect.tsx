@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown, X } from "lucide-react";  // Ajout de l'icône X
+import { Check, ChevronsUpDown, CircleX, X } from "lucide-react";  // Ajout de l'icône X
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -67,10 +67,7 @@ export function ComboboxMultiSelect<T>({
                                     <Badge key={selectedItem} className="text-sm flex items-center gap-1">
                                         {label}
                                         {/* Bouton pour supprimer un élément sélectionné */}
-                                        <X 
-                                            className="cursor-pointer text-red-500" 
-                                            onClick={() => handleRemoveSelection(selectedItem)} 
-                                        />
+                                        <CircleX className="cursor-pointer text-black h-4 w-4" onClick={() => handleRemoveSelection(selectedItem)} />
                                     </Badge>
                                 );
                             })}

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from "react";
-import { Check, ChevronsUpDown, X } from "lucide-react";  // Ajout de l'icône X
+import { Check, ChevronsUpDown, X,CircleX } from "lucide-react";  // Ajout de l'icône X
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -56,10 +56,7 @@ export function ComboboxSingleSelect<T>({
                             <div className="flex items-center space-x-2">
                                 <span>{labelExtractor(options.find(option => valueExtractor(option) === selectedItem)!)} </span>
                                 {/* Bouton pour supprimer la sélection */}
-                                <X
-                                    className="cursor-pointer text-black"
-                                    onClick={handleRemoveSelection}
-                                />
+                                <CircleX className="cursor-pointer text-black h-4 w-4" onClick={handleRemoveSelection} />
                             </div>
                         ) : (
                             <span className="text-gray-500">{placeholder}</span>

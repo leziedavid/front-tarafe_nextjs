@@ -4,22 +4,30 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from '@radix-ui/react-icons';
-import { format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import { fr } from 'date-fns/locale'; // Importer la locale française
 import * as React from 'react';
 import { DateRange } from 'react-day-picker';
 
-interface CalendarDateRangePickerProps {
+interface CalendarDateRangePicker2Props {
   className?: string;
   onDateChange: (formattedDateRange: string) => void;
 }
 
-export function CalendarDateRangePicker({
+export function CalendarDateRangePicker2({
   className,
   onDateChange
-}: CalendarDateRangePickerProps) {
-  // Initialiser les dates avec undefined pour ne pas afficher de date par défaut
-  const [date, setDate] = React.useState<DateRange | undefined>(undefined);
+}: CalendarDateRangePicker2Props) {
+  // Calculer le premier jour du mois courant
+  const today = new Date();
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // 1er jour du mois
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth(), 10); // 10e jour du mois
+
+  // Initialiser les dates avec le 1er au 10 du mois en cours
+  const [date, setDate] = React.useState<DateRange | undefined>({
+    from: startOfMonth,
+    to: endOfMonth,
+  });
 
   React.useEffect(() => {
     if (date?.from && date.to) {
@@ -44,19 +52,19 @@ export function CalendarDateRangePicker({
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? (
+            {date?.from ? (
               date.to ? (
                 <>
                   {/* Affichage des dates en français */}
-                  {date.from && format(date.from, 'dd-MM-yyyy', { locale: fr })} -{' '}
+                  {format(date.from, 'dd-MM-yyyy', { locale: fr })} -{' '}
                   {format(date.to, 'dd-MM-yyyy', { locale: fr })}
                 </>
               ) : (
                 // Affichage de la date de début uniquement si "to" est vide
-                date.from && format(date.from, 'dd-MM-yyyy', { locale: fr })
+                format(date.from, 'dd-MM-yyyy', { locale: fr })
               )
             ) : (
-              <span>Sélectionner une plage de dates</span> // Texte par défaut
+              <span>Pick a date</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -64,8 +72,9 @@ export function CalendarDateRangePicker({
           <Calendar
             initialFocus
             mode="range"
-            selected={date}  // Utilisation de selected pour contrôler la sélection
-            onSelect={setDate}  // Callback sur la sélection de dates
+            defaultMonth={date?.from}
+            selected={date}
+            onSelect={setDate}
             numberOfMonths={2}
           />
         </PopoverContent>

@@ -1,7 +1,7 @@
 
 import { getBaseUrl } from "./baseUrl";
 import { ApiResponse } from "@/interfaces/ApiResponse";
-import { ApiDataCategories, ApiDataCategoriesByRealisation, ApiDataOders, OrderData, OrderDetails, RealisationData, TransactionData } from "@/interfaces/AdminInterface";
+import { ApiDataCategories, ApiDataCategoriesByRealisation, ApiDataOders, OrderData, OrderDetails, RealisationData, TransactionData, TransactionTotalsResponse } from "@/interfaces/AdminInterface";
 import { Filters } from "@/interfaces/Filters"; // Importation de l'interface Filters
 
 const getCsrfToken = async () => {
@@ -360,17 +360,20 @@ export const imports = async (token: string | null, formData: FormData): Promise
 // Service pour récupérer les commandes avec des filtres
 export const getAlltransactions = async (
     token: string | null,
-    filters: Filters
+    filters: Filters,
+    category: string | null,
+    payment: string | null,
+    selectedYears: string | null,
 ): Promise<ApiResponse<TransactionData>> => {
     try {
         // Construction de l'URL avec les paramètres de filtre
         const url = new URL(`${getBaseUrl()}/transactions`);
         url.searchParams.append('page', filters.page.toString());
         url.searchParams.append('limit', filters.limit.toString());
-
-        if (filters.search) {
-            url.searchParams.append('search', filters.search);
-        }
+        if (filters.search) { url.searchParams.append('search', filters.search); }
+        if (category) { url.searchParams.append('category', category); }
+        if (payment) { url.searchParams.append('payment', payment); }
+        if (selectedYears) { url.searchParams.append('selectedYears', selectedYears); }
 
         const response = await fetch(url.toString(), {
             method: 'GET',
@@ -440,7 +443,54 @@ export const getAllImagesById = async ( token: string | null, id: number): Promi
 };
 
 
+export const getAllTransactionTotals = async (
+    token: string | null,
+    filters: Filters,
+    category: string | null,
+    payment: string | null,
+    selectedYears: string | null
+): Promise<ApiResponse<TransactionTotalsResponse>> => {
+    try {
+        // Construction de l'URL avec les paramètres de filtre
+        const url = new URL(`${getBaseUrl()}/getTransactionTotal`); // Assurez-vous que l'API retourne les totaux via cette route
+        url.searchParams.append('page', filters.page.toString());
+        url.searchParams.append('limit', filters.limit.toString());
+        if (filters.search) { url.searchParams.append('search', filters.search); }
+        if (category) { url.searchParams.append('category', category); }
+        if (payment) { url.searchParams.append('payment', payment); }
+        if (selectedYears) { url.searchParams.append('selectedYears', selectedYears); }
 
-// realisations/{id}/images
+        const response = await fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Ajout du token JWT
+                'Content-Type': 'application/json'   // Type de contenu JSON
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la récupération des données.');
+        }
+
+        const result: ApiResponse<TransactionTotalsResponse> = await response.json();
+        return result;
+
+    } catch (error: any) {
+        console.error('Erreur dans la récupération des données:', error.message);
+        return {
+            statusCode: 500,
+            statusMessage: error.message,
+            data: {
+                totals: {
+                    total_sortie_caisse: "0.00",
+                    total_sortie_banque: "0.00",
+                    total_entree_caisse: "0.00",
+                    total_entree_banque: "0.00",
+                    total_general: 0
+                }
+            }
+        };
+    }
+}
 
 
