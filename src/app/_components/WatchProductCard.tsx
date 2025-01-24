@@ -231,7 +231,7 @@ const LuxuryWatchProductPage: React.FC<Props> = ({ data,image }) => {
                         </div>
                     </Card>
 
-                    <OrderSheet productId={product.name as string} isOpen={isSheetOpen} onClose={handleCloseSheet} />
+                    <OrderSheet productId={product.name as string} isOpen={isSheetOpen} datas={data} onClose={handleCloseSheet} />
 
                 </div>
 

@@ -14,10 +14,15 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { Realisation } from '@/interfaces/HomeInterface';
+import FormDialog from '@/components/Dialog/FormDialog';
 
-type RealisationListingPage = {};
 
-export default function RealisationListingPage({}: RealisationListingPage) {
+type RealisationListingPage = {
+  isDialogOpen: boolean;
+  onDialogOpenChange: (open: boolean) => void; // Prop pour gérer l'ouverture du dialog
+};
+
+export default function RealisationListingPage({isDialogOpen,onDialogOpenChange}: RealisationListingPage) {
 
 
   const [currentPage, setCurrentPage] = useState(1); // Page actuelle
@@ -81,7 +86,11 @@ export default function RealisationListingPage({}: RealisationListingPage) {
         />
       )}
 
+      <FormDialog open={isDialogOpen} onOpenChange={onDialogOpenChange} datas={null} />
+
     </div>
+
+
   );
 
 }

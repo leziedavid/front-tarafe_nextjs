@@ -1,16 +1,22 @@
 // Ajoutez cette ligne en haut du fichier
 'use client';
 
+
 import PageContainer from '@/components/layout/page-container';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { Suspense, useState } from 'react';
-import GallerieListingPage from './_components/gallerie-listing';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
 
-// export const metadata = { title: 'Dashboard: produits' };
+import { Suspense, useState } from 'react';
+import Transactionsliste from './_components/transactions-listing';
+import { Button } from '@/components/ui/button';
+import { Toaster } from '@/components/ui/sonner';
+
+// export const metadata = {  title: 'Dashboard: comnandes'};
 
 export default function Page() {
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Cette fonction sera passée à GallerieListingPage
@@ -22,16 +28,13 @@ export default function Page() {
     <PageContainer>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Heading title="Gallerie" description="Gérer la gallerie (fonctionnalités de la table côté serveur)." />
-          <Button variant="secondary" size="sm" onClick={() => handleDialogOpenChange(true)} >
-            ＋ Add New Images
-          </Button>
+          <Heading title="Liste des Transactions"  description="Gérer les Transactions (fonctionnalités de la table côté serveur)." />
+          <Button variant="secondary" size="sm" onClick={() => handleDialogOpenChange(true)}>＋ Importer en (excel,csv..)</Button>
         </div>
+        <Toaster />
 
         <Separator />
-        <Suspense fallback={<div>Loading...</div>}>
-          <GallerieListingPage isDialogOpen={isDialogOpen} onDialogOpenChange={handleDialogOpenChange} /> {/* Passer la fonction ici */}
-        </Suspense>
+        <Transactionsliste  isDialogOpen={isDialogOpen} onDialogOpenChange={handleDialogOpenChange}/>
       </div>
     </PageContainer>
   );

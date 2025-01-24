@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,12 +12,17 @@ import * as z from "zod";
 import { ImageUploader } from "@/components/ui/ImageUploader";
 import { PhoneInput } from "@/components/ui/phone-input";
 import dynamic from "next/dynamic";
-import { CircleX, Pen, Terminal } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CircleX, Pen } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Realisation } from "@/interfaces/HomeInterface";
+import { addOrders } from "@/servives/AdminService";
+import useAuth from '@/servives/useAuth';
+
+
+// Dynamically load Quill editor (without SSR)
 const QuillEditor = dynamic(() => import("@/components/ui/QuillEditor"), { ssr: false });
 
-// Mise à jour du schema sans `files`
+// Mise à jour du schéma avec validation pour chaque champ
 const formSchema = z.object({
     texte: z.string().optional(),
     police: z.string().optional(),
@@ -29,19 +34,24 @@ const formSchema = z.object({
     email: z.string().email("Adresse e-mail invalide"),
     Description: z.string().optional(),
     position: z.string().min(1, "Sélectionnez l'emplacement de l'image"), // Ajout de validation pour la position
+    // files: z.array(z.instanceof(File)).min(1, "Vous devez télécharger au moins un fichier") // Validation pour les fichiers
 });
 
 interface OrderSheetProps {
     productId: string;
     isOpen: boolean;
+    datas: Realisation[];
     onClose: () => void;
 }
 
-export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
+export function OrderSheet({ productId, isOpen, onClose, datas }: OrderSheetProps) {
     const [phone, setPhone] = useState<string>("");
     const [description, setDescription] = useState("");
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]); // Fichiers d'images de support principal
     const [otherFiles, setOtherFiles] = useState<File[]>([]); // Fichiers d'images de support supplémentaire
+    const [isUploading, setIsUploading] = useState(false);
+
+    const token = useAuth();  // Récupérer le token à l'aide du hook
 
     const [previewText, setPreviewText] = useState<string>("");
     const [previewColor, setPreviewColor] = useState<string>("black");
@@ -53,7 +63,6 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
             NomPrenom: "",
             email: "",
             numero: "",
-            Description: "",
             texte: "",
             police: "",
             dimension: "",
@@ -62,7 +71,6 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
             position: "",
         },
     });
-
 
     // Fonction pour mettre à jour les fichiers sélectionnés pour les images principales
     const onFilesChange = (files: File[]) => {
@@ -74,42 +82,82 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
         setOtherFiles(files);
     };
 
-    // Fonction pour envoyer la commande avec les fichiers
-    const handleOrder = async (data: any) => {
-        const formData = new FormData();
-        alert('ok');
-        console.log(data);
-        // Ajout des données du formulaire
-        Object.keys(data).forEach((key) => {
-            formData.append(key, data[key]);
+    // Fonction de validation
+    const validateForm = () => {
+        const result = formSchema.safeParse({
+            texte: getValues("texte"),
+            police: getValues("police"),
+            dimension: getValues("dimension"),
+            colors: getValues("colors"),
+            NomPrenom: getValues("NomPrenom"),
+            Entreprise: getValues("Entreprise"),
+            numero: getValues("numero"),
+            email: getValues("email"),
+            position: getValues("position"),
         });
 
-        // Ajout des fichiers sélectionnés pour l'upload des images principales
-        selectedFiles.forEach((file) => formData.append("files", file));
-        // Ajout des fichiers sélectionnés pour l'upload du support supplémentaire
-        otherFiles.forEach((file) => formData.append("otherFiles", file));
+        if (result.success) {
 
-        try {
-            const res = await fetch("/api/order", { // Remplacer "/api/order" par l'URL de ton API d'enregistrement de commande
-                method: "POST",
-                body: formData,
+            return true; // Aucune erreur, tout est valide
+        } else {
+            // Si validation échoue, traiter les erreurs
+            result.error.errors.forEach((error) => {
+                // Ici, tu peux récupérer le nom du champ d'erreur à partir de error.path
+                const fieldName = error.path[0]; // Le nom de l'input
+                const errorMessage = `${fieldName} est requis`; // Message d'erreur avec nom du champ
+    
+                // Affiche l'erreur via le toast avec un message personnalisé
+                toast.error(`Le champ ${fieldName} est requis. Erreur : ${error.message}`);
             });
-
-            if (!res.ok) {
-                throw new Error("Erreur lors de l'enregistrement de la commande");
-            }
-
-            const result = await res.json();
-            console.log("Commande enregistrée avec succès", result);
-            toast.success("Commande passée avec succès");
-            onClose(); // Ferme le formulaire après la commande
-        } catch (error) {
-            console.error("Erreur API :", error);
-            toast.error("Erreur lors de l'enregistrement de la commande.");
+            return false; // Validation échouée
         }
     };
 
-    // Tableau d'options dynamiques pour l'emplacement de l'image
+    const handleOrder = async () => {
+        // Validation des données
+        if (!validateForm()) return;
+    
+        console.log(selectedFiles)
+        // Créer FormData pour l'envoi des données
+        const formData = new FormData();
+        // Ajouter les fichiers d'images principales
+        selectedFiles.forEach((file) => formData.append("imgLogosAchats", file)); // Ajoute les fichiers principaux
+        // Ajouter les fichiers de support supplémentaire
+        otherFiles.forEach((file) => formData.append("FileAchats", file)); // Ajoute les autres fichiers
+        // Ajout d'un champ pour la taille des fichiers sélectionnés
+        formData.append("codeAchat", datas[0].code_realisation);
+        formData.append("remarques", description || "");
+        formData.append("texteAchats", getValues("texte") || "");  // texte par défaut si pas précisé
+        formData.append("couleursAchats", getValues("colors") || "");  // colors par défaut si pas précisé
+        formData.append("PositionsFiles", getValues("position") || "");  // Position par défaut si pas précisé
+        formData.append("NomPrenomAchats", getValues("NomPrenom") || "");
+        formData.append("EntrepriseAchats", getValues("Entreprise") || "");
+        formData.append("numeroAchats", getValues("numero") || "");
+        formData.append("policeAchats", getValues("police") || "");
+        formData.append("emailAchats", getValues("email") || "");
+        // On ne prend plus en compte `id_realisations` ici, car il n'y a pas de mise à jour
+        setIsUploading(true);  // Désactive l'interface pour indiquer que l'upload est en cours
+    
+        try {
+            // Envoi des données pour créer une nouvelle commande
+            const result = await addOrders(token, formData);  // Appel à la fonction pour créer une commande
+            
+            if (result.statusCode === 200) {
+                toast.success("Commande passée avec succès !");
+                onClose(); // Ferme le formulaire après succès
+            } else {
+                toast.error("Erreur lors de l'envoi des données.");
+            }
+    
+        } catch (error) {
+            console.error("Erreur lors de l'envoi des données :", error);
+            toast.error("Une erreur s'est produite pendant la soumission.");
+        } finally {
+            setIsUploading(false);  // Restaure l'état de l'interface une fois l'upload terminé
+        }
+    };
+    
+    // Options pour les sélections
     const imagePositions = [
         { value: "En Haut", label: "En Haut" },
         { value: "A Gauche", label: "A Gauche" },
@@ -118,7 +166,6 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
         { value: "A Droite", label: "A Droite" },
     ];
 
-    // Tableau d'options dynamiques pour les couleurs principales
     const colorOptions = [
         { value: "red", label: "Rouge" },
         { value: "blue", label: "Bleu" },
@@ -142,7 +189,6 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
         { value: "beige", label: "Beige" },
     ];
 
-    // Tableau d'options dynamiques pour les polices
     const fontOptions = [
         { value: "Arial", label: "Arial" },
         { value: "Verdana", label: "Verdana" },
@@ -163,53 +209,31 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
         { value: "Consolas", label: "Consolas" },
     ];
 
-
-    // Utiliser useEffect pour mettre à jour l'aperçu à chaque changement de texte, couleur ou police
+    // Mise à jour de l'aperçu du texte
     useEffect(() => {
-        const texte = getValues('texte');
-        const couleur = getValues('colors');
-        const police = getValues('police');
-        setPreviewText(texte || "Votre texte ici...");
-        setPreviewColor(couleur || "black");
-        setPreviewFont(police || "Arial");
-    }, [getValues('texte'), getValues('colors'), getValues('police')]);
-
+        setPreviewText(getValues("texte") || "");
+        setPreviewColor(getValues("colors") || "black");
+        setPreviewFont(getValues("police") || "Arial");
+    }, [getValues]);
 
     return (
-
-        <Sheet open={isOpen}>
+        <Sheet open={isOpen} >
             <SheetContent className="flex flex-col h-full overflow-y-auto md:max-w-full w-full md:w-1/3">
-                <SheetHeader className="relative flex mb-6">
-                    <CircleX onClick={onClose} size={30} className="absolute right-0 cursor-pointer" />
-                    <SheetTitle className="flex">
-                        <Pen className="mr-2 h-5 w-5" />  Personnalisé le produit
-                    </SheetTitle>
+            <SheetHeader>
+                    <SheetTitle>Personnalisez le produit</SheetTitle>
+                    <p>{datas[0].libelle_realisations}</p>
                 </SheetHeader>
 
-                <form onSubmit={handleSubmit(handleOrder)} className="w-full flex flex-col gap-4">
-                    
+                <div className="w-full flex flex-col gap-4">
                     {/* Champ texte */}
                     <div className="grid w-full items-center gap-1">
                         <Label className="font-bold" htmlFor="texte">Saisissez ici un texte (facultatif)</Label>
                         <Controller
                             name="texte"
                             control={control}
-                            render={({ field }) => (
-                                <Input {...field} id="texte" />
-                            )}
+                            render={({ field }) => <Input {...field} id="texte" />}
                         />
                     </div>
-
-
-                   {/* Aperçu du texte */}
-                    {/* <Alert>
-                        <Terminal className="h-4 w-4" />
-                        <AlertTitle>Aperçu de votre texte</AlertTitle>
-                        <AlertDescription className="font-bold" style={{  color: previewColor, fontFamily: previewFont, }}>
-                            {previewText}
-                        </AlertDescription>
-                    </Alert> */}
-
 
                     {/* Sélection de la police d'écriture */}
                     <div className="grid w-full items-center gap-1">
@@ -234,10 +258,7 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
                     {/* Sélection de la couleur */}
                     <div className="grid w-full items-center gap-1">
                         <Label className="font-bold" htmlFor="colors">Choisir une couleur</Label>
-                        <Select
-                            onValueChange={value => setValue('colors', value)}
-                            defaultValue={getValues('colors')}
-                        >
+                        <Select onValueChange={value => setValue('colors', value)} defaultValue={getValues('colors')}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Sélectionner une couleur" />
                             </SelectTrigger>
@@ -250,7 +271,6 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
                             </SelectContent>
                         </Select>
                     </div>
-
 
                     {/* Champ nom et prénom */}
                     <div className="grid w-full items-center gap-1">
@@ -284,10 +304,15 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
                         {errors.numero && <p className="text-red-500">{errors.numero.message}</p>}
                     </div>
 
-                     {/* Champ texte */}
+                    {/* Champ email */}
                     <div className="grid w-full items-center gap-1">
-                        <Label className="font-bold" htmlFor="texte">email</Label>
-                        <Controller name="email" control={control} render={({ field }) => ( <Input {...field} id="email" /> )}
+                        <Label className="font-bold" htmlFor="email">Email</Label>
+                        <Controller
+                            name="email"
+                            control={control}
+                            render={({ field }) => (
+                                <Input {...field} id="email" />
+                            )}
                         />
                     </div>
 
@@ -297,20 +322,16 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
                         <QuillEditor value={description} onChange={setDescription} />
                     </div>
 
-                    
                     {/* Champ télécharger fichiers principaux */}
                     <div className="grid w-full items-center gap-1">
-                    <Label className="font-bold" htmlFor="otherFiles">Télecharger une image (png,jpg,jpeg) (facultatif)</Label>
-                        <ImageUploader onFilesChange={onFilesChange} multiple={true} />
+                        <Label className="font-bold" htmlFor="otherFiles">Télécharger une image (facultatif)</Label>
+                        <ImageUploader onFilesChange={onFilesChange} multiple={false} />
                     </div>
 
                     {/* Sélection de la position */}
                     <div className="grid w-full items-center gap-1">
                         <Label className="font-bold" htmlFor="position">Sélectionner l'emplacement de l'image</Label>
-                        <Select
-                            onValueChange={value => setValue('position', value)}
-                            defaultValue={getValues('position')}
-                        >
+                        <Select onValueChange={value => setValue('position', value)} defaultValue={getValues('position')}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Sélectionner la position" />
                             </SelectTrigger>
@@ -326,22 +347,19 @@ export function OrderSheet({ productId, isOpen, onClose }: OrderSheetProps) {
 
                     {/* Champ télécharger autre support */}
                     <div className="grid w-full items-center gap-1 mb-3">
-                        <Label className="font-bold" htmlFor="otherFiles">Télécharger un autre support (png, jpg, jpeg) (facultatif)</Label>
+                        <Label className="font-bold" htmlFor="otherFiles">Télécharger un autre support (facultatif)</Label>
                         <ImageUploader onFilesChange={onOtherFilesChange} multiple={true} />
                     </div>
-
 
                     <SheetFooter className="mt-auto">
                         <div className="flex justify-center space-x-2">
                             <Button onClick={onClose} type="button" className="text-sm px-4 py-2">Annuler</Button>
-                            <Button type="submit" className="text-sm px-4 py-2 space-x-2">Passer la commande</Button>
+                            <Button onClick={handleOrder} type="button" className="text-sm px-4 py-2 space-x-2">Passer la commande</Button>
+                            {/* <Button onClick={handleSubmit(handleOrder)} type="button" className="text-sm px-4 py-2 space-x-2">Passer la commande</Button> */}
                         </div>
                     </SheetFooter>
-                </form>
-
+                </div>
             </SheetContent>
         </Sheet>
-
-
     );
 }

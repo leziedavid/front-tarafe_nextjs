@@ -5,36 +5,37 @@ import Image from "next/image";
 import { Trash2, File, FileText, Image as ImageIcon } from "lucide-react"; // Importation des icônes
 
 // Définir le type des props attendues par le composant
-interface ImageUploaderProps {
+interface ImageUploaderMultipleProps {
     // Callback pour notifier les fichiers sélectionnés au parent
-    onFilesChange: (files: File[]) => void;
+    onOtherFilesChange: (files: File[]) => void;
 
     // Permettre ou non la sélection de plusieurs fichiers (par défaut false)
     multiple?: boolean;
 }
 
-export function ImageUploader({
-    onFilesChange,
+export function ImageUploaderMultiple({
+    onOtherFilesChange,
     multiple = false,
-}: ImageUploaderProps) {
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]); // Fichiers sélectionnés pour l'aperçu
+}: ImageUploaderMultipleProps) {
+
+    const [otherFiles, setOtherFiles] = useState<File[]>([]); // Fichiers sélectionnés pour l'aperçu
 
     // Fonction qui gère la sélection de fichiers
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onChangeMultiple = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { files } = e.target;
 
         if (files && files.length > 0) {
             const newFiles = Array.from(files); // Convertir FileList en tableau
-            setSelectedFiles(newFiles); // Mettre à jour les fichiers sélectionnés
-            onFilesChange(newFiles); // Notifier le parent des nouveaux fichiers sélectionnés
+            setOtherFiles(newFiles); // Mettre à jour les fichiers sélectionnés
+            onOtherFilesChange(newFiles); // Notifier le parent des nouveaux fichiers sélectionnés
         }
     };
 
     // Fonction pour supprimer une image ou fichier sélectionné
     const removeFile = (index: number) => {
-        const newFiles = selectedFiles.filter((_, idx) => idx !== index); // Retirer le fichier à l'index donné
-        setSelectedFiles(newFiles); // Mettre à jour les fichiers après suppression
-        onFilesChange(newFiles); // Notifier le parent des fichiers mis à jour
+        const newFiles = otherFiles.filter((_, idx) => idx !== index); // Retirer le fichier à l'index donné
+        setOtherFiles(newFiles); // Mettre à jour les fichiers après suppression
+        onOtherFilesChange(newFiles); // Notifier le parent des fichiers mis à jour
     };
 
     // Fonction pour déterminer le type de fichier (PDF, Word, ou Image)
@@ -64,7 +65,7 @@ export function ImageUploader({
                 type="file"
                 accept="image/*,.pdf,.doc,.docx" // Accepter image, PDF et Word
                 multiple={multiple} // Permet la sélection multiple si "multiple" est vrai
-                onChange={onChange}
+                onChange={onChangeMultiple}
                 className="hidden"
                 id="file-input"
             />
@@ -73,7 +74,7 @@ export function ImageUploader({
             </label>
             <div className="mt-2 grid grid-cols-4 gap-4">
                 {/* Afficher les aperçus ou icônes des fichiers sélectionnés */}
-                {selectedFiles.map((file, idx) => (
+                {otherFiles.map((file, idx) => (
                     <div key={idx} className="relative w-20 h-20 flex items-center justify-center overflow-hidden rounded-lg border border-gray-200 cursor-pointer" onClick={() => removeFile(idx)} >
                         {/* Si le fichier est une image, afficher son aperçu */}
 

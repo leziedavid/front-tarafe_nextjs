@@ -20,6 +20,8 @@ import { ApiResponse } from "@/interfaces/ApiResponse";
 import PaginationComponent from "@/components/pagination/paginationComponent"
 import CategoryFilter from "@/components/features/CategoryFilter"; // Importation du composant de filtre
 import useAuth from "@/servives/useAuth";
+import { useRouter } from 'next/navigation';
+
 
 const Page: React.FC = () => {
 
@@ -28,6 +30,7 @@ const Page: React.FC = () => {
   const [reglage, setReglages] = useState<Reglage []>([]);
   const [realisation, setRealisation] = useState<RealisationData[]>([]);
   const [option, setOption] = useState<OptionRealisation[]>([]);
+  const router = useRouter();
 
   const [realisations, setRealisations] = useState<Realisation[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -87,6 +90,11 @@ const isDataEmpty = !realisations || realisations.length <= 0;
     return truncatedDoc.innerHTML; // Retourne le texte HTML tronqué
   };
 
+
+  const navigateTo = (path: string) => {
+    const libelleModified = path.replace(/ /g, '-');
+    router.push('/product/' + libelleModified);
+};
 
 
   return (
@@ -151,9 +159,8 @@ const isDataEmpty = !realisations || realisations.length <= 0;
                           ></p>
                         </div>
 
-                        {/* Bouton de commande */}
-                        <Button size="sm" className="gap-4 px-1 py-2 text-sm sm:text-base md:text-lg sm:px-4 sm:py-3 sm:gap-6 md:px-6 md:py-4 md:gap-8">
-                          Commander <MoveRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                        <Button className="gap-4 w-full" onClick={() => navigateTo(item.libelle_realisations)}>
+                          Commander<MoveRight className="w-4 h-4" />
                         </Button>
 
                       </div>

@@ -15,3 +15,4 @@ export const getBaseUrlImg = (): string => {
 export const getBaseSiteUrl = (): string => {
     return BASE_URL_SITE;
 };
+

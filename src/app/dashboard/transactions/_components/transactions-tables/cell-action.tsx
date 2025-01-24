@@ -3,7 +3,7 @@
 import { AlertModal } from '@/components/modal/alert-modal';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { ApiDataOders, Order ,OrderDetails} from '@/interfaces/AdminInterface';
+import { ApiDataOders, Transaction ,OrderDetails} from '@/interfaces/AdminInterface';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -12,13 +12,14 @@ import { getdetailCommandes } from '@/servives/AdminService';
 import { OrderDetailsSheet } from '@/app/_components/OrderDetailsSheet';
 
 interface CellActionProps {
-  data: Order;
+  data: Transaction;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [opens, setOpens] = useState(false);
+
   const [orderDetails, setOrderDetails] = useState<OrderDetails[]>([]); // Stocker les détails de la commande
   // const [response, setResponse] = useState<TrajetResponse | null>(null);
 
@@ -64,7 +65,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           {/* Lien pour voir les détails de la commande */}
-          <DropdownMenuItem onClick={() => openOrderDetails(data.id_orders)}>
+          <DropdownMenuItem onClick={() => openOrderDetails(data.id)}>
             <Edit className="mr-2 h-4 w-4" /> Voir Détails
           </DropdownMenuItem>
 

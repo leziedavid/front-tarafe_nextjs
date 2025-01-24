@@ -99,8 +99,8 @@ const Feature5: React.FC<Feature5Props> = ({ data,reglage }) => {
                                     </div>
 
                                     {/* Bouton de commande */}
-                                    <Button onClick={() => navigateTo(item.libelle_realisations)} size="sm" className="gap-4 px-1 py-2 text-sm sm:text-base md:text-lg sm:px-4 sm:py-3 sm:gap-6 md:px-6 md:py-4 md:gap-8">
-                                        Commander <MoveRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                                    <Button className="gap-4 w-full" onClick={() => navigateTo(item.libelle_realisations)}>
+                                        Commander<MoveRight className="w-4 h-4" />
                                     </Button>
 
                                 </div>

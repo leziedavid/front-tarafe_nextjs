@@ -17,6 +17,7 @@ import { ApiResponse } from "@/interfaces/ApiResponse";
 import PaginationComponent from "@/components/pagination/paginationComponent"
 import useAuth from "@/servives/useAuth";
 import { Filters } from "@/interfaces/Filters";
+import ImagePreviewDialog from "@/components/Dialog/ImagePreviewDialog";
 
 const Page: React.FC = () => {
 
@@ -31,7 +32,12 @@ const Page: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [search, setSearch] = useState(''); // Recherche
 
-  const fetchData = async () => { const filters: Filters = {  page: currentPage, limit: 10, search: search || undefined,};
+
+  const [imageLink, setImageLink] = useState<string>(''); // Etat pour l'URL de l'image
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false); // Etat pour contrôler l'ouverture du Dialog
+
+  const fetchData = async () => {
+    const filters: Filters = { page: currentPage, limit: 10, search: search || undefined, };
 
     const result: ApiResponse<GallerieImagesResponse> = await getAllImagesGallery(token, filters);
 
@@ -47,7 +53,6 @@ const Page: React.FC = () => {
     }
   };
 
-  console.log(dataImages);
   // Fonction pour changer la page
   const handlePageChange = (page: number) => {
     setCurrentPage(page); // Mettre à jour la page courante
@@ -56,7 +61,7 @@ const Page: React.FC = () => {
   // Appeler la fonction fetchData à chaque changement de page ou de catégorie
   useEffect(() => {
     fetchData();
-  }, [currentPage,search]); // Dépendances mises à jour pour inclure selectedCategory
+  }, [currentPage, search]); // Dépendances mises à jour pour inclure selectedCategory
 
 
 
@@ -80,6 +85,19 @@ const Page: React.FC = () => {
   };
 
 
+  // Fonction pour ouvrir le Dialog avec l'image sélectionnée
+  const handleImageClick = (url: string) => {
+    setImageLink(url);  // Met l'URL de l'image dans l'état
+    setDialogOpen(true); // Ouvre le Dialog
+  };
+
+  // Fonction pour fermer le Dialog
+  const handleCloseDialog = (open: boolean) => {
+    setDialogOpen(open);  // Ferme le Dialog
+    setImageLink('');  // Réinitialise l'URL de l'image
+  };
+
+
 
   return (
 
@@ -94,7 +112,7 @@ const Page: React.FC = () => {
 
             <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
               <h4 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-bold">
-                  NOS REALISATIONS
+                NOS REALISATIONS
               </h4>
 
             </div>
@@ -105,28 +123,31 @@ const Page: React.FC = () => {
             ) : (
 
               <>
-                  <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-4">
+                <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-4">
 
-                    {dataImages.map((item, index) => (
-                      <div key={index} className="flex flex-col gap-4">
+                  {dataImages.map((item, index) => (
+                    <div key={index} className="flex flex-col gap-4">
 
-                        <div className="bg-muted rounded-md aspect-video mb-0">
-                          <img src={`${getBaseUrlImg()}/${item.files_gallerie_images}`}  alt="logo"
-                            width={500} height={300} className="object-cover rounded-md" />
-                        </div>
+                      <div className="bg-muted rounded-md aspect-video mb-0">
+                        <img src={`${getBaseUrlImg()}/${item.files_gallerie_images}`} alt="logo"
+                          width={500} height={300} className="object-cover rounded-md cursor-pointer"
+                          onClick={() => handleImageClick(`${getBaseUrlImg()}/${item.files_gallerie_images}`)} // Quand l'image est cliquée, on met à jour l'URL
+                          />
+
                       </div>
-                    ))}
+                    </div>
+                  ))}
 
-                  </div>
+                </div>
 
-                  {/* Pagination */}
-                  <PaginationComponent
-                    currentPage={currentPage}
-                    lastPage={totalPages}
-                    onPageChange={handlePageChange}
-                  />
+                {/* Pagination */}
+                <PaginationComponent
+                  currentPage={currentPage}
+                  lastPage={totalPages}
+                  onPageChange={handlePageChange}
+                />
 
-                </>
+              </>
             )}
 
 
@@ -135,6 +156,13 @@ const Page: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Intégration du Dialog */}
+      <ImagePreviewDialog
+        imageUrl={imageLink}
+        open={dialogOpen}
+        onOpenChange={handleCloseDialog} // Fonction pour fermer le Dialog
+      />
 
       <Footer data={reglage} />
 

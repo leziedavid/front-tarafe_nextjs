@@ -133,7 +133,15 @@ export const navItems: NavItem[] = [
   {
     title: 'Commandes',
     url: '/dashboard/commandes',
-    icon: 'user',
+    icon: 'NotebookPen',
+    shortcut: ['c', 'c'],
+    isActive: false,
+    items: []
+  },
+  {
+    title: 'Transactions',
+    url: '/dashboard/transactions',
+    icon: 'ArrowLeftRight',
     shortcut: ['c', 'c'],
     isActive: false,
     items: []
@@ -150,7 +158,7 @@ export const navItems: NavItem[] = [
   {
     title: 'Galleries',
     url: '/dashboard/galleries',
-    icon: 'product',
+    icon: 'gallerie',
     shortcut: ['g', 'g'],
     isActive: false,
     items: []
@@ -159,7 +167,7 @@ export const navItems: NavItem[] = [
   {
     title: 'Reglages',
     url: '/dashboard/reglage',
-    icon: 'product',
+    icon: 'QrCode',
     shortcut: ['r', 'r'],
     isActive: false,
     items: []

@@ -16,7 +16,11 @@ import {AlertTriangle,ArrowRight,Check,ChevronLeft,ChevronRight,CircuitBoardIcon
   UserCircle2Icon,
   UserPen,
   UserX2Icon,
-  X
+  X,
+  ArrowLeftRight,
+  NotebookPen,
+  Images,
+  QrCode,
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -26,6 +30,7 @@ export const Icons = {
   logo: Command,
   login: LogIn,
   close: X,
+  ArrowLeftRight: ArrowLeftRight,
   product: LucideShoppingBag,
   spinner: Loader2,
   kanban: CircuitBoardIcon,
@@ -50,6 +55,9 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
+  NotebookPen: NotebookPen,
+  gallerie: Images,
+  QrCode: QrCode,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

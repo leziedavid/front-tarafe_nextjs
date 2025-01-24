@@ -37,6 +37,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
 
     return (
         <ReactQuill
+            className='text-lg'
             ref={quillRef}
             theme="snow"
             value={value}

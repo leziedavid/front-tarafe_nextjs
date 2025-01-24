@@ -1,5 +1,5 @@
 
-import { ApiAllDataResponse, GallerieImagesResponse, Data, DataAllProduct, Realisation, DetailRealisation,ApiData } from "@/interfaces/HomeInterface";
+import { ApiAllDataResponse, GallerieImagesResponse, Data, DataAllProduct, Realisation, DetailRealisation,ApiData, Publicite } from "@/interfaces/HomeInterface";
 import { getBaseUrl } from "./baseUrl";
 import { ApiResponse } from "@/interfaces/ApiResponse";
 import { Filters } from "@/interfaces/Filters";
@@ -98,6 +98,47 @@ export const getreglages = async (token: string | null): Promise<ApiResponse<Api
             data: {
                 reglages: [],
                 equipes: []
+            }
+        };
+    }
+};
+
+export const getPub = async (token: string | null): Promise<ApiResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/pubs`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Ajout du token JWT
+                'Content-Type': 'application/json'   // Type de contenu JSON
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la récupération des données.');
+        }
+
+        const result: ApiResponse<any> = await response.json();
+        return result;
+
+    } catch (error: any) {
+        console.error('Erreur dans la récupération des données:', error.message);
+        return {
+            statusCode: 500,
+            statusMessage: error.message,
+            data:{
+                id_publicite: 0,
+                typesCard1: 0,
+                typesCard2: 0,
+                files_publicite1: "",
+                files_publicite2: "",
+                libelle_publicite1: "",
+                libelle_publicite2: "",
+                link1: "",
+                link2: "",
+                class1: "",
+                class2: "",
+                created_at: "",
+                updated_at: ""
             }
         };
     }
@@ -232,8 +273,4 @@ export const getRealisationsByLaballe = async (token: string | null, labelle: st
         };
     }
 };
-
-
-
-
 

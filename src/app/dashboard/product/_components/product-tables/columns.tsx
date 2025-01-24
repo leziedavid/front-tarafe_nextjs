@@ -84,7 +84,7 @@ export const columns: ColumnDef<Realisation>[] = [
       );
     }
   },
-
+  
   {
     accessorKey: 'created_at',
     header: 'Created At',

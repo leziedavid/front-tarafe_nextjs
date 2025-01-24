@@ -16,10 +16,16 @@ import { getBaseUrlImg } from '@/servives/baseUrl';
 import PaginationComponent from '@/components/pagination/paginationComponent';
 import { Edit, Eye, Trash } from 'lucide-react';
 import { CalendarDateRangePicker } from '@/components/date-range-picker';
+import ImagePreviewDialog from '@/components/Dialog/ImagePreviewDialog';
+import ImageUploadDialog from '@/components/Dialog/ImageUploadDialog';
 
-type GallerieListingPage = {};
+type GallerieListingPage = {
+  isDialogOpen: boolean;
+  onDialogOpenChange: (open: boolean) => void; // Prop pour gérer l'ouverture du dialog
+};
 
-export default function GallerieListingPage({}: GallerieListingPage) {
+
+export default function GallerieListingPage({isDialogOpen,onDialogOpenChange}: GallerieListingPage) {
 
   const [isLoading, startTransition] = useTransition();
 
@@ -29,6 +35,11 @@ export default function GallerieListingPage({}: GallerieListingPage) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [search, setSearch] = useState(''); // Recherche
+
+  const [imageLink, setImageLink] = useState<string>(''); // Etat pour l'URL de l'image
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false); // Etat pour contrôler l'ouverture du Dialog
+  // const [isDialogOpen, setIsDialogOpen] = useState(false);
+
 
   const fetchData = async () => { const filters: Filters = {  page: currentPage, limit: 10, search: search || undefined,};
 
@@ -63,8 +74,23 @@ export default function GallerieListingPage({}: GallerieListingPage) {
     };
 
 
+  // Fonction pour ouvrir le Dialog avec l'image sélectionnée
+  const handleImageClick = (url: string) => {
+    setImageLink(url);  // Met l'URL de l'image dans l'état
+    setDialogOpen(true); // Ouvre le Dialog
+  };
+
+  // Fonction pour fermer le Dialog
+  const handleCloseDialog = (open: boolean) => {
+    setDialogOpen(open);  // Ferme le Dialog
+    setImageLink('');  // Réinitialise l'URL de l'image
+  };
+  
+
+
   return (
     <div>
+      
 
       {/* <Input placeholder="Search Produit ..." value={search} onChange={(e) => setSearch(e.target.value)} className={cn('w-full md:max-w-sm', isLoading && 'animate-pulse', "mb-6")} /> */}
       <div className="flex items-center justify-between space-y-2">
@@ -140,7 +166,7 @@ export default function GallerieListingPage({}: GallerieListingPage) {
 
         <div className="space-y-4">
 
-                  <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-6">
                     {dataImages.map((item, index) => (
                       <div key={index} className="relative flex flex-col gap-4">
 
@@ -151,7 +177,7 @@ export default function GallerieListingPage({}: GallerieListingPage) {
                             alt="logo"
                             width={500}
                             height={300}
-                            className="object-cover rounded-md"
+                            className="object-cover rounded-md cursor-pointer"
                           />
 
                           {/* Effet sombre lors du survol */}
@@ -162,7 +188,7 @@ export default function GallerieListingPage({}: GallerieListingPage) {
                             </button>
 
                             {/* Bouton d'édition avec icône */}
-                            <button className="bg-yellow-500 text-white px-4 py-2 rounded-md shadow-md transition-transform transform hover:scale-105 flex items-center space-x-2">
+                            <button  onClick={() => handleImageClick(`${getBaseUrlImg()}/${item.files_gallerie_images}`)} className="bg-yellow-500 text-white px-4 py-2 rounded-md shadow-md transition-transform transform hover:scale-105 flex items-center space-x-2">
                               <Eye size={16} />
                             </button>
                           </div>
@@ -179,6 +205,9 @@ export default function GallerieListingPage({}: GallerieListingPage) {
                     onPageChange={handlePageChange}
                   />
         </div>
+
+        <ImageUploadDialog open={isDialogOpen} onOpenChange={onDialogOpenChange} />
+        <ImagePreviewDialog imageUrl={imageLink}  open={dialogOpen}  onOpenChange={handleCloseDialog} />
 
           
         </>

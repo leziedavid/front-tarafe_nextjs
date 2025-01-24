@@ -54,3 +54,13 @@ export function formatDateTime(dateString: string | undefined): string {
     return `${formattedDate} ${hours}h${minutes}`;
 }
 
+
+// Fonction de formatage de la date
+export function formatDateFR(dateString: string): string {
+    const date = new Date(dateString); // Crée un objet Date à partir de la chaîne
+    const day = String(date.getDate()).padStart(2, '0'); // Jour avec 2 chiffres
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Mois avec 2 chiffres (janvier est 0)
+    const year = date.getFullYear(); // Année
+    return `${day}-${month}-${year}`; // Retourne la date formatée
+}
+

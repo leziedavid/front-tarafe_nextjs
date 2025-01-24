@@ -10,7 +10,8 @@ import {
   LayoutDashboard,
   UsersRound,
   Settings,
-  ChevronRight
+  ChevronRight,
+  ArrowLeftRight
 } from "lucide-react";
 import { Button } from "./ui/button";
 
@@ -54,6 +55,12 @@ export default function SideNavbar({}: Props) {
             title: "Ordrs",
             href: "/orders",
             icon: ShoppingCart,
+            variant: "ghost"
+          },
+          {
+            title: "Transactions",
+            href: "/transactions",
+            icon: ArrowLeftRight,
             variant: "ghost"
           },
           {
