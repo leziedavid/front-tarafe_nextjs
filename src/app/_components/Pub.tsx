@@ -30,8 +30,9 @@ const Pub: React.FC<Props> = ({ data }) => {
 
         <>
 
-            <div className="w-full py-20 lg:py-40">
-                <div className="container mx-auto">
+            <div className="w-full py-5 lg:py-10">
+            {/* container mx-auto */}
+                <div className="">
                     <div className="flex flex-col gap-10">
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -39,7 +40,7 @@ const Pub: React.FC<Props> = ({ data }) => {
                             <div className="bg-[url('/hero.jpg')] bg-cover bg-center rounded-md aspect-square p-6 flex justify-center items-center relative">
                                 <div className="flex flex-col justify-center items-center relative">
 
-                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 bg-[#242078] hover:bg-[#ffb44b] shadow-lg shadow-black/20 text-white uppercase font-bold pt-3 pb-2 px-2 text-sm md:text-base whitespace-nowrap">
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 bg-[#242078] hover:bg-[#ffb44b] shadow-lg shadow-black/20 text-white uppercase font-extrabold font-title pt-3 pb-2 px-2 text-sm md:text-base whitespace-nowrap">
                                             Effet wahou
                                     </div>
 
@@ -48,7 +49,7 @@ const Pub: React.FC<Props> = ({ data }) => {
 
 
                             <div className="bg-[url('/hero.jpg')] bg-cover bg-center rounded-md h-full lg:col-span-2 p-6 aspect-square lg:aspect-auto flex justify-center items-center relative">
-                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 bg-[#242078] hover:bg-[#ffb44b] shadow-lg shadow-black/20 text-white uppercase font-bold pt-3 pb-2 px-2 text-sm md:text-base whitespace-nowrap">
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 bg-[#242078] hover:bg-[#ffb44b] shadow-lg shadow-black/20 text-white uppercase font-extrabold font-title pt-3 pb-2 px-2 text-sm md:text-base whitespace-nowrap">
                                     Mettez des étoiles plein les yeux !
                                 </div>
                             </div>

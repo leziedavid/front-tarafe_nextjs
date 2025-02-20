@@ -21,6 +21,8 @@ import {AlertTriangle,ArrowRight,Check,ChevronLeft,ChevronRight,CircuitBoardIcon
   NotebookPen,
   Images,
   QrCode,
+  BellRing,
+  LibraryBig
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -58,6 +60,9 @@ export const Icons = {
   NotebookPen: NotebookPen,
   gallerie: Images,
   QrCode: QrCode,
+  bellRing: BellRing,
+  LibraryBig: LibraryBig,
+
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

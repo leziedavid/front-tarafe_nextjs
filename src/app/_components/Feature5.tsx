@@ -60,7 +60,7 @@ const Feature5: React.FC<Feature5Props> = ({ data,reglage }) => {
                                 <Badge className="bg-[#242078] hover:bg-[#ffb44b]">Du nouveau !</Badge>
                             </div>
                             <div className="flex gap-2 flex-col">
-                                <h2 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-bold text-left">
+                                <h2 className="text-3xl md:text-5xl uppercase tracking-tighter max-w-xl font-bold text-left">
                                     {reglage[0]?.libelle_section}
                                 </h2>
                                 <p className="text-lg max-w-xl lg:max-w-lg leading-relaxed tracking-tight text-muted-foreground text-left">
@@ -84,10 +84,17 @@ const Feature5: React.FC<Feature5Props> = ({ data,reglage }) => {
 
                                     {/* Conteneur avec une taille maximale de titre et de description */}
                                     <div className="flex flex-col h-full">
+
+                                        <div className="flex justify-between items-center">
+                                            <div className="text-sm md:text-lg font-title  font-bold ">
+                                                {item.libelle_realisations}
+                                            </div>
+                                        </div>
+
                                         {/* Titre du produit - Limité à 2 lignes */}
-                                        <h3 className="text-sm md:text-lg tracking-tight font-base line-clamp-2">
+                                        {/* <h3 className="text-sm md:text-lg tracking-tight font-base line-clamp-2">
                                             {item.libelle_realisations}
-                                        </h3>
+                                        </h3> */}
 
                                         {/* Description du produit tronquée */}
                                         <p
@@ -99,7 +106,7 @@ const Feature5: React.FC<Feature5Props> = ({ data,reglage }) => {
                                     </div>
 
                                     {/* Bouton de commande */}
-                                    <Button className="gap-4 w-full" onClick={() => navigateTo(item.libelle_realisations)}>
+                                    <Button className="gap-4 w-full cursor-pointer" onClick={() => navigateTo(item.libelle_realisations)}>
                                         Commander<MoveRight className="w-4 h-4" />
                                     </Button>
 

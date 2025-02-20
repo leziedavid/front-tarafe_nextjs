@@ -55,7 +55,7 @@ const AddImageDialog: React.FC<AddImageDialogProps> = ({ open,id,code, onOpenCha
             if (response.statusCode === 200) {
                 setImages(response.data); // Mise à jour des images
             } else {
-                toast.error(response.statusMessage || 'Erreur lors de la récupération des images.');
+                toast.error(response.message || 'Erreur lors de la récupération des images.');
             }
         } catch (error) {
             toast.error('Une erreur est survenue.');
@@ -64,6 +64,7 @@ const AddImageDialog: React.FC<AddImageDialogProps> = ({ open,id,code, onOpenCha
 
 
     const handleSubmit = async () => {
+        
         // Préparer les fichiers à envoyer dans le FormData
         const formData = new FormData();
         formData.append("id_realisation", id.toString()); // Conversion en chaîne
@@ -188,7 +189,6 @@ const AddImageDialog: React.FC<AddImageDialogProps> = ({ open,id,code, onOpenCha
 
             </DialogContent>
         </Dialog>
-        <Toaster />
         </>
     );
 };

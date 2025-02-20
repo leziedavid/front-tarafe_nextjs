@@ -51,7 +51,7 @@ export const getAllRealisations = async (token: string | null, page: number, sel
         console.error('Erreur dans la récupération des données:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: {
                 realisations: {
                     data: [], current_page: 1, last_page: 1, total: 0, links: [],
@@ -94,7 +94,7 @@ export const getreglages = async (token: string | null): Promise<ApiResponse<Api
         console.error('Erreur dans la récupération des données:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: {
                 reglages: [],
                 equipes: []
@@ -124,7 +124,7 @@ export const getPub = async (token: string | null): Promise<ApiResponse<any>> =>
         console.error('Erreur dans la récupération des données:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data:{
                 id_publicite: 0,
                 typesCard1: 0,
@@ -166,7 +166,7 @@ export const getAllImagesGallery1 = async (token: string | null, page: number): 
         console.error('Erreur dans la récupération des données:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: {
                 data: {
                     data: [], current_page: 1, last_page: 1, total: 0, links: [],
@@ -219,7 +219,7 @@ export const getAllImagesGallery = async (
         console.error('Erreur dans la récupération des données:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: {
                 data: {
                     data: [], current_page: 1, last_page: 1, total: 0, links: [],
@@ -263,7 +263,7 @@ export const getRealisationsByLaballe = async (token: string | null, labelle: st
         // Retourne une structure par défaut pour éviter l'erreur
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: {
                 images: [],  // Type explicitement défini comme Image[]
                 id: '',
@@ -274,3 +274,32 @@ export const getRealisationsByLaballe = async (token: string | null, labelle: st
     }
 };
 
+
+export const addContacts = async (token: string | null, data: any): Promise<ApiResponse<any>> => {  // Utilisation de ApiResponse<any> ici
+    try {
+
+        const response = await fetch(`${getBaseUrl()}/contacts`, {
+            method: 'POST',
+            body: data,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'   // Type de contenu JSON
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Échec lors de l'envor du formulaire.");
+        }
+
+        const result: ApiResponse<any> = await response.json();  // On attend une réponse de type ApiResponse<any>
+        return result;
+
+    } catch (error: any) {
+        // console.error('Erreur lors de l\'enregistrement de la commande:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: null,  // On renvoie null ou un objet vide en cas d'erreur
+        };
+    }
+};

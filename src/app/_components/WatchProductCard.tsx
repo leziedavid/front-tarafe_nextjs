@@ -208,7 +208,7 @@ const LuxuryWatchProductPage: React.FC<Props> = ({ data,image }) => {
                             <CardContent className="w-full lg:w-1/2 p-4 lg:p-8 flex flex-col h-full">
                                 <div className="mb-4">
                                     <h4 className="text-sm text-gray-500 uppercase tracking-wide">CODE : {data[0].code_realisation}</h4>
-                                    <h2 className="text-2xl font-bold text-gray-900 mt-1 uppercase">{data[0].libelle_realisations}</h2>
+                                    <h2 className="text-2xl font-extrabold font-title text-gray-900 mt-1 uppercase">{data[0].libelle_realisations}</h2>
                                 </div>
 
                                 <p className="text-gray-600 mb-6" dangerouslySetInnerHTML={{ __html: data && data[0] ? data[0].descript_real : '' }} />

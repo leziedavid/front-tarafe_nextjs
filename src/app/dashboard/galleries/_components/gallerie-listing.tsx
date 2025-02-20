@@ -45,9 +45,8 @@ export default function GallerieListingPage({isDialogOpen,onDialogOpenChange}: G
 
     const result: ApiResponse<GallerieImagesResponse> = await getAllImagesGallery(token, filters);
 
-
     if (result.statusCode !== 200) {
-      toast.error(result.statusMessage);
+      toast.error(result.message);
     } else {
       setImage(result.data.data.data);
       setTotalPages(result.data.data.last_page); // Met à jour le nombre total de pages
@@ -206,10 +205,10 @@ export default function GallerieListingPage({isDialogOpen,onDialogOpenChange}: G
                   />
         </div>
 
-        <ImageUploadDialog open={isDialogOpen} onOpenChange={onDialogOpenChange} />
+        <ImageUploadDialog  open={isDialogOpen} onOpenChange={onDialogOpenChange}  fetchData={fetchData} />
         <ImagePreviewDialog imageUrl={imageLink}  open={dialogOpen}  onOpenChange={handleCloseDialog} />
-
-          
+        <Toaster />
+        
         </>
 
       )}

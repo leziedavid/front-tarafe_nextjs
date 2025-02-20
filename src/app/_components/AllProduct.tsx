@@ -27,7 +27,7 @@ export const AllProduct = () => (
                                 />
                             </div>
 
-                            <h3 className="text-sm md:text-xl tracking-tight  font-bold">Pay supplier invoices</h3>
+                            <h3 className="text-sm md:text-xl tracking-tight  font-extrabold font-title">Pay supplier invoices</h3>
                             <p className="text-muted-foreground text-sm md:text-base">
                                 Our goal is to streamline .....
                             </p>
@@ -47,7 +47,7 @@ export const AllProduct = () => (
                                 />
                             </div>
 
-                            <h3 className="text-sm md:text-xl tracking-tight  font-bold">Pay supplier invoices</h3>
+                            <h3 className="text-sm md:text-xl tracking-tight  font-extrabold font-title">Pay supplier invoices</h3>
                             <p className="text-muted-foreground text-sm md:text-base">
                                 Our goal is to streamline .....
                             </p>
@@ -67,7 +67,7 @@ export const AllProduct = () => (
                                 />
                             </div>
 
-                            <h3 className="text-sm md:text-xl tracking-tight  font-bold">Pay supplier invoices</h3>
+                            <h3 className="text-sm md:text-xl tracking-tight  font-extrabold font-title">Pay supplier invoices</h3>
                             <p className="text-muted-foreground text-sm md:text-base">
                                 Our goal is to streamline .....
                             </p>
@@ -87,7 +87,7 @@ export const AllProduct = () => (
                                 />
                             </div>
 
-                            <h3 className="text-sm md:text-xl tracking-tight  font-bold">Pay supplier invoices</h3>
+                            <h3 className="text-sm md:text-xl tracking-tight  font-extrabold font-title">Pay supplier invoices</h3>
                             <p className="text-muted-foreground text-sm md:text-base">
                                 Our goal is to streamline .....
                             </p>

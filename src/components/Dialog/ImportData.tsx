@@ -160,7 +160,6 @@ const ImportData: React.FC<ImportDataProps> = ({ open,onOpenChange }) => {
 
                 </DialogContent>
             </Dialog>
-            <Toaster />
         </>
     );
 };

@@ -28,8 +28,8 @@ export default function AppSidebar() {
             <company.logo className="size-4" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{company.name}</span>
-            <span className="truncate text-xs">{company.plan}</span>
+            <span className="truncate text-4xl font-bold">{company.name}</span>
+            <span className="truncate  text-xs">{company.plan}</span>
           </div>
         </div>
       </SidebarHeader>
@@ -45,7 +45,7 @@ export default function AppSidebar() {
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton tooltip={item.title}  isActive={pathname === item.url} >
                         {item.icon && <Icon />}
-                        <span>{item.title}</span>
+                        <span className="">{item.title}</span>
                         <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
@@ -70,7 +70,7 @@ export default function AppSidebar() {
                   <SidebarMenuButton  asChild  tooltip={item.title} isActive={pathname === item.url}>
                     <Link href={item.url}>
                       <Icon />
-                      <span>{item.title}</span>
+                      <span className="">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -79,6 +79,7 @@ export default function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -152,6 +153,7 @@ export default function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   );

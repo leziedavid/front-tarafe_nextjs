@@ -42,7 +42,7 @@ const Page: React.FC = () => {
     const result: ApiResponse<ApiAllDataResponse> = await getAllRealisations(token,currentPage,validCategoryId);
 
     if (result.statusCode !== 200) {
-      toast.error(result.statusMessage);
+      toast.error(result.message);
 
     } else {
 
@@ -146,9 +146,16 @@ const isDataEmpty = !realisations || realisations.length <= 0;
                         {/* Conteneur avec une taille maximale de titre et de description */}
                         <div className="flex flex-col h-full">
                           {/* Titre du produit - Limité à 2 lignes */}
-                          <h3 className="text-sm md:text-lg tracking-tight font-base line-clamp-2">
+
+                          <div className="flex justify-between items-center">
+                            <div className="text-sm md:text-lg font-title  font-bold ">
+                              {item.libelle_realisations}
+                            </div>
+                          </div>
+
+                          {/* <h3 className="text-sm md:text-lg tracking-tight font-base line-clamp-2">
                             {item.libelle_realisations}
-                          </h3>
+                          </h3> */}
 
                           {/* Description du produit tronquée */}
                           <p
@@ -159,7 +166,7 @@ const isDataEmpty = !realisations || realisations.length <= 0;
                           ></p>
                         </div>
 
-                        <Button className="gap-4 w-full" onClick={() => navigateTo(item.libelle_realisations)}>
+                        <Button className="gap-4 w-full cursor-pointer" onClick={() => navigateTo(item.libelle_realisations)}>
                           Commander<MoveRight className="w-4 h-4" />
                         </Button>
 

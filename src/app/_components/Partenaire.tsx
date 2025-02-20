@@ -1,79 +1,77 @@
-"use client";
-
-import { MoveRight, PhoneCall } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import CarouselComponent from "./CarouselComponent";
-import { Partenaires } from "@/interfaces/HomeInterface";
-import { getBaseSiteUrl, getBaseUrlImg } from "@/servives/baseUrl";
+import * as React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Skeleton from "react-loading-skeleton";
-
-
+import { getBaseUrlImg } from "@/servives/baseUrl";
 
 interface Props {
-    data: Partenaires[];
+    data: { Path_partenaires: string }[];
 }
 
-
-const Partenaire: React.FC<Props> = ({ data }) => {
-
-    const photoUrl = data[0]?.Path_partenaires ?? 'clients/Logo_blanc.png';
+const PartenaireCarousel: React.FC<Props> = ({ data }) => {
     const isDataEmpty = data.length <= 0;
 
-    const handleClick = async (publicId: string) => {
-        const url = `https://tarafe.com/catalogue/${publicId}`;
-        window.open(url, '_blank');
-    };
-
-    const clients = [
-        { image: "/clients/logoipsum-265.svg" },
-        { image: "/clients/logoipsum-222.svg" },
-        { image: "/clients/logoipsum-243.svg" },
-        { image: "/clients/logoipsum-258.svg" },
-        { image: "/clients/logoipsum-317.svg" },
-        { image: "/clients/logoipsum-289.svg" },
-        { image: "/clients/logoipsum-297.svg" },
-        { image: "/clients/logoipsum-311.svg" },
-        { image: "/clients/logoipsum-264.svg" },
-        { image: "/clients/logoipsum-264.svg" },
-    ];
-
     return (
-
-        <>
-
+        <div className="w-full py-1 md:py-1 lg:py-1">
             {isDataEmpty ? (
+                <div className="w-full flex flex-col text-center bg-muted rounded-md p-4 lg:p-14 gap-8 items-center">
+                    <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
+                    <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
+                    <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
+                    <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
+                    <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
+                    <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
+                </div>
+            ) : (
+                <>
 
-                <div className="w-full py-1 md:py-1 lg:py-1">
-                    <div className="">
-                        <div className=" w-full flex flex-col text-center bg-muted rounded-md p-4 lg:p-14 gap-8 items-center">
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                        </div>
+
+
+
+                <div className="flex justify-center items-center flex-col mb-6">
+
+                    <div className="pt-3 pb-4 px-2">
+                        <h1 className="text-2xl md:text-3xl text-primary font-extrabold font-title uppercase">Ils nous ont fait confiance </h1>
+                    </div>
+
+
+                    <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl relative">
+                        {/* Carousel encapsule les flèches et les éléments de contenu */}
+                        <Carousel opts={{ align: "start" }}>
+                            <CarouselContent>
+                                {data.map((item, index) => (
+                                    <CarouselItem key={index} className="md:basis-1/3 lg:basis-1/4">
+                                        <div className="p-1">
+                                            <Card>
+                                                <CardContent className="flex aspect-square items-center justify-center p-6">
+                                                    <img
+                                                        src={`${getBaseUrlImg()}/${item.Path_partenaires}`}
+                                                        alt={`Logo partenaire ${index + 1}`}
+                                                        className="w-full h-auto object-contain"
+                                                    />
+                                                </CardContent>
+                                            </Card>
+                                        </div>
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+
+                            {/* Flèches de navigation à l'intérieur du Carousel */}
+                            <CarouselPrevious className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-gray-500 text-white p-2 rounded-full md:w-12 md:h-12 w-8 h-8">
+                                <span className="sr-only">Précédent</span>
+                            </CarouselPrevious>
+                            <CarouselNext className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-gray-500 text-white p-2 rounded-full md:w-12 md:h-12 w-8 h-8">
+                                <span className="sr-only">Suivant</span>
+                            </CarouselNext>
+                        </Carousel>
                     </div>
                 </div>
+                </>
 
-                ) : (
 
-                    <div className="flex justify-center items-center flex-col mb-6">
-                    <div className="text-4xl w-3/4 text-center xl:text-5xl font-medium"> Ils nous ont fait confiance </div>
-    
-                    <div className='grid grid-cols-3  xl:grid-cols-4 items-center justify-center  px-10 md:px-20 lg:px-0 lg:w-1/2 pt-10 gap-10 text-center mx-auto'>
-                        {data.map((item, index) => (
-                            <div key={index} className="">
-                                <img src= {`${getBaseUrlImg()}/${item.Path_partenaires}`} alt="logo" width={500} height={500} className='' />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                )}
-        </>
-
+            )}
+        </div>
     );
 };
-export default Partenaire;
+
+export default PartenaireCarousel;

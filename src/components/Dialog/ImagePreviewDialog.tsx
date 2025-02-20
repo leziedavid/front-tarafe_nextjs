@@ -55,7 +55,6 @@ const ImagePreviewDialog: React.FC<ImagePreviewDialogProps> = ({ imageUrl, open,
                 )}
             </DialogContent>
         </Dialog>
-        <Toaster />
         </>
     );
 };

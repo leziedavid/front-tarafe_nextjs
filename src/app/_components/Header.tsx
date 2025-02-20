@@ -75,7 +75,7 @@ const Header: React.FC = ({ }) => {
                                         {item.href ? (
                                             <>
                                                 <NavigationMenuLink href={item.href}>
-                                                    <Button variant="ghost" className="font-bold tracking-tight text-sm flex items-center hover:bg-[#ffb44b]">
+                                                    <Button variant="ghost" className="font-extrabold font-title tracking-tight text-sm flex items-center hover:bg-[#ffb44b]">
                                                         {/* {item.icon} */}
                                                         {item.title}
                                                     </Button>
@@ -83,7 +83,7 @@ const Header: React.FC = ({ }) => {
                                             </>
                                         ) : (
                                             <>
-                                                <NavigationMenuTrigger className="font-medium text-sm font-bold tracking-tight text-lg">
+                                                <NavigationMenuTrigger className="font-medium text-sm font-extrabold font-title tracking-tight text-lg">
                                                     {/* {item.icon} */}
                                                     {item.title}
                                                 </NavigationMenuTrigger>
@@ -99,7 +99,7 @@ const Header: React.FC = ({ }) => {
                         {/* Icône du panier */}
                         <div className="flex items-center gap-x-2">
                             <div>
-                                <Link href="/auth/login" className="font-title flex">
+                                <Link href="/login" className="font-title flex">
                                     <LucideUser2 className="w-6 h-6" />
                                 </Link>
                             </div>
@@ -119,14 +119,14 @@ const Header: React.FC = ({ }) => {
                                         <div className="flex flex-col gap-2">
                                             {item.href ? (
                                                 <Link href={item.href} className="flex justify-between items-center" >
-                                                    <span onClick={() => setOpen(!isOpen)} className="text-sm font-bold tracking-tighter flex items-center">
+                                                    <span onClick={() => setOpen(!isOpen)} className="text-sm font-extrabold font-title tracking-tighter flex items-center">
                                                         {/* {item.icon} */}
                                                         {item.title}
                                                     </span>
                                                     <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground" />
                                                 </Link>
                                             ) : (
-                                                <p onClick={() => setOpen(!isOpen)} className="text-sm font-bold tracking-tighter flex items-center">
+                                                <p onClick={() => setOpen(!isOpen)} className="text-sm font-extrabold font-title tracking-tighter flex items-center">
                                                     {/* {item.icon} */}
                                                     {item.title}
                                                 </p>

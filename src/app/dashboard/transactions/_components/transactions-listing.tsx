@@ -6,7 +6,7 @@ import { TotalTransaction, Transaction } from '@/interfaces/AdminInterface'; // 
 import { DataTable as TransactionsTable } from '@/components/ui/table/data-table'; // Composant du tableau des commandes
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
-import { getAlltransactions, getAllTransactionTotals } from "@/servives/AdminService";
+import { DownloadFiles, getAlltransactions, getAllTransactionTotals } from "@/servives/AdminService";
 import { ApiResponse } from "@/interfaces/ApiResponse";
 import { Filters } from '@/interfaces/Filters'; // Importation de l'interface Filters
 import useAuth from '@/servives/useAuth';
@@ -27,6 +27,9 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Heading } from '@/components/ui/heading';
+import { Button } from '@/components/ui/button';
+import { Download } from 'lucide-react';
 
 type TransactionslistePage = {
   isDialogOpen: boolean;
@@ -35,7 +38,6 @@ type TransactionslistePage = {
 
 
 export default function TransactionslistePage({isDialogOpen,onDialogOpenChange}: TransactionslistePage) {
-
 
   const [currentPage, setCurrentPage] = useState(1); // Page actuelle
   const [totalPages, setTotalPages] = useState(1); // Nombre total de pages
@@ -97,7 +99,7 @@ const handleYearChange = (selected: string | null) => {
 
     const result = await getAlltransactions(token, filters, category, payment, selectedYears);
     if (result.statusCode !== 200) {
-      toast.error(result.statusMessage);
+      toast.error(result.message);
     } else {
       setTransaction(result.data.data); // Mettre à jour les commandes
       setTotalPages(result.data.last_page); // Mettre à jour le nombre total de pages
@@ -111,9 +113,21 @@ const handleYearChange = (selected: string | null) => {
 
     const result = await getAllTransactionTotals(token, filters, category, payment, selectedYears);
     if (result.statusCode !== 200) {
-      toast.error(result.statusMessage);
+      toast.error(result.message);
     } else {
       setTotal(result.data.totals); // Mettre à jour les commandes
+    }
+  };
+
+  const Downloads = async () => {
+    const filters: Filters = {  page: currentPage, limit: 10, search: search || undefined, // Ajouter la recherche si elle est définie
+    };
+
+    const result = await DownloadFiles(token, filters, category, payment, selectedYears);
+    if (result.statusCode !== 200) {
+      toast.error(result.message);
+    } else {
+      toast.error("Fichier téléchargé avec succès !");
     }
   };
 
@@ -138,7 +152,6 @@ const handleYearChange = (selected: string | null) => {
 
   return (
     <div>
-
 
     <div className="grid w-full gap-4 mt-4">
 
@@ -191,12 +204,14 @@ const handleYearChange = (selected: string | null) => {
 
     </div>
 
+
       <div className="space-y-2 mt-4 mb-4">
+
         <Tabs defaultValue="overview" className="space-y-4">
 
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
+              <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
                     Solde Caisse
@@ -207,7 +222,6 @@ const handleYearChange = (selected: string | null) => {
                   <div className="text-2xl font-bold">{total ? total.total_general.toLocaleString() : 0} FCFA</div>
                 </CardContent>
               </Card>
-
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
@@ -248,10 +262,15 @@ const handleYearChange = (selected: string | null) => {
                 </CardContent>
               </Card>
             </div>
-
           </TabsContent>
 
         </Tabs>
+
+        <div className="flex items-center justify-between">
+          <Heading title="Exporter le tableau en excel" description="" />
+          <Button onClick={Downloads} variant="secondary" size="sm" > <Download className='w-4 h-4' /> Exporter</Button>
+        </div>
+
       </div>
 
       {isDataEmpty ? (
@@ -266,11 +285,11 @@ const handleYearChange = (selected: string | null) => {
           totalItems={totalItems}
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+          onPageChange={handlePageChange} />
       )}
 
     <ImportData open={isDialogOpen} onOpenChange={onDialogOpenChange} />
+    <Toaster />
 
     </div>
   );

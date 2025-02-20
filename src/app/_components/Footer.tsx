@@ -22,13 +22,13 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
                     {/* Conteneur pour l'image et le téléph */}
                     <div className="flex flex-col justify-start h-full">
                         <img src={`${getBaseUrlImg()}/${photoUrl}`} alt="logo" className="h-20 md:h-20 px-6" width={300} height={250} />
-                        <p className="text-white font-bold text-base sm:text-lg md:text-xl lg:text-xl  px-4">  {data[0]?.desc_footer} </p>
+                        <p className="text-white font-extrabold font-title text-base sm:text-lg md:text-xl lg:text-xl  px-4">  {data[0]?.desc_footer} </p>
                     </div>
 
                     {/* Sections */}
                     <div className="flex gap-4 flex-col md:flex-row px-8 md:px-0">
                         {/* Services Section */}
-                        <div className="space-y-5 font-bold">
+                        <div className="space-y-5 font-extrabold font-title">
                             <span className="uppercase text-xl font-title">Services</span>
                             <div className="flex flex-col gap-y-5 text-base">
                                 <div>Prix du marché</div>
@@ -39,7 +39,7 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
                         </div>
 
                         {/* Contact Section */}
-                        <div className="space-y-5 font-bold">
+                        <div className="space-y-5 font-extrabold font-title">
                             <span className="uppercase text-xl font-title">Contact</span>
                             <div className="flex flex-col gap-y-5 text-base">
                                 <div className="flex flex-col">
@@ -65,7 +65,7 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
 
                         {/* Download Section */}
                         <div className="md:w-1/2">
-                            <span className="uppercase text-xl font-title font-bold"> Suivez-nous sur ...</span>
+                            <span className="uppercase text-xl font-title font-extrabold font-title"> Suivez-nous sur ...</span>
                             <div className="flex space-x-5 py-5">
                                 <Instagram size={30} strokeWidth={3} absoluteStrokeWidth />
                                 <Linkedin size={30} strokeWidth={3} absoluteStrokeWidth />

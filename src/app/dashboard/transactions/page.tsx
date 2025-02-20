@@ -5,7 +5,7 @@
 import PageContainer from '@/components/layout/page-container';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
-import { Plus } from 'lucide-react';
+import { FileDown, Plus } from 'lucide-react';
 import Link from 'next/link';
 
 import { Suspense, useState } from 'react';
@@ -29,7 +29,7 @@ export default function Page() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Heading title="Liste des Transactions"  description="Gérer les Transactions (fonctionnalités de la table côté serveur)." />
-          <Button variant="secondary" size="sm" onClick={() => handleDialogOpenChange(true)}>＋ Importer en (excel,csv..)</Button>
+          <Button variant="secondary" size="sm" onClick={() => handleDialogOpenChange(true)}> <FileDown className='w-4 h-4' /> Importer en (excel,csv..)</Button>
         </div>
         <Toaster />
 

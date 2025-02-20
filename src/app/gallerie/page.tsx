@@ -43,7 +43,7 @@ const Page: React.FC = () => {
 
 
     if (result.statusCode !== 200) {
-      toast.error(result.statusMessage);
+      toast.error(result.message);
 
     } else {
 

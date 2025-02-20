@@ -154,6 +154,14 @@ export const navItems: NavItem[] = [
     isActive: false,
     items: []
   },
+  {
+    title: 'categorie',
+    url: '/dashboard/categorie',
+    icon: 'LibraryBig',
+    shortcut: ['c', 'c'],
+    isActive: false,
+    items: []
+  },
 
   {
     title: 'Galleries',
@@ -164,6 +172,14 @@ export const navItems: NavItem[] = [
     items: []
   },
 
+  {
+    title: 'Messages',
+    url: '/dashboard/messages',
+    icon: 'bellRing',
+    shortcut: ['m', 'm'],
+    isActive: false,
+    items: []
+  },
   {
     title: 'Reglages',
     url: '/dashboard/reglage',

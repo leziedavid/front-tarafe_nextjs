@@ -22,6 +22,7 @@ import dynamic from "next/dynamic";
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { ImageUploader } from '@/components/ui/ImageUploader';
 const QuillEditor = dynamic(() => import("@/components/ui/QuillEditor"), { ssr: false });
 
 type ReglageListingPage = {
@@ -41,6 +42,9 @@ export default function ReglageListingPage({isDialogOpen,onDialogOpenChange}: Re
   const [totalPages, setTotalPages] = useState<number>(1);
   const [search, setSearch] = useState(''); // Recherche
   const [description, setDescription] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [showInput, setShowInput] = useState(0);
 
   // État pour contrôler la visibilité du bloc d'images 1 & 2
   const [isBlockVisible, setIsBlockVisible] = useState(true);
@@ -241,10 +245,8 @@ const updateReglages = async () => {
   const fetchData = async () => { const filters: Filters = {  page: currentPage, limit: 10, search: search || undefined,};
 
     const result: ApiResponse<GallerieImagesResponse> = await getAllImagesGallery(token, filters);
-
-
     if (result.statusCode !== 200) {
-      toast.error(result.statusMessage);
+      toast.error(result.message);
     } else {
       setImage(result.data.data.data);
       setTotalPages(result.data.data.last_page); // Met à jour le nombre total de pages
@@ -262,9 +264,7 @@ const updateReglages = async () => {
     fetchData();
   }, [currentPage,search]); // Dépendances mises à jour pour inclure selectedCategory
 
-
   const isDataEmpty = !dataImages || dataImages.length <= 0;
-
 
   // Fonction pour ouvrir le Dialog avec l'image sélectionnée
   const handleImageClick = (url: string) => {
@@ -303,6 +303,14 @@ const updateReglages = async () => {
     } catch (error) {
       console.error('Erreur lors de la mise à jour du statut', error);
     }
+  };
+
+  const onFilesChange = (files: File[]) => {
+    setSelectedFiles(files); // Mise à jour des fichiers sélectionnés
+  };
+
+  const OpenFilsInput = (Input: number) => {
+    setShowInput(Input); // Mise à jour des fichiers sélectionnés
   };
 
   return (
@@ -370,7 +378,6 @@ const updateReglages = async () => {
 
         ) : (
 
-          
           <>
     
         <div className=' bg-white flex h-full gap-4 overflow-x-auto scrollbar-hide'>
@@ -421,8 +428,9 @@ const updateReglages = async () => {
 
 
                   <div className='space-y-4 w-full'>
+
                   <div className="flex items-center space-x-4">
-                    <img className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${logoSiteReglages}`} alt="Image" />
+                    <img onClick={() => OpenFilsInput(1)} className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${logoSiteReglages}`} alt="Image" />
                     <div className="flex-1">
                       <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">Titre de la page d'accueil</Label>
                       <Input
@@ -433,6 +441,15 @@ const updateReglages = async () => {
                       />
                     </div>
                   </div>
+
+                    {showInput === 1 && (
+                      <div className="grid w-full items-center gap-1 mt-4">
+                          {/* Champ pour télécharger des images */}
+                          <Label className="font-bold" htmlFor="otherFiles">Télécharger une image (png, jpg, jpeg)</Label>
+                          <ImageUploader onFilesChange={onFilesChange} multiple={true} />  {/* Permet de sélectionner plusieurs fichiers */}
+                          {errors.files && <p className="text-red-500">{errors.files}</p>}
+                      </div>
+                    )}
 
                   <Label htmlFor="home-content" className="block text-sm font-medium text-gray-700">Description sous le footer</Label>
                   <QuillEditor value={descFooter} onChange={(value) => setDescFooter(value)} />
@@ -446,12 +463,15 @@ const updateReglages = async () => {
                     <div className="flex space-x-4 flex-1 flex-col items-center">
                       <div className="flex space-x-4"> {/* Conteneur avec espace entre les images */}
                         <div className="flex flex-col items-center">
-                          <img className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${images1Reglages}`}  alt="tarafé" />
+                          <img  onClick={() => OpenFilsInput(2)} className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${images1Reglages}`}  alt="tarafé" />
                         </div>
                         <div className="flex flex-col items-center">
-                          <img className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${images2Reglages}`} alt="tarafé" />
+                          <img onClick={() => OpenFilsInput(2)}  className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${images2Reglages}`} alt="tarafé" />
                         </div>
+
                       </div>
+
+
 
                       {/* Switch pour activer/désactiver le Bloc 1 */}
                       <div className="flex items-center space-x-2 mt-4">
@@ -466,9 +486,10 @@ const updateReglages = async () => {
                       </div>
                     </div>
 
+
                     {/* Bloc 2 : Image 3 */}
                     <div className="flex-1 flex flex-col items-center">
-                      <img className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${images3Reglages}`} alt="tarafé" />
+                      <img  onClick={() => OpenFilsInput(3)}  className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${images3Reglages}`} alt="tarafé" />
                       {/* Switch pour activer/désactiver le Bloc 2 */}
                       <div className="flex items-center space-x-2 mt-4">
                         <Switch
@@ -481,7 +502,39 @@ const updateReglages = async () => {
                         </Label>
                       </div>
                     </div>
+
                   </div>
+
+
+                      <div className="grid grid-cols-12 gap-4 mt-4">
+                        {/* Champ pour télécharger des images */}
+
+                        {showInput === 2 && (
+
+                          <div className="col-span-6">
+                            <Label className="font-bold" htmlFor="otherFiles">
+                              Télécharger 2 images en paysage* (png, jpg, jpeg)
+                            </Label>
+                            <ImageUploader onFilesChange={onFilesChange} multiple={true} />
+                            {errors.files && <p className="text-red-500">{errors.files}</p>}
+                          </div>
+                        )}
+                        <div className="col-span-6"> </div>
+
+                        {showInput === 3 && (
+
+                          <div className="col-span-6">
+                            {/* Champ pour télécharger une image en portrait */}
+                            <Label className="font-bold" htmlFor="otherFiles">
+                              Télécharger une image en portrait * (png, jpg, jpeg)
+                            </Label>
+                            <ImageUploader onFilesChange={onFilesChange} multiple={true} />
+                            {errors.files && <p className="text-red-500">{errors.files}</p>}
+                          </div>
+
+                        )}
+                      </div>
+
 
                   {/* Section pour les bannières, localisation, contacts, réseaux sociaux */}
                   <div className="space-y-6">
@@ -822,15 +875,6 @@ const updateReglages = async () => {
 
               )}
               
-              {/* {activeCard === 'apropos' && (
-                <div className='space-y-4 w-full'>
-                  <label htmlFor="apropos-title" className="block text-sm font-medium text-gray-700">Titre de la page à propos</label>
-                  <Input id="apropos-title" placeholder="Titre de la page à propos" />
-
-                  <label htmlFor="apropos-description" className="block text-sm font-medium text-gray-700">Description</label>
-                  <Input id="apropos-description" placeholder="Description de la page à propos" />
-                </div>
-              )} */}
               
               {activeCard === 'settings' && (
 
@@ -852,7 +896,7 @@ const updateReglages = async () => {
 
 
                   <div className="flex items-center space-x-4">
-                      <img className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${filesPublicite1}`} alt="Image" />
+                      <img onClick={() => OpenFilsInput(4)} className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${filesPublicite1}`} alt="Image" />
                       <div className="flex-1">
 
                         <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">Titre de la page d'accueil</Label>
@@ -864,8 +908,20 @@ const updateReglages = async () => {
                       </div>
                   </div>
 
+                    {showInput === 4 && (
+                      <div className="grid grid-cols-12 gap-4 mt-4">
+                        <div className="col-span-12">  </div>
+                        <div className="col-span-12">
+                          <Label className="font-bold" htmlFor="otherFiles">
+                            Télécharger 2 images en paysage* (png, jpg, jpeg)
+                          </Label>
+                          <ImageUploader onFilesChange={onFilesChange} multiple={true} />
+                          {errors.files && <p className="text-red-500">{errors.files}</p>}
+                        </div>
+                      </div>
+                    )}
                   <div className="flex items-center space-x-4">
-                      <img className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${filesPublicite2}`} alt="Image" />
+                      <img  onClick={() => OpenFilsInput(5)} className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${filesPublicite2}`} alt="Image" />
                       <div className="flex-1">
 
                         <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">Titre de la page d'accueil</Label>
@@ -876,6 +932,21 @@ const updateReglages = async () => {
 
                       </div>
                   </div>
+
+                    {showInput === 5 && (
+
+                      <div className="grid grid-cols-12 gap-4 mt-4">
+                        <div className="col-span-12">  </div>
+
+                        <div className="col-span-12">
+                          <Label className="font-bold" htmlFor="otherFiles">
+                            Télécharger 2 images en paysage* (png, jpg, jpeg)
+                          </Label>
+                          <ImageUploader onFilesChange={onFilesChange} multiple={true} />
+                          {errors.files && <p className="text-red-500">{errors.files}</p>}
+                        </div>
+                      </div>
+                    )}
                   
                 </div>
 
@@ -918,7 +989,7 @@ const updateReglages = async () => {
 
         </div>
 
-        <ImageUploadDialog open={isDialogOpen} onOpenChange={onDialogOpenChange} />
+        <ImageUploadDialog open={isDialogOpen} onOpenChange={onDialogOpenChange}  fetchData={fetchData}  />
         <ImagePreviewDialog imageUrl={imageLink}  open={dialogOpen}  onOpenChange={handleCloseDialog} />
 
         </>

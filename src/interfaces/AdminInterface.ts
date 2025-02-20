@@ -1,4 +1,4 @@
-import { Realisation } from "./HomeInterface";
+import { OptionRealisation, Realisation } from "./HomeInterface";
 
 // Interface représentant les données des commandes
 export interface RealisationData {
@@ -210,3 +210,48 @@ export interface TransactionTotalsResponse {
     totals: TotalTransaction; // Totaux des transactions
 }
 
+
+export interface Newsletter {
+    newsletters_id: number;
+    objets: string;
+    nom_newsletters: string;
+    email_newsletters: string;
+    contact_newsletters: string;
+    texte_newsletters: string;
+    status_newsletters: string;
+    created_at: string;
+    updated_at: string | null;
+}
+
+export interface NewsletterResponse {
+    current_page: number;
+    data: Newsletter[];
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: PaginationLink[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+}
+
+
+export interface AllOptionsResponse {
+    current_page: number;
+    data: OptionRealisation[];
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: PaginationLink[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+}

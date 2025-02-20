@@ -6,6 +6,8 @@ import { toast } from "sonner";  // Pour les notifications de succès ou d'erreu
 import { ImageUploader } from '../ui/ImageUploader';
 import { Button } from '../ui/button';
 import { Toaster } from "@/components/ui/sonner";
+import { addGallery } from '@/servives/AdminService';
+import useAuth from '@/servives/useAuth';
 
 // Définir la validation Zod pour plusieurs fichiers (max 5 fichiers et format png/jpg/jpeg)
 const filesValidationSchema = z.array(
@@ -21,12 +23,13 @@ const filesValidationSchema = z.array(
 interface ImageUploadDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    fetchData: () => void;
 }
 
 const ImageUploadDialog: React.FC<ImageUploadDialogProps> = ({ open, onOpenChange }) => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [isUploading, setIsUploading] = useState(false);
-
+    const token = useAuth();  // Récupérer le token à l'aide du hook
     const onFilesChange = (files: File[]) => {
         setSelectedFiles(files); // Mise à jour des fichiers sélectionnés
     };
@@ -35,8 +38,10 @@ const ImageUploadDialog: React.FC<ImageUploadDialogProps> = ({ open, onOpenChang
         // Validation des fichiers avec Zod
         try {
             filesValidationSchema.parse(selectedFiles);  // Si la validation échoue, une erreur sera levée
+
         } catch (error) {
             if (error instanceof z.ZodError) {
+
                 toast.error(error.errors[0].message);  // Afficher l'erreur de validation
                 return;
             }
@@ -45,26 +50,44 @@ const ImageUploadDialog: React.FC<ImageUploadDialogProps> = ({ open, onOpenChang
         // Préparer les fichiers à envoyer dans le FormData
         const formData = new FormData();
         selectedFiles.forEach((file) => formData.append("files", file));
-
         setIsUploading(true);
 
         try {
-            const res = await fetch("/api/images", {
-                method: "POST",
-                body: formData,
-            });
+            // Envoi des données pour créer une nouvelle commande
+            const result = await addGallery(token, formData);  // Appel à la fonction pour créer une commande
 
-            if (res.ok) {
+            if (result.statusCode === 200) {
                 toast.success("Images téléchargées avec succès !");
                 onOpenChange(false);  // Fermer le dialog après le succès
             } else {
-                toast.error("Erreur lors du téléchargement des images.");
+                toast.error("Erreur lors de la soumission des images.");
             }
+
         } catch (error) {
-            toast.error("Erreur lors de la soumission des images.");
+            console.error("Erreur lors de l'envoi des données :", error);
+            toast.error("Une erreur s'est produite pendant la soumission.");
         } finally {
-            setIsUploading(false);
+            setIsUploading(false);  // Restaure l'état de l'interface une fois l'upload terminé
         }
+
+        // try {
+        //     const res = await fetch("/api/images", {
+        //         method: "POST",
+        //         body: formData,
+        //     });
+
+        //     if (res.ok) {
+        //         toast.success("Images téléchargées avec succès !");
+        //         onOpenChange(false);  // Fermer le dialog après le succès
+        //     } else {
+        //         toast.error("Erreur lors du téléchargement des images.");
+        //     }
+        // } catch (error) {
+        //     toast.error("Erreur lors de la soumission des images.");
+        // } finally {
+        //     setIsUploading(false);
+        // }
+
     };
 
     return (
@@ -109,7 +132,6 @@ const ImageUploadDialog: React.FC<ImageUploadDialogProps> = ({ open, onOpenChang
                 </div>
             </DialogContent>
         </Dialog>
-        <Toaster />
         
         </>
     );

@@ -1,7 +1,7 @@
 
 import { getBaseUrl } from "./baseUrl";
 import { ApiResponse } from "@/interfaces/ApiResponse";
-import { ApiDataCategories, ApiDataCategoriesByRealisation, ApiDataOders, OrderData, OrderDetails, RealisationData, TransactionData, TransactionTotalsResponse } from "@/interfaces/AdminInterface";
+import { AllOptionsResponse, ApiDataCategories, ApiDataCategoriesByRealisation, ApiDataOders, NewsletterResponse, OrderData, OrderDetails, RealisationData, TransactionData, TransactionTotalsResponse } from "@/interfaces/AdminInterface";
 import { Filters } from "@/interfaces/Filters"; // Importation de l'interface Filters
 
 const getCsrfToken = async () => {
@@ -51,7 +51,7 @@ export const getAllRealisations = async (
         console.error('Erreur dans la récupération des données:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: {
                 data: [],
                 current_page: 1,
@@ -105,7 +105,7 @@ export const getAllorders = async (
         console.error('Erreur dans la récupération des données:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: {
                 data: [],
                 current_page: 1,
@@ -129,7 +129,7 @@ export const getAllorders = async (
 export const getdetailCommandes = async (token: string | null, id: number): Promise<ApiResponse> => {
     try {
         // Appel de l'API avec le token et l'ID de la commande
-        const response = await fetch(`${getBaseUrl()}/getdetailCommandes/${id}/${token}`, {
+        const response = await fetch(`${getBaseUrl()}/getdetailCommandes/${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajout du token JWT
@@ -151,7 +151,7 @@ export const getdetailCommandes = async (token: string | null, id: number): Prom
         console.error('Erreur dans la récupération des données:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: []
         }
     }
@@ -240,7 +240,7 @@ export const createRealisation = async (token: string | null, formData: FormData
         console.error('Erreur lors de l\'enregistrement du produit:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: null,  // On renvoie null ou un objet vide en cas d'erreur
         };
     }
@@ -267,7 +267,7 @@ export const updateRealisations = async (token: string | null, formData: FormDat
         console.error('Erreur lors de l\'enregistrement du produit:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: null,  // On renvoie null ou un objet vide en cas d'erreur
         };
     }
@@ -295,7 +295,7 @@ export const addOrders = async (token: string | null, formData: FormData): Promi
         console.error('Erreur lors de l\'enregistrement de la commande:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: null,  // On renvoie null ou un objet vide en cas d'erreur
         };
     }
@@ -323,7 +323,34 @@ export const addAllImagesForProductt = async (token: string | null, formData: Fo
         console.error('Erreur lors de l\'enregistrement de la commande:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
+            data: null,  // On renvoie null ou un objet vide en cas d'erreur
+        };
+    }
+};
+
+export const addGallery = async (token: string | null, formData: FormData): Promise<ApiResponse<any>> => {  // Utilisation de ApiResponse<any> ici
+    try {
+
+        const response = await fetch(`${getBaseUrl()}/savegallerie-images`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la création de l\'image');
+        }
+
+        const result: ApiResponse<any> = await response.json();  // On attend une réponse de type ApiResponse<any>
+        return result;
+    } catch (error: any) {
+        console.error('Erreur lors de l\'enregistrement de l\'image:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
             data: null,  // On renvoie null ou un objet vide en cas d'erreur
         };
     }
@@ -351,7 +378,7 @@ export const imports = async (token: string | null, formData: FormData): Promise
         // console.error('Erreur lors de l\'enregistrement de la commande:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: null,  // On renvoie null ou un objet vide en cas d'erreur
         };
     }
@@ -394,7 +421,7 @@ export const getAlltransactions = async (
         console.error('Erreur dans la récupération des données:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: {
                 data: [],
                 current_page: 1,
@@ -436,7 +463,7 @@ export const getAllImagesById = async ( token: string | null, id: number): Promi
         // Retourne une réponse par défaut en cas d'erreur
         return {
             statusCode: 500,
-            statusMessage: 'Erreur interne',
+            message: 'Erreur interne',
             data: [],
         };
     }
@@ -479,7 +506,7 @@ export const getAllTransactionTotals = async (
         console.error('Erreur dans la récupération des données:', error.message);
         return {
             statusCode: 500,
-            statusMessage: error.message,
+            message: error.message,
             data: {
                 totals: {
                     total_sortie_caisse: "0.00",
@@ -492,5 +519,188 @@ export const getAllTransactionTotals = async (
         };
     }
 }
+
+export const DownloadFiles = async (
+    token: string | null,
+    filters: Filters,
+    category: string | null,
+    payment: string | null,
+    selectedYears: string | null
+): Promise<ApiResponse<any>> => {
+    try {
+        // Construction de l'URL avec les paramètres de filtre
+        const url = new URL(`${getBaseUrl()}/export-transactions`); // Assurez-vous que l'API retourne les totaux via cette route
+        url.searchParams.append('page', filters.page.toString());
+        url.searchParams.append('limit', filters.limit.toString());
+        if (filters.search) { url.searchParams.append('search', filters.search); }
+        if (category) { url.searchParams.append('category', category); }
+        if (payment) { url.searchParams.append('payment', payment); }
+        if (selectedYears) { url.searchParams.append('selectedYears', selectedYears); }
+
+        const response = await fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Ajout du token JWT
+                'Content-Type': 'application/json'   // Type de contenu JSON
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la récupération des données.');
+        }
+
+        const result: ApiResponse<any> = await response.json();
+        return result;
+
+    } catch (error: any) {
+        console.error('Erreur dans la récupération des données:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: { }
+        };
+    }
+}
+
+// Service pour récupérer les commandes avec des filtres
+export const geAllCategorie = async (
+    token: string | null,
+    filters: Filters
+): Promise<ApiResponse<AllOptionsResponse>> => {
+    try {
+        // Construction de l'URL avec les paramètres de filtre
+        const url = new URL(`${getBaseUrl()}/all-options-realisation`);
+        url.searchParams.append('page', filters.page.toString());
+        url.searchParams.append('limit', filters.limit.toString());
+        if (filters.search) {
+            url.searchParams.append('search', filters.search);
+        }
+        const response = await fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Ajout du token JWT
+                'Content-Type': 'application/json'   // Type de contenu JSON
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la récupération des données.');
+        }
+
+        const result: ApiResponse<AllOptionsResponse> = await response.json();
+        return result;
+
+    } catch (error: any) {
+        console.error('Erreur dans la récupération des données:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: {
+                data: [],
+                current_page: 1,
+                last_page: 1,
+                total: 0,
+                links: [],
+                first_page_url: "",
+                last_page_url: "",
+                next_page_url: null,
+                prev_page_url: null,
+                path: "",
+                per_page: 0,
+                from: 0,
+                to: 0
+            }
+        };
+    }
+};
+
+// Fonction pour ajouter ou mettre à jour une catégorie
+export const saveCategory = async (token: string | null, categoryNames: string[], categoryId?: number): Promise<ApiResponse<any>> => {
+    try {
+        const url = categoryId
+            ? `${getBaseUrl()}/update-category/${categoryId}`  // Route pour la mise à jour
+            : `${getBaseUrl()}/add-category`;  // Route pour l'ajout
+
+        // Préparation du corps de la requête
+        const body = JSON.stringify({ categories: categoryNames });
+
+        const response = await fetch(url, {
+            method: categoryId ? 'PUT' : 'POST',  // Utiliser PUT si un ID est passé, sinon POST
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: body,
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de l\'ajout ou de la mise à jour de la catégorie');
+        }
+
+        const result: ApiResponse<any> = await response.json();
+        return result;
+
+    } catch (error: any) {
+        console.error('Erreur lors de la soumission des catégories:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: null,
+        };
+    }
+};
+
+export const geAllMessages = async (
+    token: string | null,
+    filters: Filters
+): Promise<ApiResponse<NewsletterResponse>> => {
+    try {
+        // Construction de l'URL avec les paramètres de filtre
+        const url = new URL(`${getBaseUrl()}/geAllMessages`);
+        url.searchParams.append('page', filters.page.toString());
+        url.searchParams.append('limit', filters.limit.toString());
+
+        if (filters.search) {
+            url.searchParams.append('search', filters.search);
+        }
+
+        const response = await fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Ajout du token JWT
+                'Content-Type': 'application/json'   // Type de contenu JSON
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la récupération des données.');
+        }
+
+        const result: ApiResponse<NewsletterResponse> = await response.json();
+        return result;
+
+    } catch (error: any) {
+        console.error('Erreur dans la récupération des données:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: {
+                data: [],
+                current_page: 1,
+                last_page: 1,
+                total: 0,
+                links: [],
+                first_page_url: "",
+                last_page_url: "",
+                next_page_url: null,
+                prev_page_url: null,
+                path: "",
+                per_page: 0,
+                from: 0,
+                to: 0
+            }
+        };
+    }
+};
 
 
