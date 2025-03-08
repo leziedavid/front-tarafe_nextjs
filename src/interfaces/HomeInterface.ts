@@ -132,6 +132,9 @@ export interface Reglage {
     couleur2: string;
     couleur3: string;
     couleur4: string;
+    nb_views_site: number;
+    nb_views_fb: number;
+    nb_views_insta : number;
     created_at: string;
     updated_at: string;
 }

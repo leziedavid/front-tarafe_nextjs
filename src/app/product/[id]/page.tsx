@@ -35,6 +35,7 @@ import { getRealisationsByLaballe } from "@/servives/HomeService";
 import { ApiResponse } from "@/interfaces/ApiResponse";
 import useAuth from "@/servives/useAuth";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 
 
 const Page: React.FC = () => {
@@ -83,7 +84,7 @@ const Page: React.FC = () => {
           </div>
           <LuxuryWatchProductPage data={realisations} image={images}  />
       </div>
-
+      <WhatsappFloatButton />
       <Footer data={reglage} />
       <Toaster />
 

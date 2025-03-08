@@ -22,6 +22,7 @@ import { toast } from "sonner"
 import Partenaire from "./_components/Partenaire";
 import Pub from "./_components/Pub";
 import useAuth from "@/servives/useAuth";
+import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 
 const Home: React.FC = () => {
   const token = useAuth();  // Récupérer le token à l'aide du hook
@@ -64,6 +65,8 @@ useEffect(() => {
         <Pub data={[]}/>
         <Partenaire data={partenaire}/>
         <ContactForm data={reglages} />
+        <WhatsappFloatButton />
+
       </div>
       <Footer data={reglages}/>
       <Toaster />

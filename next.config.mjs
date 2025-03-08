@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    // Dans l'environnement de production, on utilise "export" pour un site statique
+    // output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
+
     images: {
-        domains: ['tarafe.tarafe.com'], // Ajouter ton domaine ici
+        domains: ['ms.cloud.tarafe.com'], // Ajouter ton domaine ici
+        // domains: ['tarafe.tarafe.com'], // Ajouter ton domaine ici
         remotePatterns: [
             {
                 protocol: 'http',

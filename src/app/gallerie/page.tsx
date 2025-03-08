@@ -18,6 +18,7 @@ import PaginationComponent from "@/components/pagination/paginationComponent"
 import useAuth from "@/servives/useAuth";
 import { Filters } from "@/interfaces/Filters";
 import ImagePreviewDialog from "@/components/Dialog/ImagePreviewDialog";
+import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 
 const Page: React.FC = () => {
 
@@ -164,6 +165,7 @@ const Page: React.FC = () => {
         onOpenChange={handleCloseDialog} // Fonction pour fermer le Dialog
       />
 
+      <WhatsappFloatButton />
       <Footer data={reglage} />
 
     </>

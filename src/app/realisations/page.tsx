@@ -21,6 +21,7 @@ import PaginationComponent from "@/components/pagination/paginationComponent"
 import CategoryFilter from "@/components/features/CategoryFilter"; // Importation du composant de filtre
 import useAuth from "@/servives/useAuth";
 import { useRouter } from 'next/navigation';
+import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 
 
 const Page: React.FC = () => {
@@ -191,6 +192,8 @@ const isDataEmpty = !realisations || realisations.length <= 0;
         </div>
 
       </div>
+      
+      <WhatsappFloatButton />
 
       <Footer data={reglage} />
 

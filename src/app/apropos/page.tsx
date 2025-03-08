@@ -36,6 +36,7 @@ import { ApiResponse } from "@/interfaces/ApiResponse";
 import PaginationComponent from "@/components/pagination/paginationComponent"
 import CategoryFilter from "@/components/features/CategoryFilter"; // Importation du composant de filtre
 import useAuth from "@/servives/useAuth";
+import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 
 const Page: React.FC = () => {
 
@@ -48,7 +49,7 @@ const Page: React.FC = () => {
     const result: ApiResponse<ApiData> = await getreglages(token);
 
     if (result.statusCode !== 200) {
-      toast.error(result.statusMessage);
+      toast.error(result.message);
 
     } else {
 
@@ -76,17 +77,16 @@ const isDataEmpty = !reglage || reglage.length <= 0;
             <div className="w-full justify-start gap-12 grid lg:grid-cols-2 grid-cols-1">
 
               {/* Affichage des membres de l'équipe avec disposition conditionnelle */}
+
+              
               <div className="w-full items-start gap-6 grid sm:grid-cols-2 grid-cols-1 lg:order-first order-last">
                 {equipes.map((equipe) => (
-                  <div key={equipe.id_equipe} className="flex items-center gap-6">
+                  <div key={equipe.id_equipe} className="flex items-center gap-1">
                     {/* Si l'id est impair, afficher dans la première div */}
                     {equipe.id_equipe % 2 !== 0 ? (
                       <div>
                         <div className="sm:justify-end justify-start items-start gap-2.5 flex">
-                          <img
-                            className="rounded-xl object-cover" src={`${getBaseUrlImg()}/${equipe.photo_equipe}`}
-                            alt={`Image de ${equipe.nomPren_equipe}`}
-                          />
+                          <img className="rounded-xl object-cover " src={`${getBaseUrlImg()}/${equipe.photo_equipe}`} alt={`Image de ${equipe.nomPren_equipe}`} />
                         </div>
                         <div className="text-center mt-4">
                           <p className="text-lg font-semibold">{equipe.nomPren_equipe}</p>
@@ -96,8 +96,7 @@ const isDataEmpty = !reglage || reglage.length <= 0;
                     ) : (
                       /* Si l'id est pair, afficher dans la deuxième image */
                       <div>
-                        <img className="sm:ml-0 ml-auto rounded-xl object-cover" src={`${getBaseUrlImg()}/${equipe.photo_equipe}`}
-                          alt={`Image de ${equipe.nomPren_equipe}`}/>
+                        <img className="sm:ml-0 ml-auto rounded-xl object-cover " src={`${getBaseUrlImg()}/${equipe.photo_equipe}`} alt={`Image de ${equipe.nomPren_equipe}`}/>
                         <div className="text-center mt-4">
                           <p className="text-lg font-semibold">{equipe.nomPren_equipe}</p>
                           <p className="text-gray-500">{equipe.fonction_equipe}</p>
@@ -115,21 +114,22 @@ const isDataEmpty = !reglage || reglage.length <= 0;
                   
                   <div className="w-full flex-col justify-start lg:items-start items-center gap-3 flex">
                     <h2 className="text-gray-900 text-4xl font-bold font-manrope leading-normal lg:text-start text-center"> A propos de Tarafé </h2>
-                    <p className="text-gray-500 text-base font-normal leading-relaxed lg:text-start text-center"> {reglage[0]?.description_reglages} </p>
+                    <div dangerouslySetInnerHTML={{ __html: reglage[0]?.description_reglages && reglage[0]?.description_reglages ? reglage[0]?.description_reglages : '' }}  className="text-gray-500 text-base font-normal leading-relaxed lg:text-start" />
                   </div>
+                  {/* {reglage[0]?.description_reglages}  */}
                   
                   <div className="w-full lg:justify-start justify-center items-center sm:gap-10 gap-5 inline-flex">
                     <div className="flex-col justify-start items-start inline-flex">
-                      <h3 className="text-gray-900 text-4xl font-bold font-manrope leading-normal">33+</h3>
-                      <h6 className="text-gray-500 text-base font-normal leading-relaxed">Years of Experience</h6>
+                      <h3 className="text-gray-900 text-2xl font-bold font-manrope leading-normal">{reglage[0]?.nb_views_site}+</h3>
+                      <h6 className="text-gray-500 text-base font-normal leading-relaxed">Visite sur le site</h6>
                     </div>
                     <div className="flex-col justify-start items-start inline-flex">
-                      <h4 className="text-gray-900 text-4xl font-bold font-manrope leading-normal">125+</h4>
-                      <h6 className="text-gray-500 text-base font-normal leading-relaxed">Successful Projects</h6>
+                      <h4 className="text-gray-900 text-2xl font-bold font-manrope leading-normal">{reglage[0]?.nb_views_fb}+</h4>
+                      <h6 className="text-gray-500 text-base font-normal leading-relaxed">Abonnés Facebook</h6>
                     </div>
                     <div className="flex-col justify-start items-start inline-flex">
-                      <h4 className="text-gray-900 text-4xl font-bold font-manrope leading-normal">52+</h4>
-                      <h6 className="text-gray-500 text-base font-normal leading-relaxed">Happy Clients</h6>
+                      <h4 className="text-gray-900 text-2xl font-bold font-manrope leading-normal"> {reglage[0]?.nb_views_insta}+</h4>
+                      <h6 className="text-gray-500 text-base font-normal leading-relaxed">Abonnés Instagram</h6>
                     </div>
                   </div>
                 </div>
@@ -142,6 +142,8 @@ const isDataEmpty = !reglage || reglage.length <= 0;
         </section>
 
       </div>
+
+      <WhatsappFloatButton />
 
       <Footer data={reglage} />
 

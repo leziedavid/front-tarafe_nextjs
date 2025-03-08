@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation'
 import { toast, Toaster } from 'sonner';
 import { signIn } from '@/servives/Auth';
+import WhatsappFloatButton from '@/components/WhatsappFloatButton';
 
 // Définir le schéma de validation avec Zod
 const loginSchema = z.object({
@@ -175,6 +176,8 @@ export default function Page() {
                     </div>
                 </div>
             </div>
+            <WhatsappFloatButton />
+
         </>
     );
 }

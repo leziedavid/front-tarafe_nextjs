@@ -31,10 +31,8 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
                         <div className="space-y-5 font-extrabold font-title">
                             <span className="uppercase text-xl font-title">Services</span>
                             <div className="flex flex-col gap-y-5 text-base">
-                                <div>Prix du marché</div>
-                                <div>Météo & Récommandations</div>
-                                <div>Conseils agricoles</div>
-                                <div>Alertes</div>
+                                <div>Personnalisation de produits</div>
+                                <div>Solutions pour les entreprises (B2B)</div>
                             </div>
                         </div>
 
