@@ -158,7 +158,7 @@ const LuxuryWatchProductPage: React.FC<Props> = ({ data,image }) => {
                                 <div className="relative w-full  mb-4">
                                     {/* Image principale */}
                                     {mainImage ? (
-                                        <img
+                                        <Image
                                             src={mainImageSrc} // Image principale affichée ici
                                             alt={mainImage.codeId} // Alt text for accessibility
                                             width={500} // Ajuster selon votre design
@@ -181,7 +181,7 @@ const LuxuryWatchProductPage: React.FC<Props> = ({ data,image }) => {
                                     <div className="flex space-x-4 w-full justify-start overflow-x-auto scrollbar-hide">
                                         {currentImages.map((item) => (
                                             <div key={item.id_img_realisations} className="w-24 h-24 cursor-pointer rounded-md hover:opacity-75 transition" onClick={() => { }} >
-                                                <img
+                                                <Image
                                                     src={`${getBaseUrlImg()}/${item.filles_img_realisations}`}
                                                     alt={item.codeId}
                                                     width={100}

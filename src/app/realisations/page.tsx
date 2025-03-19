@@ -140,7 +140,7 @@ const isDataEmpty = !realisations || realisations.length <= 0;
                       <div key={index} className="flex flex-col gap-4">
 
                         <div className="bg-muted rounded-md aspect-video mb-0">
-                          <img src={`${getBaseUrlImg()}/${item.images_realisations}`}
+                          <Image src={`${getBaseUrlImg()}/${item.images_realisations}`}
                             alt={item.libelle_realisations} width={500} height={300} className="object-cover rounded-md" />
                         </div>
 
@@ -153,10 +153,6 @@ const isDataEmpty = !realisations || realisations.length <= 0;
                               {item.libelle_realisations}
                             </div>
                           </div>
-
-                          {/* <h3 className="text-sm md:text-lg tracking-tight font-base line-clamp-2">
-                            {item.libelle_realisations}
-                          </h3> */}
 
                           {/* Description du produit tronquée */}
                           <p

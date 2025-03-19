@@ -85,10 +85,6 @@ const Hero3: React.FC<Props> = ({ data }) => {
                                             </div>
                                         </div>
 
-                                        {/* <div className="">
-                                        <CarouselComponent CARROUSSEL_BANNER={CARROUSSEL_BANNER} />
-                                    </div> */}
-
                                     </div>
                                 <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
 

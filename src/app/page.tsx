@@ -12,10 +12,9 @@ import Footer from "./_components/Footer";
 import Feature5 from "./_components/Feature5";
 import CarouselComponent from "./_components/CarouselComponent";
 import Hero3 from "./_components/Hero3";
-import Contact1 from "./_components/Contact1";
 import ContactForm from "./_components/ContactForm";
 import { getAllHomeData } from "@/servives/HomeService";
-import { Realisation, Reglage,Partenaires } from "@/interfaces/HomeInterface";
+import { Realisation, Reglage,Partenaires,Publicite } from "@/interfaces/HomeInterface";
 
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
@@ -32,6 +31,7 @@ const Home: React.FC = () => {
   const [reglages, setReglages] = useState<Reglage []>([]);
   const [partenaire , setPartenaire] = useState<Partenaires []>([]);
   const [realisation, setRealisation] = useState<Realisation[]>([]);
+  const [publicites, setPublicites] = useState<Publicite[]>([]);
 
 
 useEffect(() => {
@@ -48,6 +48,7 @@ useEffect(() => {
           setReglages(result.reglages)
           setRealisation(result.realisations)
           setPartenaire(result.partenaires)
+          setPublicites(result.Publicites)
       }
   };
 
@@ -62,7 +63,7 @@ useEffect(() => {
       <div className={`min-h-[calc(100vh_-_56px)] py-5 px-3 lg:px-6 mt-[4rem] md:mt-[4rem]`}>
         <Hero3 data={reglages} />
         <Feature5 data={realisation} reglage={reglages}/>
-        <Pub data={[]}/>
+        <Pub data={publicites}/>
         <Partenaire data={partenaire}/>
         <ContactForm data={reglages} />
         <WhatsappFloatButton />

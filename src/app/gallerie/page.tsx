@@ -19,6 +19,7 @@ import useAuth from "@/servives/useAuth";
 import { Filters } from "@/interfaces/Filters";
 import ImagePreviewDialog from "@/components/Dialog/ImagePreviewDialog";
 import WhatsappFloatButton from "@/components/WhatsappFloatButton";
+import Image from 'next/image';
 
 const Page: React.FC = () => {
 
@@ -130,7 +131,7 @@ const Page: React.FC = () => {
                     <div key={index} className="flex flex-col gap-4">
 
                       <div className="bg-muted rounded-md aspect-video mb-0">
-                        <img src={`${getBaseUrlImg()}/${item.files_gallerie_images}`} alt="logo"
+                        <Image src={`${getBaseUrlImg()}/${item.files_gallerie_images}`} alt="logo"
                           width={500} height={300} className="object-cover rounded-md cursor-pointer"
                           onClick={() => handleImageClick(`${getBaseUrlImg()}/${item.files_gallerie_images}`)} // Quand l'image est cliquée, on met à jour l'URL
                           />

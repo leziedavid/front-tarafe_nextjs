@@ -11,6 +11,10 @@ interface FooterProps {
     data: Reglage[]; // Le type de `data` dépend de la structure de ton résultat
 }
 
+const handleClick = async (publicId: string) => {
+    const url = `${publicId}`;
+    window.open(url, '_blank');
+};
 
 const Footer: React.FC<FooterProps> = ({ data }) => {
     const photoUrl = data[0]?.logo_footer ?? 'Logos/Logo_blanc.png';  // Valeur par défaut
@@ -21,7 +25,10 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
 
                     {/* Conteneur pour l'image et le téléph */}
                     <div className="flex flex-col justify-start h-full">
-                        <img src={`${getBaseUrlImg()}/${photoUrl}`} alt="logo" className="h-20 md:h-20 px-6" width={300} height={250} />
+
+                        <Image src={`${getBaseUrlImg()}/${photoUrl}`} alt="logo" className="h-20 md:h-20 px-6"
+                            width={300} height={250}
+                            layout="intrinsic"/>
                         <p className="text-white font-extrabold font-title text-base sm:text-lg md:text-xl lg:text-xl  px-4">  {data[0]?.desc_footer} </p>
                     </div>
 
@@ -65,9 +72,9 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
                         <div className="md:w-1/2">
                             <span className="uppercase text-xl font-title font-extrabold font-title"> Suivez-nous sur ...</span>
                             <div className="flex space-x-5 py-5">
-                                <Instagram size={30} strokeWidth={3} absoluteStrokeWidth />
-                                <Linkedin size={30} strokeWidth={3} absoluteStrokeWidth />
-                                <Facebook size={30} strokeWidth={3} absoluteStrokeWidth />
+                                <Instagram onClick={() => handleClick(data[0]?.lienInstagram_reglages)}  size={30} strokeWidth={3} absoluteStrokeWidth />
+                                <Linkedin onClick={() => handleClick(data[0]?.lienLikedin_reglages)}  size={30} strokeWidth={3} absoluteStrokeWidth />
+                                <Facebook onClick={() => handleClick(data[0]?.lienFacebbook_reglages)} size={30} strokeWidth={3} absoluteStrokeWidth />
                             </div>
                         </div>
 

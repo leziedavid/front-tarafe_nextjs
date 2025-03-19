@@ -7,6 +7,7 @@ import useAuth from '@/servives/useAuth';
 import { OrderDetails } from "@/interfaces/AdminInterface";
 import { getBaseUrlImg } from '@/servives/baseUrl';
 import { formatDateFR } from "@/servives/DateUtils";
+import Image from 'next/image';
 
 interface OrderDetailsSheetProps {
     isOpens: boolean;
@@ -57,12 +58,18 @@ export function OrderDetailsSheet({ isOpens, onClose, datas }: OrderDetailsSheet
 
                                     <div className="flex justify-between items-center border-b pb-4">
                                         <div className="flex items-center space-x-4">
-                                            <img className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${order.images_realisations}`} alt={order.libelle_realisations} />
+                                            <Image
+                                                className="w-30 h-40 object-cover"
+                                                src={`${getBaseUrlImg()}/${order.images_realisations}`}
+                                                alt={order.libelle_realisations}
+                                                width={150}
+                                                height={100}
+                                                />
                                             <div>
                                                 <p className="font-semibold text-gray-800 mb-2">{order.libelle_realisations}</p>
 
                                                     <p className="text-lg font-bold text-red-600">Option demander par le client :</p>
-                                                    <p className="text-sm font-bold text-gray-800">Police d'écriture : {order.policeAchats}</p>
+                                                    <p className="text-sm font-bold text-gray-800"> {"Police d'écriture"} : {order.policeAchats}</p>
                                                     <p className="text-sm font-bold text-gray-800"> Couleur : {order.couleursAchats}</p>
                                                     <p className="text-sm font-bold text-gray-800">Position du logo: {order.PositionsFiles}</p>
 
@@ -80,14 +87,20 @@ export function OrderDetailsSheet({ isOpens, onClose, datas }: OrderDetailsSheet
                                 <div className="flex space-x-4">
                                     {/* Image 1 */}
                                     <div className="flex flex-col items-center">
-                                        <img className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${order.images_realisations}`} alt={order.libelle_realisations} />
+                                        <Image className="w-30 h-40 object-cover" 
+                                        src={`${getBaseUrlImg()}/${order.images_realisations}`} alt={order.libelle_realisations}
+                                        width={150}
+                                        height={100} />
                                         <p className="text-sm mt-2font-bold   text-center text-gray-800">Logo</p>
                                     </div>
 
                                     {/* Image 2 */}
                                     <div className="flex flex-col items-center">
-                                        <img className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${order.images_realisations}`} alt={order.libelle_realisations} />
-                                        <p className="text-sm mt-2 font-bold  text-center text-gray-800">Support d'impression : </p>
+                                        <Image className="w-30 h-40 object-cover" 
+                                        src={`${getBaseUrlImg()}/${order.images_realisations}`} alt={order.libelle_realisations} 
+                                        width={150}
+                                        height={100}/>
+                                        <p className="text-sm mt-2 font-bold  text-center text-gray-800">{"Support d'impression"} : </p>
                                     </div>
                                 </div>
 

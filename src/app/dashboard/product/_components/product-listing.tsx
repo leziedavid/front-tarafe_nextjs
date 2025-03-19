@@ -52,9 +52,7 @@ export default function RealisationListingPage({isDialogOpen,onDialogOpenChange}
 
   // Appeler la fonction fetchData chaque fois que la page courante ou la recherche change
   useEffect(() => {
-
     fetchData();
-
   }, [currentPage, search]); // Lors de la modification de la page ou de la recherche, les données seront récupérées à nouveau
 
   // Fonction pour changer la page

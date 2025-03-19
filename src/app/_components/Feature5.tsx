@@ -8,6 +8,7 @@ import { Realisation, Reglage } from "@/interfaces/HomeInterface";
 import { getBaseUrlImg } from "@/servives/baseUrl";
 import React from "react";
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';  // Import de Image de Next.js
 
 
 interface Feature5Props {
@@ -75,10 +76,11 @@ const Feature5: React.FC<Feature5Props> = ({ data,reglage }) => {
                                 <div key={index} className="flex flex-col gap-4">
 
                                     <div className="bg-muted rounded-md aspect-video">
-                                        <img src={`${getBaseUrlImg()}/${item.images_realisations}`} alt={item.libelle_realisations}
+                                        <Image src={`${getBaseUrlImg()}/${item.images_realisations}`} alt={item.libelle_realisations}
                                             width={500}
                                             height={300}
                                             className="object-cover rounded-md"
+                                            layout="intrinsic"
                                         />
                                     </div>
 

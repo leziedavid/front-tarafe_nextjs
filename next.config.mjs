@@ -4,12 +4,22 @@ const nextConfig = {
     // output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
 
     images: {
-        domains: ['ms.cloud.tarafe.com'], // Ajouter ton domaine ici
+        domains: ['ms.cloud.tarafe.com', 'tarafe.com'], // Ajouter ton domaine ici
         // domains: ['tarafe.tarafe.com'], // Ajouter ton domaine ici
         remotePatterns: [
             {
                 protocol: 'http',
                 hostname: 'localhost',
+                pathname: '**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'ms.cloud.tarafe.com',
+                pathname: '**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'tarafe.com',
                 pathname: '**',
             },
             {

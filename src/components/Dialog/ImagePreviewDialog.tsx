@@ -1,8 +1,11 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import Skeleton from "react-loading-skeleton"; // Pour afficher le skeleton pendant le chargement
 import "react-loading-skeleton/dist/skeleton.css"; // Importation du CSS du skeleton
 import { Toaster } from "@/components/ui/sonner";
+import Image from 'next/image';
 
 interface ImagePreviewDialogProps {
     imageUrl: string;  // URL de l'image à afficher
@@ -41,8 +44,8 @@ const ImagePreviewDialog: React.FC<ImagePreviewDialogProps> = ({ imageUrl, open,
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-lg">
                 <DialogHeader>
-                    <DialogTitle className='text-2xl md:text-3xl tracking-tighter max-w-xl font-bold'>Aperçu de l'image</DialogTitle>
-                    <DialogDescription>Voici l'image en haute résolution.</DialogDescription>
+                    <DialogTitle className='text-2xl md:text-3xl tracking-tighter max-w-xl font-bold'>{"Aperçu de l'image"}</DialogTitle>
+                    <DialogDescription>{"Voici l'image en haute résolution."}</DialogDescription>
                 </DialogHeader>
 
                 {/* Affichage du skeleton pendant le chargement */}
@@ -51,7 +54,12 @@ const ImagePreviewDialog: React.FC<ImagePreviewDialogProps> = ({ imageUrl, open,
                         <Skeleton height="100%" />
                     </div>
                 ) : (
-                    <img src={imageUrl} alt="Preview" className="object-contain w-full max-h-[70vh] mx-auto" onLoad={handleImageLoad}  />
+                    <Image  src={imageUrl} alt="Preview"
+                        className="object-contain w-full max-h-[70vh] mx-auto"
+                        onLoad={handleImageLoad}
+                        width={500}
+                        height={300}
+                    />
                 )}
             </DialogContent>
         </Dialog>

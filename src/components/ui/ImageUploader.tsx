@@ -79,8 +79,7 @@ export function ImageUploader({
 
                         {file.type.startsWith("image/") ? (
                             <Image
-                                src={URL.createObjectURL(file)} // Crée une URL pour l'aperçu de l'image
-                                alt={file.name}
+                                src={URL.createObjectURL(file)}  alt={file.name}
                                 layout="fill"
                                 objectFit="cover"
                                 className="rounded-lg shadow-md"

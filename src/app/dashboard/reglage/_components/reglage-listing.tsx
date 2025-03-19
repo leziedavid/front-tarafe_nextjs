@@ -16,6 +16,7 @@ import { getBaseUrlImg } from '@/servives/baseUrl';
 import { Check, Edit, Eye, Minus, Trash, Settings, Home  } from 'lucide-react';
 import ImagePreviewDialog from '@/components/Dialog/ImagePreviewDialog';
 import ImageUploadDialog from '@/components/Dialog/ImageUploadDialog';
+import Image from 'next/image';
 
 
 import dynamic from "next/dynamic";
@@ -390,7 +391,7 @@ const updateReglages = async () => {
                   onClick={() => handleMenuClick('home')}
                 >
                   <Edit className="h-5 w-5 text-gray-600" />
-                  <span className="text-sm text-gray-600">Page d'accueil</span>
+                  <span className="text-sm text-gray-600">{"Page d'accueil"}</span>
                 </li>
 
                 {/* <li className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-lg cursor-pointer" onClick={() => handleMenuClick('apropos')} >
@@ -430,9 +431,15 @@ const updateReglages = async () => {
                   <div className='space-y-4 w-full'>
 
                   <div className="flex items-center space-x-4">
-                    <img onClick={() => OpenFilsInput(1)} className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${logoSiteReglages}`} alt="Image" />
+                    <Image onClick={() => OpenFilsInput(1)}
+                      className="w-40 h-30 object-cover"
+                      src={`${getBaseUrlImg()}/${logoSiteReglages}`} 
+                      alt="Image" 
+                      width={100}
+                      height={100}
+                      />
                     <div className="flex-1">
-                      <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">Titre de la page d'accueil</Label>
+                      <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">{"Titre de la page d'accueil"}</Label>
                       <Input
                         id="home-title"
                         placeholder="Titre de la page d'accueil"
@@ -463,10 +470,18 @@ const updateReglages = async () => {
                     <div className="flex space-x-4 flex-1 flex-col items-center">
                       <div className="flex space-x-4"> {/* Conteneur avec espace entre les images */}
                         <div className="flex flex-col items-center">
-                          <img  onClick={() => OpenFilsInput(2)} className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${images1Reglages}`}  alt="tarafé" />
+                          <Image  onClick={() => OpenFilsInput(2)} className="w-30 h-40 object-cover" 
+                          src={`${getBaseUrlImg()}/${images1Reglages}`}  alt="tarafé"
+                          width={100}
+                          height={100}
+                          />
                         </div>
                         <div className="flex flex-col items-center">
-                          <img onClick={() => OpenFilsInput(2)}  className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${images2Reglages}`} alt="tarafé" />
+                          <Image onClick={() => OpenFilsInput(2)}  className="w-30 h-40 object-cover" 
+                          src={`${getBaseUrlImg()}/${images2Reglages}`} alt="tarafé" 
+                          width={100}
+                          height={100}
+                          />
                         </div>
 
                       </div>
@@ -489,7 +504,11 @@ const updateReglages = async () => {
 
                     {/* Bloc 2 : Image 3 */}
                     <div className="flex-1 flex flex-col items-center">
-                      <img  onClick={() => OpenFilsInput(3)}  className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${images3Reglages}`} alt="tarafé" />
+                      <Image  onClick={() => OpenFilsInput(3)}  className="w-30 h-40 object-cover"
+                        src={`${getBaseUrlImg()}/${images3Reglages}`} alt="tarafé"
+                          width={100}
+                          height={100}
+                        />
                       {/* Switch pour activer/désactiver le Bloc 2 */}
                       <div className="flex items-center space-x-2 mt-4">
                         <Switch
@@ -615,7 +634,7 @@ const updateReglages = async () => {
                       </div>
 
                       <div className="flex flex-col">
-                        <Label htmlFor="heure-ouverture" className="block text-sm font-medium text-gray-700">Heure d'ouverture</Label>
+                        <Label htmlFor="heure-ouverture" className="block text-sm font-medium text-gray-700">{"Heure d'ouverture"}</Label>
                         <Input
                           id="heure-ouverture"
                           placeholder="Heure d'ouverture"
@@ -896,13 +915,17 @@ const updateReglages = async () => {
 
 
                   <div className="flex items-center space-x-4">
-                      <img onClick={() => OpenFilsInput(4)} className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${filesPublicite1}`} alt="Image" />
+                      <Image onClick={() => OpenFilsInput(4)} 
+                        className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${filesPublicite1}`} alt="Image"
+                        width={100}
+                        height={100}
+                        />
                       <div className="flex-1">
 
-                        <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">Titre de la page d'accueil</Label>
+                        <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">{"Titre de la page d'accueil"}</Label>
                         <Input id="home-title" placeholder="Titre de la page d'accueil" value={libellePublicite1} onChange={(e) => setLibellePublicite1(e.target.value)} />
 
-                        <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">Titre de la page d'accueil</Label>
+                        <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">{"Titre de la page d'accueil"}</Label>
                         <Input id="home-title" placeholder="Titre de la page d'accueil" value={link1} onChange={(e) => setLink1(e.target.value)} />
 
                       </div>
@@ -921,13 +944,17 @@ const updateReglages = async () => {
                       </div>
                     )}
                   <div className="flex items-center space-x-4">
-                      <img  onClick={() => OpenFilsInput(5)} className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${filesPublicite2}`} alt="Image" />
+                      <Image  onClick={() => OpenFilsInput(5)} className="w-40 h-30 object-cover" 
+                      src={`${getBaseUrlImg()}/${filesPublicite2}`} alt="Image" 
+                      width={100}
+                      height={100}
+                      />
                       <div className="flex-1">
 
-                        <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">Titre de la page d'accueil</Label>
+                        <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">{"Titre de la page d'accueil"}</Label>
                         <Input id="home-title" placeholder="Titre de la page d'accueil" value={libellePublicite2} onChange={(e) => setLibellePublicite2(e.target.value)} />
 
-                        <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">Titre de la page d'accueil</Label>
+                        <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">{"Titre de la page d'accueil"}</Label>
                         <Input id="home-title" placeholder="Titre de la page d'accueil" value={link2} onChange={(e) => setLink2(e.target.value)} />
 
                       </div>
@@ -972,7 +999,11 @@ const updateReglages = async () => {
                         <div className="flex space-x-4"> {/* Conteneur avec espace entre les images */}
                           {equipe.map((item, index) => (
                             <div key={index} className="flex flex-col items-center">
-                              <img className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${item.photo_equipe}`}  alt="tarafé" /> 
+                              <Image className="w-30 h-40 object-cover" src={`${getBaseUrlImg()}/${item.photo_equipe}`}
+                                alt="tarafé" 
+                                width={100}
+                                height={100}
+                                />
                               <Label htmlFor="equipe-members" className="block text-lg font-bold text-gray-700">{item.nomPren_equipe}</Label>
                               <Label htmlFor="equipe-members" className="block text-lg font-medium text-gray-700">{item.fonction_equipe}</Label>
                             </div>

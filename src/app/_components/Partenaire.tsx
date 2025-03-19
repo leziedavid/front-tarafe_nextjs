@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Skeleton from "react-loading-skeleton";
 import { getBaseUrlImg } from "@/servives/baseUrl";
+import Image from 'next/image';
+
 
 interface Props {
     data: { Path_partenaires: string }[];
@@ -44,10 +46,11 @@ const PartenaireCarousel: React.FC<Props> = ({ data }) => {
                                         <div className="p-1">
                                             <Card>
                                                 <CardContent className="flex aspect-square items-center justify-center p-6">
-                                                    <img
-                                                        src={`${getBaseUrlImg()}/${item.Path_partenaires}`}
+                                                    <Image src={`${getBaseUrlImg()}/${item.Path_partenaires}`}
                                                         alt={`Logo partenaire ${index + 1}`}
                                                         className="w-full h-auto object-contain"
+                                                        width={100}  // Largeur d'origine de l'image
+                                                        height={80} // Hauteur d'origine de l'image
                                                     />
                                                 </CardContent>
                                             </Card>

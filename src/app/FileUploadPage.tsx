@@ -1,5 +1,6 @@
 import { ImageUploader } from '@/components/ui/ImageUploader';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export function FileUploadPage({ apiUrl }: { apiUrl: string }) {
     
@@ -72,7 +73,11 @@ export function FileUploadPage({ apiUrl }: { apiUrl: string }) {
                     <div className="grid grid-cols-2 gap-4 mt-2">
                         {uploadedFiles.map((file, idx) => (
                             <div key={idx} className="relative w-32 h-32 overflow-hidden rounded-lg">
-                                <img src={file} alt={`Uploaded ${idx}`} className="object-cover w-full h-full rounded-lg" />
+                                <Image src={file} alt={`Uploaded ${idx}`}
+                                    className="object-cover w-full h-full rounded-lg"
+                                    width={500}
+                                    height={300}
+                                />
                             </div>
                         ))}
                     </div>

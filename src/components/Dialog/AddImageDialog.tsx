@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -10,6 +12,7 @@ import { addAllImagesForProductt, getAllImagesById } from '@/servives/AdminServi
 import { getBaseUrlImg } from '@/servives/baseUrl';
 import { Trash2 ,Trash} from 'lucide-react';
 import { Toaster } from "@/components/ui/sonner";
+import Image from 'next/image';
 
 // Définir la validation Zod pour plusieurs fichiers (max 5 fichiers et format png/jpg/jpeg)
 const filesValidationSchema = z.array(
@@ -164,10 +167,12 @@ const AddImageDialog: React.FC<AddImageDialogProps> = ({ open,id,code, onOpenCha
                             <div key={image.id_img_realisations} className="relative group" >
                                 {/* Afficher l'image si disponible */}
                                 {image.filles_img_realisations ? (
-                                    <img src={`${getBaseUrlImg()}/${image.filles_img_realisations}`}
+                                    <Image src={`${getBaseUrlImg()}/${image.filles_img_realisations}`}
                                         alt={`Image ${image.id_img_realisations}`}
                                         className="object-cover w-40 h-40 rounded-lg"
                                         style={{ objectFit: 'cover' }}
+                                        width={100}
+                                        height={100}
                                     />
                                 ) : (
                                     <div className="flex items-center justify-center w-full h-full text-gray-400">

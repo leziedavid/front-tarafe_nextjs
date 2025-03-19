@@ -237,7 +237,7 @@ export function OrderSheet({ productId, isOpen, onClose, datas }: OrderSheetProp
 
                     {/* Sélection de la police d'écriture */}
                     <div className="grid w-full items-center gap-1">
-                        <Label className="font-bold" htmlFor="police">Choisir la police d'écriture</Label>
+                        <Label className="font-bold" htmlFor="police">{"Choisir la police d'écriture "}</Label>
                         <Select
                             onValueChange={value => setValue('police', value)}
                             defaultValue={getValues('police')}
@@ -330,7 +330,7 @@ export function OrderSheet({ productId, isOpen, onClose, datas }: OrderSheetProp
 
                     {/* Sélection de la position */}
                     <div className="grid w-full items-center gap-1">
-                        <Label className="font-bold" htmlFor="position">Sélectionner l'emplacement de l'image</Label>
+                        <Label className="font-bold" htmlFor="position">{"Sélectionner l'emplacement de l'image"}</Label>
                         <Select onValueChange={value => setValue('position', value)} defaultValue={getValues('position')}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Sélectionner la position" />

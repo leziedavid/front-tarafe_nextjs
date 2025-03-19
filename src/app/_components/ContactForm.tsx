@@ -287,7 +287,7 @@ const ContactForm: React.FC<Props> = ({ data }) => {
                                                             <Checkbox className="text-[#6c6684]" />
                                                         </div>
                                                         <div className="text-xs font-extrabold font-title  md:w-3/4 mb-1">
-                                                            J'accepte que tarafé m&apos;envoie des communications marketing relatives à tarafé
+                                                            {"J'accepte que tarafé m'envoie des communications marketing relatives à tarafé"}
                                                         </div>
                                                     </div>
 

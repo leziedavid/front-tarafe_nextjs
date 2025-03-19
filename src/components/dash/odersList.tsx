@@ -129,7 +129,7 @@ export const OdersList: React.FC<Prop> = ({ ordersData }) => {
                 </TableBody>
             </Table>
 
-            <OrderDetail data={orders} isOpen={isSheetOpen} onClose={handleCloseSheet} />
+            <OrderDetail id={idOders} data={orders} isOpen={isSheetOpen} onClose={handleCloseSheet} />
 
         </>
     );

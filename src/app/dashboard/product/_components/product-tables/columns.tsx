@@ -25,11 +25,13 @@ export const columns: ColumnDef<Realisation>[] = [
       return (
         <div className="relative w-20 h-20"> {/* Taille de la miniature 24x24 (taille ajustable) */}
           {imageUrl ? (
-            <img
+            <Image
               src={`${getBaseUrlImg()}/${imageUrl}`}
               alt={imageAlt}
               className="object-cover w-full h-full rounded-lg"
               style={{ objectFit: 'cover' }} // Assure la couverture sans déformation
+              width={100}
+              height={100}
             />
           ) : (
             <div className="flex items-center justify-center w-full h-full text-gray-400">

@@ -13,9 +13,11 @@ import { ApiDataOders, OrderDetails } from "@/interfaces/AdminInterface";
 import { getdetailCommandes } from "@/servives/AdminService";
 import useAuth from "@/servives/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import Image from 'next/image';
 
 
 interface OrderDetailProps {
+    id: number;
     data: OrderDetails[];
     isOpen: boolean;
     onClose: () => void;
@@ -67,7 +69,7 @@ export function OrderDetail({ data, isOpen, onClose }: OrderDetailProps) {
 
                     <Card className="mb-8 shadow-lg">
                         <CardHeader className="bg-[#242078] text-white">
-                            <CardTitle>Informations sur l'utilisateur</CardTitle>
+                            <CardTitle>{"Informations sur l'utilisateur"}</CardTitle>
                         </CardHeader>
 
                         <CardContent>
@@ -92,7 +94,7 @@ export function OrderDetail({ data, isOpen, onClose }: OrderDetailProps) {
                                 <p><strong>Status de la commande :</strong> {data[0]?.status_orders === 0 ? 'Non traité' : 'Traité'}</p>
                                 <p><strong>Remarques :</strong> {data[0]?.notes_orders || "Aucune remarque"}</p>
 
-                                <p><strong>Nom de l'entreprise :</strong> {data[0]?.EntrepriseAchats}</p>
+                                <p><strong>{"Nom de l'entreprise"} :</strong> {data[0]?.EntrepriseAchats}</p>
                                 <p><strong>Facture :</strong> <a href={data[0]?.factures} target="_blank" className="text-blue-600">Voir la facture</a></p>
                             </div>
                         </CardContent>

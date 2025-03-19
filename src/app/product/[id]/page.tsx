@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import AllProduct from "../../_components/AllProduct";
 import {Filter, MoveRight, SearchIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import LuxuryWatchProductPage from "../../_components/WatchProductCard";
@@ -34,7 +33,7 @@ import {DetailRealisation,Reglage,Realisation,Images} from "@/interfaces/HomeInt
 import { getRealisationsByLaballe } from "@/servives/HomeService";
 import { ApiResponse } from "@/interfaces/ApiResponse";
 import useAuth from "@/servives/useAuth";
-import { Breadcrumbs } from "@/components/breadcrumbs";
+// import { Breadcrumbs } from "@/components/breadcrumbs";
 import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 
 
@@ -79,9 +78,9 @@ const Page: React.FC = () => {
       <Header />
 
       <div className={`min-h-[calc(100vh_-_56px)] py-5 px-3 lg:px-6 mt-[4rem] md:mt-[4rem]`}>
-          <div className="flex items-center gap-2 px-4">
+          {/* <div className="flex items-center gap-2 px-4">
             <Breadcrumbs />
-          </div>
+          </div> */}
           <LuxuryWatchProductPage data={realisations} image={images}  />
       </div>
       <WhatsappFloatButton />

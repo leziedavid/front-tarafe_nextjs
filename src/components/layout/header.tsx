@@ -3,7 +3,7 @@
 import React from 'react';
 import { SidebarTrigger } from '../ui/sidebar';
 import { Separator } from '../ui/separator';
-import { Breadcrumbs } from '../breadcrumbs';
+// import { Breadcrumbs } from '../breadcrumbs';
 import { UserNav } from './user-nav';
 import ThemeToggle from './ThemeToggle/theme-toggle';
 
@@ -15,7 +15,7 @@ export default function Header() {
       <div className="flex items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 h-4" />
-        <Breadcrumbs />
+        {/* <Breadcrumbs /> */}
       </div>
 
       <div className="flex items-center gap-2 px-4">

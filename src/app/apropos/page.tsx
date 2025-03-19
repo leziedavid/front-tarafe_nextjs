@@ -22,8 +22,6 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import AllProduct from "../_components/AllProduct";
-import {Filter, MoveRight, SearchIcon, Share2, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ApiData, Equipe, Reglage } from "@/interfaces/HomeInterface";
@@ -86,7 +84,12 @@ const isDataEmpty = !reglage || reglage.length <= 0;
                     {equipe.id_equipe % 2 !== 0 ? (
                       <div>
                         <div className="sm:justify-end justify-start items-start gap-2.5 flex">
-                          <img className="rounded-xl object-cover " src={`${getBaseUrlImg()}/${equipe.photo_equipe}`} alt={`Image de ${equipe.nomPren_equipe}`} />
+                          <Image className="rounded-xl object-cover"
+                            src={`${getBaseUrlImg()}/${equipe.photo_equipe}`}
+                            alt={`Image de ${equipe.nomPren_equipe}`}
+                            width={500}
+                            height={300}
+                            />
                         </div>
                         <div className="text-center mt-4">
                           <p className="text-lg font-semibold">{equipe.nomPren_equipe}</p>
@@ -96,7 +99,12 @@ const isDataEmpty = !reglage || reglage.length <= 0;
                     ) : (
                       /* Si l'id est pair, afficher dans la deuxième image */
                       <div>
-                        <img className="sm:ml-0 ml-auto rounded-xl object-cover " src={`${getBaseUrlImg()}/${equipe.photo_equipe}`} alt={`Image de ${equipe.nomPren_equipe}`}/>
+                        <Image className="sm:ml-0 ml-auto rounded-xl object-cover"
+                          src={`${getBaseUrlImg()}/${equipe.photo_equipe}`}
+                          alt={`Image de ${equipe.nomPren_equipe}`}
+                          width={500}
+                          height={300}
+                          />
                         <div className="text-center mt-4">
                           <p className="text-lg font-semibold">{equipe.nomPren_equipe}</p>
                           <p className="text-gray-500">{equipe.fonction_equipe}</p>
