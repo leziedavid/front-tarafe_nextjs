@@ -125,22 +125,26 @@ const Page: React.FC = () => {
             ) : (
 
               <>
-                <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-4">
 
+
+                {/* Grid de produits */}
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                   {dataImages.map((item, index) => (
-                    <div key={index} className="flex flex-col gap-4">
-
-                      <div className="bg-muted rounded-md aspect-video mb-0">
-                        <Image src={`${getBaseUrlImg()}/${item.files_gallerie_images}`} alt="logo"
-                          width={500} height={300} className="object-cover rounded-md cursor-pointer"
-                          onClick={() => handleImageClick(`${getBaseUrlImg()}/${item.files_gallerie_images}`)} // Quand l'image est cliquée, on met à jour l'URL
-                          />
-
+                    <div key={index} className="cursor-pointer">
+                      {/* Image en arrière-plan */}
+                      <div className="bg-muted rounded-md aspect-video">
+                        <Image src={`${getBaseUrlImg()}/${item.files_gallerie_images}`} alt="Tarafe"
+                          width={500}
+                          height={300}
+                          className="object-cover rounded-md"
+                          layout="intrinsic"
+                          onClick={() => handleImageClick(`${getBaseUrlImg()}/${item.files_gallerie_images}`)}
+                        />
                       </div>
                     </div>
                   ))}
-
                 </div>
+
 
                 {/* Pagination */}
                 <PaginationComponent

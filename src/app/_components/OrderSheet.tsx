@@ -346,10 +346,10 @@ export function OrderSheet({ productId, isOpen, onClose, datas }: OrderSheetProp
                     </div>
 
                     {/* Champ télécharger autre support */}
-                    <div className="grid w-full items-center gap-1 mb-3">
+                    {/* <div className="grid w-full items-center gap-1 mb-3">
                         <Label className="font-bold" htmlFor="otherFiles">Télécharger un autre support (facultatif)</Label>
                         <ImageUploader onFilesChange={onOtherFilesChange} multiple={true} />
-                    </div>
+                    </div> */}
 
                     <SheetFooter className="mt-auto">
                         <div className="flex justify-center space-x-2">

@@ -13,10 +13,10 @@ import Image from 'next/image';  // Import de Image de Next.js
 
 interface Feature5Props {
     data: Realisation[];
-    reglage:  Reglage[];
+    reglage: Reglage[];
 }
 
-const Feature5: React.FC<Feature5Props> = ({ data,reglage }) => {
+const Feature5: React.FC<Feature5Props> = ({ data, reglage }) => {
 
     const router = useRouter();
     // Fonction pour tronquer la description HTML
@@ -55,66 +55,46 @@ const Feature5: React.FC<Feature5Props> = ({ data,reglage }) => {
                 ) : (
 
                     <div className="flex flex-col gap-10">
-                        {/* Section titre */}
-                        <div className="flex gap-4 flex-col items-start">
-                            <div>
-                                <Badge className="bg-[#242078] hover:bg-[#ffb44b]">Du nouveau !</Badge>
+                            {/* Section titre */}
+                            <div className="flex gap-4 flex-col items-start">
+                                <div>
+                                    <Badge className="bg-[#242078] hover:bg-[#ffb44b]">Du nouveau !</Badge>
+                                </div>
+                                <div className="flex gap-2 flex-col">
+                                    <h2 className="text-3xl md:text-5xl uppercase tracking-tighter max-w-xl font-bold text-left">
+                                        {reglage[0]?.libelle_section}
+                                    </h2>
+                                    <p className="text-lg max-w-xl lg:max-w-lg leading-relaxed tracking-tight text-muted-foreground text-left">
+                                        {reglage[0]?.description_section}
+                                    </p>
+                                </div>
                             </div>
-                            <div className="flex gap-2 flex-col">
-                                <h2 className="text-3xl md:text-5xl uppercase tracking-tighter max-w-xl font-bold text-left">
-                                    {reglage[0]?.libelle_section}
-                                </h2>
-                                <p className="text-lg max-w-xl lg:max-w-lg leading-relaxed tracking-tight text-muted-foreground text-left">
-                                    {reglage[0]?.description_section}
-                                </p>
-                            </div>
-                        </div>
 
-                        {/* Section Grid pour les produits */}
-                        <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-4">
-                            {data.map((item, index) => (
-                                <div key={index} className="flex flex-col gap-4">
-
-                                    <div className="bg-muted rounded-md aspect-video">
-                                        <Image src={`${getBaseUrlImg()}/${item.images_realisations}`} alt={item.libelle_realisations}
-                                            width={500}
-                                            height={300}
-                                            className="object-cover rounded-md"
-                                            layout="intrinsic"
-                                        />
-                                    </div>
-
-                                    {/* Conteneur avec une taille maximale de titre et de description */}
-                                    <div className="flex flex-col h-full">
-
-                                        <div className="flex justify-between items-center">
-                                            <div className="text-sm md:text-lg font-title  font-bold ">
-                                                {item.libelle_realisations}
-                                            </div>
+                            {/* Grid de produits */}
+                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                                {data.map((item, index) => (
+                                    <div key={index} className="cursor-pointer">
+                                        {/* Image en arrière-plan */}
+                                        <div className="bg-muted rounded-md aspect-video">
+                                            <Image src={`${getBaseUrlImg()}/${item.images_realisations}`} alt={item.libelle_realisations}
+                                                width={500}
+                                                height={300}
+                                                className="object-cover rounded-md"
+                                                layout="intrinsic"
+                                            />
                                         </div>
-
-                                        {/* Titre du produit - Limité à 2 lignes */}
-                                        {/* <h3 className="text-sm md:text-lg tracking-tight font-base line-clamp-2">
-                                            {item.libelle_realisations}
-                                        </h3> */}
-
-                                        {/* Description du produit tronquée */}
+                                        {/* Informations du produit */}
+                                        <h3 className="text-sm font-bold truncate">{item.libelle_realisations}</h3>
                                         <p
                                             className="text-muted-foreground text-sm md:text-base line-clamp-3"
-                                            dangerouslySetInnerHTML={{
-                                                __html: truncateDescription(item.descript_real, 20), // 150 caractères avant de tronquer
-                                            }}
-                                        ></p>
+                                            dangerouslySetInnerHTML={{ __html: truncateDescription(item.descript_real, 20) }}
+                                        />
+                                        <Button className="gap-4 w-full cursor-pointer" onClick={() => navigateTo(item.libelle_realisations)}>
+                                            Commander <MoveRight className="w-4 h-4" />
+                                        </Button>
                                     </div>
-
-                                    {/* Bouton de commande */}
-                                    <Button className="gap-4 w-full cursor-pointer" onClick={() => navigateTo(item.libelle_realisations)}>
-                                        Commander<MoveRight className="w-4 h-4" />
-                                    </Button>
-
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
 
                     </div>
 

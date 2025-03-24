@@ -9,7 +9,7 @@ import Header from '../_components/Header';
 import Footer from "../_components/Footer";
 
 import { Button } from "@/components/ui/button"
-import {MoveRight} from "lucide-react";
+import { MoveRight } from "lucide-react";
 import { ApiAllDataResponse, OptionRealisation, Realisation, RealisationData, Reglage } from "@/interfaces/HomeInterface";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
@@ -28,7 +28,7 @@ const Page: React.FC = () => {
 
   const token = useAuth();  // Récupérer le token à l'aide du hook
   // Déclaration d'un état pour stocker les données
-  const [reglage, setReglages] = useState<Reglage []>([]);
+  const [reglage, setReglages] = useState<Reglage[]>([]);
   const [realisation, setRealisation] = useState<RealisationData[]>([]);
   const [option, setOption] = useState<OptionRealisation[]>([]);
   const router = useRouter();
@@ -40,7 +40,7 @@ const Page: React.FC = () => {
 
   const fetchData = async () => {
     const validCategoryId = selectedCategory ?? 0;
-    const result: ApiResponse<ApiAllDataResponse> = await getAllRealisations(token,currentPage,validCategoryId);
+    const result: ApiResponse<ApiAllDataResponse> = await getAllRealisations(token, currentPage, validCategoryId);
 
     if (result.statusCode !== 200) {
       toast.error(result.message);
@@ -59,20 +59,20 @@ const Page: React.FC = () => {
     setCurrentPage(page); // Mettre à jour la page courante
   };
 
-    // Appeler la fonction fetchData à chaque changement de page ou de catégorie
-    useEffect(() => {
-      fetchData();
-    }, [currentPage, selectedCategory]); // Dépendances mises à jour pour inclure selectedCategory
-  
+  // Appeler la fonction fetchData à chaque changement de page ou de catégorie
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, selectedCategory]); // Dépendances mises à jour pour inclure selectedCategory
 
-    const handleFilterChange = (categoryId: number | null) => {
-      // Si categoryId est null, on utilise une valeur par défaut (par exemple, 0)
-      const validCategoryId = categoryId ?? 0; // Si `categoryId` est `null`, on utilise 0 comme valeur par défaut.
-      setSelectedCategory(validCategoryId); // Mettre à jour la catégorie sélectionnée
-      setCurrentPage(1); // Réinitialiser la page à 1 lors du changement de catégorie
-    };
 
-const isDataEmpty = !realisations || realisations.length <= 0;
+  const handleFilterChange = (categoryId: number | null) => {
+    // Si categoryId est null, on utilise une valeur par défaut (par exemple, 0)
+    const validCategoryId = categoryId ?? 0; // Si `categoryId` est `null`, on utilise 0 comme valeur par défaut.
+    setSelectedCategory(validCategoryId); // Mettre à jour la catégorie sélectionnée
+    setCurrentPage(1); // Réinitialiser la page à 1 lors du changement de catégorie
+  };
+
+  const isDataEmpty = !realisations || realisations.length <= 0;
 
   // Fonction pour tronquer la description HTML
   const truncateDescription = (htmlContent: string, maxLength: number) => {
@@ -95,7 +95,7 @@ const isDataEmpty = !realisations || realisations.length <= 0;
   const navigateTo = (path: string) => {
     const libelleModified = path.replace(/ /g, '-');
     router.push('/product/' + libelleModified);
-};
+  };
 
 
   return (
@@ -120,7 +120,7 @@ const isDataEmpty = !realisations || realisations.length <= 0;
           <div className="md:container md:mx-auto flex flex-col gap-14">
 
             <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
-              <h4 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-bold whitespace-nowrap">
+              <h4 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl tracking-tighter max-w-xl font-bold whitespace-nowrap">
                 DÉCOUVRIR NOS CRÉATIONS
               </h4>
             </div>
@@ -134,52 +134,42 @@ const isDataEmpty = !realisations || realisations.length <= 0;
             ) : (
 
               <>
-                  <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-4">
 
-                    {realisations.map((item, index) => (
-                      <div key={index} className="flex flex-col gap-4">
 
-                        <div className="bg-muted rounded-md aspect-video mb-0">
-                          <Image src={`${getBaseUrlImg()}/${item.images_realisations}`}
-                            alt={item.libelle_realisations} width={500} height={300} className="object-cover rounded-md" />
-                        </div>
-
-                        {/* Conteneur avec une taille maximale de titre et de description */}
-                        <div className="flex flex-col h-full">
-                          {/* Titre du produit - Limité à 2 lignes */}
-
-                          <div className="flex justify-between items-center">
-                            <div className="text-sm md:text-lg font-title  font-bold ">
-                              {item.libelle_realisations}
-                            </div>
-                          </div>
-
-                          {/* Description du produit tronquée */}
-                          <p
-                            className="text-muted-foreground text-sm md:text-base line-clamp-3"
-                            dangerouslySetInnerHTML={{
-                              __html: truncateDescription(item.descript_real, 20), // 150 caractères avant de tronquer
-                            }}
-                          ></p>
-                        </div>
-
-                        <Button className="gap-4 w-full cursor-pointer" onClick={() => navigateTo(item.libelle_realisations)}>
-                          Commander<MoveRight className="w-4 h-4" />
-                        </Button>
-
+                {/* Grid de produits */}
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                  {realisations.map((item, index) => (
+                    <div key={index} className="cursor-pointer">
+                      {/* Image en arrière-plan */}
+                      <div className="bg-muted rounded-md aspect-video">
+                        <Image src={`${getBaseUrlImg()}/${item.images_realisations}`} alt={item.libelle_realisations}
+                          width={500}
+                          height={300}
+                          className="object-cover rounded-md"
+                          layout="intrinsic"
+                        />
                       </div>
-                    ))}
+                      {/* Informations du produit */}
+                      <h3 className="text-sm font-bold truncate">{item.libelle_realisations}</h3>
+                      <p
+                        className="text-muted-foreground text-sm md:text-base line-clamp-3"
+                        dangerouslySetInnerHTML={{ __html: truncateDescription(item.descript_real, 20) }}
+                      />
+                      <Button className="gap-4 w-full cursor-pointer" onClick={() => navigateTo(item.libelle_realisations)}>
+                        Commander <MoveRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
 
-                  </div>
+                {/* Pagination */}
+                <PaginationComponent
+                  currentPage={currentPage}
+                  lastPage={totalPages}
+                  onPageChange={handlePageChange}
+                />
 
-                  {/* Pagination */}
-                  <PaginationComponent
-                    currentPage={currentPage}
-                    lastPage={totalPages}
-                    onPageChange={handlePageChange}
-                  />
-
-                </>
+              </>
             )}
 
 
@@ -188,7 +178,7 @@ const isDataEmpty = !realisations || realisations.length <= 0;
         </div>
 
       </div>
-      
+
       <WhatsappFloatButton />
 
       <Footer data={reglage} />

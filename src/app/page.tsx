@@ -64,7 +64,7 @@ useEffect(() => {
         <Hero3 data={reglages} />
         <Feature5 data={realisation} reglage={reglages}/>
         <Pub data={publicites}/>
-        <Partenaire data={partenaire}/>
+        {/* <Partenaire data={partenaire}/> */}
         <ContactForm data={reglages} />
         <WhatsappFloatButton />
 

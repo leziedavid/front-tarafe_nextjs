@@ -1,13 +1,13 @@
 "use client"
 
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Star, Heart, Share2, ShoppingCart, Check, Pen } from 'lucide-react';
 import Image from 'next/image';
 import { OrderSheet } from './OrderSheet';
-import {Realisation,Images} from "@/interfaces/HomeInterface";
+import { Realisation, Images } from "@/interfaces/HomeInterface";
 import { getBaseUrlImg } from "@/servives/baseUrl";
 import { ChevronLeft, ChevronRight } from "lucide-react"; // Import des flèches
 import { Skeleton } from "@/components/ui/skeleton";
@@ -72,12 +72,12 @@ interface ProductPageProps {
 
 interface Props {
     data: Realisation[];
-    image:  Images[];
+    image: Images[];
 }
 
-const LuxuryWatchProductPage: React.FC<Props> = ({ data,image }) => {
+const LuxuryWatchProductPage: React.FC<Props> = ({ data, image }) => {
 
-       // Initialiser l'image principale avec la première image de la liste `image`
+    // Initialiser l'image principale avec la première image de la liste `image`
     const [mainImage, setMainImage] = useState<Images>(image[0]);
 
     const [quantity, setQuantity] = useState(1);
@@ -93,15 +93,15 @@ const LuxuryWatchProductPage: React.FC<Props> = ({ data,image }) => {
 
     useEffect(() => {
         // Si le tableau `image` change, on met à jour l'image principale pour être la première image
-        if (image.length > 0) { setMainImage(image[0]);}
+        if (image.length > 0) { setMainImage(image[0]); }
     }, [image]); // Utiliser useEffect pour réagir au changement des images
 
 
     // Assurez-vous que mainImage est défini avant d'accéder à ses propriétés
     const mainImageSrc = mainImage ? `${getBaseUrlImg()}/${mainImage.filles_img_realisations}` : '';
 
-    const imagesPerPage = 3; // Nombre d'images par page
-  const [currentPage, setCurrentPage] = useState(0); // Page actuelle
+    const imagesPerPage = 2; // Nombre d'images par page
+    const [currentPage, setCurrentPage] = useState(0); // Page actuelle
 
     // Calculer les images à afficher pour la page actuelle
     const currentImages = image.slice(
@@ -146,7 +146,7 @@ const LuxuryWatchProductPage: React.FC<Props> = ({ data,image }) => {
                 </div>
 
             ) : (
-                
+
                 <div className="flex justify-center items-center min-h-screen px-4 lg:px-8">
 
                     <Card className="w-full max-w-5xl h-fit overflow-hidden bg-white border-0 shadow-none">
@@ -163,43 +163,54 @@ const LuxuryWatchProductPage: React.FC<Props> = ({ data,image }) => {
                                             alt={mainImage.codeId} // Alt text for accessibility
                                             width={500} // Ajuster selon votre design
                                             height={500} // Ajuster selon votre design
-                                            className="max-w-full max-h-full object-contain"
+                                            className="max-w-full max-h-full object-contain bg-muted rounded-md "
                                         />
                                     ) : (
                                         <p>Image non disponible</p> // Message si l'image principale est introuvable
                                     )}
                                 </div>
 
+
                                 {/* Conteneur de pagination avec flèches */}
                                 <div className="flex items-center w-full justify-center mb-4 space-x-4">
                                     {/* Flèche gauche (Retour) */}
-                                    <div className={`w-10 h-10 flex items-center justify-center cursor-pointer rounded-full bg-gray-300 hover:bg-gray-400 transition transform hover:scale-110 ${currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""}`} onClick={prevPage} >
+                                    <div
+                                        className={`w-10 h-10 flex items-center justify-center cursor-pointer rounded-full bg-gray-300 hover:bg-gray-400 transition transform hover:scale-110 
+      ${currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                        onClick={prevPage}
+                                    >
                                         <ChevronLeft className="h-6 w-6 text-gray-800" />
                                     </div>
 
-                                    {/* Petites images sous l'image principale */}
-                                    <div className="flex space-x-4 w-full justify-start overflow-x-auto scrollbar-hide">
+                                    {/* Slider centré */}
+                                    <div className="flex items-center space-x-2 overflow-x-auto scrollbar-hide scroll-smooth max-w-[90%] md:max-w-[70%] justify-center">
                                         {currentImages.map((item) => (
-                                            <div key={item.id_img_realisations} className="w-24 h-24 cursor-pointer rounded-md hover:opacity-75 transition" onClick={() => { }} >
+                                            <div
+                                                key={item.id_img_realisations}
+                                                className="w-24 h-24 cursor-pointer rounded-md hover:opacity-75 transition bg-muted flex items-center justify-center"
+                                                onClick={() => setMainImage(item)}
+                                            >
                                                 <Image
                                                     src={`${getBaseUrlImg()}/${item.filles_img_realisations}`}
                                                     alt={item.codeId}
                                                     width={100}
                                                     height={100}
-                                                    className="object-cover w-full h-full"
-                                                    onClick={() => setMainImage(item)}
+                                                    className="object-contain w-full h-full"
                                                 />
                                             </div>
                                         ))}
                                     </div>
 
                                     {/* Flèche droite (Suivant) */}
-                                    <div className={`w-10 h-10 flex items-center justify-center cursor-pointer rounded-full bg-gray-300 hover:bg-gray-400 transition transform hover:scale-110 ${(currentPage + 1) * imagesPerPage >= image.length ? "opacity-50 cursor-not-allowed" : ""}`}
-                                        onClick={nextPage} >
+                                    <div
+                                        className={`w-10 h-10 flex items-center justify-center cursor-pointer rounded-full bg-gray-300 hover:bg-gray-400 transition transform hover:scale-110 
+      ${(currentPage + 1) * imagesPerPage >= image.length ? "opacity-50 cursor-not-allowed" : ""}`}
+                                        onClick={nextPage}
+                                    >
                                         <ChevronRight className="h-6 w-6 text-gray-800" />
                                     </div>
-
                                 </div>
+
 
                             </div>
 
@@ -242,7 +253,7 @@ const LuxuryWatchProductPage: React.FC<Props> = ({ data,image }) => {
         </>
 
     );
-    
+
 
 };
 
