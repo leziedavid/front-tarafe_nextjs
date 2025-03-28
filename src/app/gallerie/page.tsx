@@ -106,6 +106,7 @@ const Page: React.FC = () => {
     <>
 
       <Header />
+
       <div className={`min-h-[calc(100vh_-_56px)] py-5 px-3 lg:px-6 mt-[4rem] md:mt-[4rem]`}>
 
         <div className="w-full py-20 lg:py-20">
@@ -125,7 +126,6 @@ const Page: React.FC = () => {
             ) : (
 
               <>
-
 
                 {/* Grid de produits */}
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2">
