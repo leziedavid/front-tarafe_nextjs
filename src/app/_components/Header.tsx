@@ -53,21 +53,12 @@ const Header: React.FC = ({ }) => {
             <div className="py-4 md:py-2 items-center w-full bg-white">
 
                 <div className="max-w-7xl mx-4 px-4 lg:mx-auto flex justify-between items-center gap-x-10">
-{/* 
-                    <Link href="/">
-                        <Image src="/logos2.png"          // Chemin de l'image
-                            alt="Logo OCI"           // Texte alternatif
-                            width={300}               // Largeur de l'image
-                            height={0}              // Hauteur de l'image
-                            className="!max-w-40 h-10 md:h-14"   // Classes CSS supplémentaires
-                        />
-                    </Link> */}
 
                     <div className="flex justify-start items-center gap-4 ">
                     <Link href="/" className="flex items-center">
-                        <Image src="/logos2.png" alt="Logo" className="h-10"
+                        <Image src="/logo/Logo-Tarafé-slogan-principal.png" alt="Logo" className="h-10"
                         width={100}  // Largeur d'origine de l'image
-                        height={80} // Hauteur d'origine de l'image
+                        height={90} // Hauteur d'origine de l'image
                         />
                     </Link>
                 </div>

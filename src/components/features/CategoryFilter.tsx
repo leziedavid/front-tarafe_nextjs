@@ -14,33 +14,31 @@ interface CategoryFilterProps {
 }
 
 const CategoryFilter: React.FC<CategoryFilterProps> = ({ options, onFilterChange }) => {
+
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null); // État pour suivre la catégorie sélectionnée
     const [loading, setLoading] = useState<boolean>(false); // État pour gérer le chargement
 
     const handleCategoryChange = (categoryId: number | null) => {
         setLoading(true); // Commence le chargement dès qu'une catégorie est sélectionnée
         setSelectedCategory(categoryId); // Mise à jour de la catégorie sélectionnée
-
         onFilterChange(categoryId); // Appel la fonction pour filtrer par catégorie
-
         // Simuler un délai de chargement (par exemple, attendre que la nouvelle page soit chargée)
         setTimeout(() => setLoading(false), 500); // Arrêter le chargement après un délai
     };
 
     return (
-        <div className="mb-8">
-            <h4 className="text-xl font-bold mb-4">Filtrer par catégorie</h4>
+        <div className="mb-3">
+            <h4 className="text-xl font-bold mb-2">Filtrer par catégorie</h4>
             <div className="flex gap-4 flex-wrap">
-                <button
-                    className={`p-2 rounded-md text-sm ${selectedCategory === null ? 'bg-[#242078] text-white' : 'bg-gray-200'}`}
-                    onClick={() => handleCategoryChange(null)}
-                >
+                
+                <button className={`p-2 rounded-full px-3 text-sm text-center me-3 ${selectedCategory === null ? 'bg-[#242078] text-white' : 'bg-gray-200'}`} onClick={() => handleCategoryChange(null)} >
                     Toutes
                 </button>
+
                 {options.map((option) => (
                     <button
                         key={option.id_option_reaalisation}
-                        className={`p-2 rounded-md text-sm ${selectedCategory === option.id_option_reaalisation ? 'bg-[#242078] text-white' : 'bg-gray-200'}`}
+                        className={`p-2 rounded-full px-3 text-sm text-center me-3 ${selectedCategory === option.id_option_reaalisation ? 'bg-[#242078] text-white' : 'bg-gray-200'}`}
                         onClick={() => handleCategoryChange(option.id_option_reaalisation)}
                     >
                         {selectedCategory === option.id_option_reaalisation && loading ? (

@@ -255,3 +255,50 @@ export interface AllOptionsResponse {
     to: number;
     total: number;
 }
+
+export interface CategorieTransaction {
+    id: number;
+    label: string;
+    defautPrice: string;
+    created_at: string | null;
+    updated_at: string | null;
+}
+
+
+export interface CategorieTransactionResponse {
+    data: CategorieTransaction[];
+}
+
+// Définir l'interface pour la réponse API
+export interface GraphData {
+    date: string;
+    value: number;
+    label: string;
+    color: string;
+}
+
+// Structure des données retournées par l'API
+export interface TransactionDataGraphe {
+    BarGraphByDate: GraphData[];
+    BarGraphByTypeOperation: GraphData[];
+    BarGraphByCategorieTransactions: GraphData[];
+    PieGraphByDate: GraphData[];
+    PieGraphByTypeOperation: GraphData[];
+    PieGraphByCategorieTransactions: GraphData[];
+}
+
+
+export interface GalleryCategory {
+    idcategories_gallery: number;
+    libelle: string;
+}
+
+export interface GalleryCategoryResponse {
+    data: GalleryCategory[];
+}
+
+
+export interface CategoryAssignment {
+    id_image: number;
+    categories: number[]; // ou string[], selon ton API
+}

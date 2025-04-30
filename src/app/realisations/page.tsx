@@ -141,21 +141,13 @@ const Page: React.FC = () => {
                   {realisations.map((item, index) => (
                     <div key={index} className="cursor-pointer">
                       {/* Image en arrière-plan */}
-                      <div className="bg-muted rounded-md aspect-video">
-                        <Image src={`${getBaseUrlImg()}/${item.images_realisations}`} alt={item.libelle_realisations}
-                          width={500}
-                          height={300}
-                          className="object-cover rounded-md"
-                          layout="intrinsic"
-                        />
+                      <div className="bg-muted rounded-md aspect-video mb-2">
+                        <Image src={`${getBaseUrlImg()}/${item.images_realisations}`} alt={item.libelle_realisations}  width={500} height={300} className="object-cover rounded-md" layout="intrinsic" />
                       </div>
                       {/* Informations du produit */}
-                      <h3 className="text-sm font-bold truncate">{item.libelle_realisations}</h3>
-                      <p
-                        className="text-muted-foreground text-sm md:text-base line-clamp-3"
-                        dangerouslySetInnerHTML={{ __html: truncateDescription(item.descript_real, 20) }}
-                      />
-                      <Button className="gap-4 w-full cursor-pointer" onClick={() => navigateTo(item.libelle_realisations)}>
+                      <h3 className="text-xl font-bold truncate mb-2">{item.libelle_realisations}</h3>
+                      <p className="text-muted-foreground text-sm md:text-base line-clamp-3 mb-2" dangerouslySetInnerHTML={{ __html: truncateDescription(item.descript_real, 20) }} />
+                      <Button className="gap-4 w-full cursor-pointer bg-white text-black hover:text-white border-2 border-gray-500 hover:border-white" onClick={() => navigateTo(item.libelle_realisations)}>
                         Commander <MoveRight className="w-4 h-4" />
                       </Button>
                     </div>

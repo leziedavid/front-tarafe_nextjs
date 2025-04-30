@@ -57,6 +57,7 @@ export default function ReglageListingPage({isDialogOpen,onDialogOpenChange}: Re
   const [activeCard, setActiveCard] = useState("home"); // Le type de activeCard peut être un id de carte ou null
 
 // Initialisation des états pour chaque champ
+const [idReglages, setidReglages] = useState(0);
 const [entrepriseReglages, setEntrepriseReglages] = useState('');
 const [descFooter, setDescFooter] = useState('');
 const [descApropos, setDescApropos] = useState('');
@@ -115,6 +116,7 @@ const [isLoading, setIsLoading] = useState(true);
         // const equipes = response.data.reglages[1]; // On prend le deuxième élément
         setEquipe(response.data.equipes || '');
         // Remplir les champs avec les données récupérées
+        setidReglages(reglages.id_reglages || 0);
         setEntrepriseReglages(reglages.entreprise_reglages || '');
         setDescFooter(reglages.desc_footer || '');
         setDescApropos(reglages.description_reglages || '');
@@ -205,6 +207,7 @@ const updateReglages = async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        id_reglages: idReglages,
         entreprise_reglages: entrepriseReglages,
         desc_footer: descFooter,
         titre_banner1: titreBanner1,
@@ -236,6 +239,59 @@ const updateReglages = async () => {
   } catch (error) {
     console.error('Erreur lors de la mise à jour:', error);
     alert('Erreur lors de la mise à jour');
+  }
+};
+
+// Fonction pour mettre à jour les réglages dans la base de données
+const updatePublicites = async (stepe: number) => {
+  try {
+    const token = localStorage.getItem('token'); // Par exemple, récupère le token JWT.
+    const response = await fetch('/api/AddMultifiles', {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: idpublicite,
+        entreprise_reglages: entrepriseReglages,
+        desc_footer: descFooter,
+        titre_banner1: titreBanner1,
+        texte_banner1: texteBanner1,
+        titre_banner2: titreBanner2,
+        texte_banner2: texteBanner2,
+        couleurTexte_banner1: couleurTexteBanner1,
+        couleurTexte_banner2: couleurTexteBanner2,
+        localisation_reglages: localisation,
+        heure_ouverture: heureOuverture,
+        email_reglages: email,
+        contact1_reglages: contact1,
+        contact2_reglages: contact2,
+        lienFacebbook_reglages: facebook,
+        liensYoutub_reglages: youtube,
+        lienLikedin_reglages: linkedin,
+        lienInstagram_reglages: instagram,
+        isBlock1Active: isBlock1Active,
+        isBlock2Active: isBlock2Active,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Échec de la mise à jour des réglages');
+    }
+
+    const result = await response.json();
+    alert('Réglages mis à jour avec succès');
+      fetchReglages();
+      getDataPub();
+
+  } catch (error) {
+
+    console.error('Erreur lors de la mise à jour:', error);
+    alert('Erreur lors de la mise à jour');
+    fetchReglages();
+    getDataPub();
+
   }
 };
 
@@ -466,9 +522,9 @@ const updateReglages = async () => {
 
                   {/* Conteneur pour les deux blocs d'images avec Flexbox */}
                   <div className="flex space-x-6">
-                    {/* Bloc 1 : Image 1 et Image 2 alignées horizontalement */}
-                    <div className="flex space-x-4 flex-1 flex-col items-center">
-                      <div className="flex space-x-4"> {/* Conteneur avec espace entre les images */}
+
+                    {/* <div className="flex space-x-4 flex-1 flex-col items-center">
+                      <div className="flex space-x-4">
                         <div className="flex flex-col items-center">
                           <Image  onClick={() => OpenFilsInput(2)} className="w-30 h-40 object-cover" 
                           src={`${getBaseUrlImg()}/${images1Reglages}`}  alt="tarafé"
@@ -486,9 +542,6 @@ const updateReglages = async () => {
 
                       </div>
 
-
-
-                      {/* Switch pour activer/désactiver le Bloc 1 */}
                       <div className="flex items-center space-x-2 mt-4">
                         <Switch
                           id="block1-switch"
@@ -499,16 +552,16 @@ const updateReglages = async () => {
                           {isBlock1Active ? 'Bloc 1 Activé' : 'Bloc 1 Désactivé'}
                         </Label>
                       </div>
-                    </div>
-
+                    </div> */}
 
                     {/* Bloc 2 : Image 3 */}
+
                     <div className="flex-1 flex flex-col items-center">
-                      <Image  onClick={() => OpenFilsInput(3)}  className="w-30 h-40 object-cover"
-                        src={`${getBaseUrlImg()}/${images3Reglages}`} alt="tarafé"
-                          width={100}
-                          height={100}
-                        />
+                          <Image  onClick={() => OpenFilsInput(3)}  className="h-auto max-w-full rounded-lg"  src={`${getBaseUrlImg()}/${images3Reglages}`} alt="tarafé" width={200} height={100} />
+                      </div>
+
+                    <div className="flex-1 flex flex-col items-center">
+                      <Image  onClick={() => OpenFilsInput(3)}  className="w-30 h-40 object-cover"  src={`${getBaseUrlImg()}/${images3Reglages}`} alt="tarafé" width={200} height={100} />
                       {/* Switch pour activer/désactiver le Bloc 2 */}
                       <div className="flex items-center space-x-2 mt-4">
                         <Switch
@@ -542,14 +595,22 @@ const updateReglages = async () => {
 
                         {showInput === 3 && (
 
-                          <div className="col-span-6">
-                            {/* Champ pour télécharger une image en portrait */}
-                            <Label className="font-bold" htmlFor="otherFiles">
-                              Télécharger une image en portrait * (png, jpg, jpeg)
-                            </Label>
-                            <ImageUploader onFilesChange={onFilesChange} multiple={true} />
-                            {errors.files && <p className="text-red-500">{errors.files}</p>}
+                          <>
+                          <div className="col-span-12">
+
+                              <Label className="font-bold" htmlFor="otherFiles">
+                                Télécharger une image en portrait * (png, jpg, jpeg)
+                              </Label>
+
+                              <ImageUploader onFilesChange={onFilesChange} multiple={true} />
+
+                              {errors.files && <p className="text-red-500">{errors.files}</p>}
+
                           </div>
+                            <div className="col-span-12">
+                              <Button onClick={() => updatePublicites(5)} className="px-6 py-5 text-white rounded-lg mt-2"> Modifier les informations </Button>
+                            </div>
+                          </>
 
                         )}
                       </div>
@@ -915,11 +976,8 @@ const updateReglages = async () => {
 
 
                   <div className="flex items-center space-x-4">
-                      <Image onClick={() => OpenFilsInput(4)} 
-                        className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${filesPublicite1}`} alt="Image"
-                        width={100}
-                        height={100}
-                        />
+                      
+                      <Image onClick={() => OpenFilsInput(4)} className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${filesPublicite1}`} alt="Image" width={100} height={100} />
                       <div className="flex-1">
 
                         <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">{"Titre de la page d'accueil"}</Label>
@@ -927,8 +985,10 @@ const updateReglages = async () => {
 
                         <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">{"Titre de la page d'accueil"}</Label>
                         <Input id="home-title" placeholder="Titre de la page d'accueil" value={link1} onChange={(e) => setLink1(e.target.value)} />
-
                       </div>
+
+                      <Button onClick={() => updatePublicites(4)} className="px-6 py-3 text-white rounded-lg"> Modifier les informations </Button>
+
                   </div>
 
                     {showInput === 4 && (
@@ -943,12 +1003,9 @@ const updateReglages = async () => {
                         </div>
                       </div>
                     )}
+
                   <div className="flex items-center space-x-4">
-                      <Image  onClick={() => OpenFilsInput(5)} className="w-40 h-30 object-cover" 
-                      src={`${getBaseUrlImg()}/${filesPublicite2}`} alt="Image" 
-                      width={100}
-                      height={100}
-                      />
+                      <Image  onClick={() => OpenFilsInput(5)} className="w-40 h-30 object-cover" src={`${getBaseUrlImg()}/${filesPublicite2}`} alt="Image" width={100} height={100} />
                       <div className="flex-1">
 
                         <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">{"Titre de la page d'accueil"}</Label>
@@ -956,8 +1013,10 @@ const updateReglages = async () => {
 
                         <Label htmlFor="home-title" className="block text-sm font-medium text-gray-700">{"Titre de la page d'accueil"}</Label>
                         <Input id="home-title" placeholder="Titre de la page d'accueil" value={link2} onChange={(e) => setLink2(e.target.value)} />
-
                       </div>
+
+                      <Button onClick={() => updatePublicites(5)} className="px-6 py-3 text-white rounded-lg"> Modifier les informations </Button>
+
                   </div>
 
                     {showInput === 5 && (

@@ -1,7 +1,11 @@
 
 import { getBaseUrl } from "./baseUrl";
 import { ApiResponse } from "@/interfaces/ApiResponse";
-import { AllOptionsResponse, ApiDataCategories, ApiDataCategoriesByRealisation, ApiDataOders, NewsletterResponse, OrderData, OrderDetails, RealisationData, TransactionData, TransactionTotalsResponse } from "@/interfaces/AdminInterface";
+import { AllOptionsResponse, ApiDataCategories, ApiDataCategoriesByRealisation,
+        ApiDataOders, CategorieTransaction, NewsletterResponse, OrderData, OrderDetails,
+        RealisationData, TransactionData, GalleryCategoryResponse,
+        TransactionTotalsResponse,TransactionDataGraphe, 
+        CategoryAssignment} from "@/interfaces/AdminInterface";
 import { Filters } from "@/interfaces/Filters"; // Importation de l'interface Filters
 
 const getCsrfToken = async () => {
@@ -391,6 +395,7 @@ export const getAlltransactions = async (
     category: string | null,
     payment: string | null,
     selectedYears: string | null,
+    selectedCategorie: string | null,
 ): Promise<ApiResponse<TransactionData>> => {
     try {
         // Construction de l'URL avec les paramètres de filtre
@@ -401,6 +406,7 @@ export const getAlltransactions = async (
         if (category) { url.searchParams.append('category', category); }
         if (payment) { url.searchParams.append('payment', payment); }
         if (selectedYears) { url.searchParams.append('selectedYears', selectedYears); }
+        if (selectedCategorie) { url.searchParams.append('selectedCategorie', selectedCategorie); }
 
         const response = await fetch(url.toString(), {
             method: 'GET',
@@ -468,7 +474,6 @@ export const getAllImagesById = async ( token: string | null, id: number): Promi
         };
     }
 };
-
 
 export const getAllTransactionTotals = async (
     token: string | null,
@@ -704,3 +709,143 @@ export const geAllMessages = async (
 };
 
 
+// Service pour récupérer les catégories de transactions en ordre décroissant
+export const fetchCategorieTransaction = async ( token: string | null ): Promise<ApiResponse<CategorieTransaction[]>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/getCategorieTransaction`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la récupération des catégories de transactions.');
+        }
+
+        const result: ApiResponse<CategorieTransaction[]> = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error('Erreur dans getCategorieTransaction:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: [],
+        };
+    }
+};
+
+
+// Service pour récupérer les commandes avec des filtres
+export const getTransactionDataGraphe = async (
+    token: string | null,
+    filters: Filters,
+    category: string | null,
+    payment: string | null,
+    selectedYears: string | null,
+    selectedCategorie: string | null,
+): Promise<ApiResponse<TransactionDataGraphe>> => {
+    try {
+        // Construction de l'URL avec les paramètres de filtre
+        const url = new URL(`${getBaseUrl()}/transactions/graphs`);
+        url.searchParams.append('page', filters.page.toString());
+        url.searchParams.append('limit', filters.limit.toString());
+        if (filters.search) { url.searchParams.append('search', filters.search); }
+        if (category) { url.searchParams.append('category', category); }
+        if (payment) { url.searchParams.append('payment', payment); }
+        if (selectedYears) { url.searchParams.append('selectedYears', selectedYears); }
+        if (selectedCategorie) { url.searchParams.append('selectedCategorie', selectedCategorie); }
+
+        const response = await fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Ajout du token JWT
+                'Content-Type': 'application/json'   // Type de contenu JSON
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la récupération des données.');
+        }
+
+        const result: ApiResponse<TransactionDataGraphe> = await response.json();
+        return result;
+
+    } catch (error: any) {
+        console.error('Erreur dans la récupération des données:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: {
+                BarGraphByDate: [],
+                BarGraphByTypeOperation: [],
+                BarGraphByCategorieTransactions: [],
+                PieGraphByDate: [],
+                PieGraphByTypeOperation: [],
+                PieGraphByCategorieTransactions: [],
+            }
+        };
+    }
+
+};
+
+
+
+// Service pour récupérer toutes les catégories de la galerie (sans pagination)
+export const fetchGalleryCategory = async (token: string | null): Promise<ApiResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/categories-gallery`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Erreur lors de la récupération des catégories de la galerie.");
+        }
+
+        const result: ApiResponse<any> = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("Erreur dans gallery Category :", error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: {
+                data: []
+            }
+        };
+    }
+};
+
+
+export const updateImageCategories = async ( token: string | null, categoryAssignments: CategoryAssignment[] ): Promise<ApiResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/associateImages`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ assignments: categoryAssignments }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Erreur lors de la mise à jour des catégories d'images.");
+        }
+
+        const result: ApiResponse<any> = await response.json();
+        return result;
+
+    } catch (error: any) {
+        console.error('Erreur dans updateImageCategories:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: null
+        };
+    }
+};
