@@ -56,7 +56,7 @@ const Header: React.FC = ({ }) => {
 
                     <div className="flex justify-start items-center gap-4 ">
                     <Link href="/" className="flex items-center">
-                        <Image src="/logo/Logo-Tarafé-slogan-principal.png" alt="Logo" className="h-10"
+                        <Image src="/Logo/Logo-Tarafé-slogan-principal.png" alt="Logo" className="h-10"
                         width={100}  // Largeur d'origine de l'image
                         height={90} // Hauteur d'origine de l'image
                         />
