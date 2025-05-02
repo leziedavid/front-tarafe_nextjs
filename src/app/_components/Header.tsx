@@ -56,8 +56,7 @@ const Header: React.FC = ({ }) => {
 
                     <div className="flex justify-start items-center gap-4 ">
                     <Link href="/" className="flex items-center">
-                        {/* <Image src="/Logo/Logo-Tarafé-slogan-principal.png" alt="Logo" className="h-10" */}
-                        <Image src="/logos2.png" alt="Logo" className="h-10"
+                        <Image src="/Logo/Logo-Tarafé-slogan-principal.png" alt="Logo" className="h-10"
                         width={100}
                         height={90}
                         />
