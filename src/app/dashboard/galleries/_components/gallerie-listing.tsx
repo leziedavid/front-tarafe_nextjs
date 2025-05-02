@@ -77,7 +77,6 @@ export default function GallerieListingPage({isDialogOpen,onDialogOpenChange}: G
       // Utilise setOptions si tu stockes ces options dans un autre state
       setSelectOptions(options);
 
-
     }
   };
   
@@ -129,6 +128,7 @@ export default function GallerieListingPage({isDialogOpen,onDialogOpenChange}: G
 
   const handleValidateCategory = async () => {
     try {
+      
       const categoryAssignments = Array.from(selectedImages.entries()).map(
         ([imageId, categories]) => ({
           id_image: Number(imageId),
@@ -188,14 +188,10 @@ export default function GallerieListingPage({isDialogOpen,onDialogOpenChange}: G
         {/* Ligne supérieure */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 md:space-x-4 w-full">
           {/* Bouton de gauche */}
-          <Button onClick={handleOpenSelect} className="w-full md:w-auto">Catégoriser la galerie</Button>
-
+          <Button onClick={handleOpenSelect} className="w-full md:w-lg">Catégoriser la galerie</Button>
           {/* Date picker */}
           <div className="w-full md:max-w-sm">
-            <CalendarDateRangePicker
-              className="w-full"
-              onDateChange={handleDateRangeChange}
-            />
+            <CalendarDateRangePicker className="w-full" onDateChange={handleDateRangeChange} />
           </div>
         </div>
 
@@ -204,8 +200,7 @@ export default function GallerieListingPage({isDialogOpen,onDialogOpenChange}: G
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 md:space-x-4 w-full">
             {/* MultiSelect */}
             <div className="flex-1 w-full">
-              <MultiSelect
-                options={selectOptions}
+              <MultiSelect options={selectOptions}
                 selected={selectedSkills}
                 onChange={setSelectedSkills}
                 placeholder="Select skills..."

@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Suspense, useState } from 'react';
 import GallerieListingPage from './_components/gallerie-listing';
+import CategorieGalleryModal from '@/components/modal/categorieGalleryModal';
 
 // export const metadata = { title: 'Dashboard: produits' };
 
@@ -23,11 +24,10 @@ export default function Page() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Heading title="Gallerie" description="Gérer la gallerie (fonctionnalités de la table côté serveur)." />
-          <Button variant="secondary" size="sm" onClick={() => handleDialogOpenChange(true)} >
-            ＋ Add New Images
-          </Button>
+          <Button variant="secondary" size="sm" onClick={() => handleDialogOpenChange(true)} > ＋  Ajouter de nouvelles images </Button>
         </div>
 
+        <CategorieGalleryModal />
         <Separator />
         <Suspense fallback={<div>Loading...</div>}>
           <GallerieListingPage isDialogOpen={isDialogOpen} onDialogOpenChange={handleDialogOpenChange} /> {/* Passer la fonction ici */}

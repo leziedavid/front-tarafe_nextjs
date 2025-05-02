@@ -308,6 +308,18 @@ const handleYearChange = (selected: string | null) => {
                     <div className="text-2xl font-bold">{total ? total.total_general.toLocaleString() : 0} FCFA</div>
                   </CardContent>
                 </Card>
+
+
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium"> Total Entrée Caisse</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">  {total ? total.total_entree_caisse.toLocaleString() : 0}  FCFA</div>
+                  </CardContent>
+                </Card>
+
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
@@ -319,6 +331,7 @@ const handleYearChange = (selected: string | null) => {
                     <div className="text-2xl font-bold">{total ? total.total_sortie_caisse.toLocaleString() : 0} FCFA</div>
                   </CardContent>
                 </Card>
+
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
@@ -329,14 +342,7 @@ const handleYearChange = (selected: string | null) => {
                     <div className="text-2xl font-bold"> {total ? total.total_sortie_banque.toLocaleString() : 0}  FCFA</div>
                   </CardContent>
                 </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium"> Total Entrée Caisse</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">  {total ? total.total_entree_caisse.toLocaleString() : 0}  FCFA</div>
-                  </CardContent>
-                </Card>
+
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
@@ -347,6 +353,7 @@ const handleYearChange = (selected: string | null) => {
                     <div className="text-2xl font-bold"> {total ? total.total_entree_banque.toLocaleString() : 0}  FCFA</div>
                   </CardContent>
                 </Card>
+
               </div>
             </TabsContent>
 

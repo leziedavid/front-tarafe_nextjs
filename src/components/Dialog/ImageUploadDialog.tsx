@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";  // Importation de Zod pour la validation
@@ -9,19 +9,20 @@ import { toast } from "sonner";  // Pour les notifications de succès ou d'erreu
 import { ImageUploader } from '../ui/ImageUploader';
 import { Button } from '../ui/button';
 import { Toaster } from "@/components/ui/sonner";
-import { addGallery } from '@/servives/AdminService';
+import { addGallery, fetchGalleryCategory } from '@/servives/AdminService';
 import useAuth from '@/servives/useAuth';
+import { MultiSelect } from '../Select2/MultiSelect';
+import { GalleryCategory } from '@/interfaces/AdminInterface';
 
 // Définir la validation Zod pour plusieurs fichiers (max 5 fichiers et format png/jpg/jpeg)
 const filesValidationSchema = z.array(
-    z.instanceof(File).refine((file) => ['image/png', 'image/jpeg'].includes(file.type), {
-        message: 'Les fichiers doivent être des images de type PNG ou JPEG.',
-    }).refine((file) => file.size <= 5 * 1024 * 1024, {  // Taille max : 5 Mo
+    z.instanceof(File).refine((file) => ['image/png', 'image/jpeg'].includes(file.type), { message: 'Les fichiers doivent être des images de type PNG ou JPEG.', }).refine((file) => file.size <= 5 * 1024 * 1024, {  // Taille max : 5 Mo
         message: 'Chaque fichier ne doit pas dépasser 5 Mo.',
     })
 ).refine((files) => files.length > 0, {
     message: 'Veuillez télécharger au moins une image.',
 });
+
 
 interface ImageUploadDialogProps {
     open: boolean;
@@ -37,31 +38,73 @@ const ImageUploadDialog: React.FC<ImageUploadDialogProps> = ({ open, onOpenChang
         setSelectedFiles(files); // Mise à jour des fichiers sélectionnés
     };
 
+    const [selectedSkills, setSelectedSkills] = useState<{ id: string; libelle: string }[]>([]);
+    const [selectOptions, setSelectOptions] = useState<{ id: string; libelle: string }[]>([]);
+    const [categories, setCategories] = useState<GalleryCategory[]>([]);
+
+
+    const fetchDataCategory = async () => {
+        const result = await fetchGalleryCategory(token);
+
+        if (result.statusCode !== 200) {
+            toast.error(result.message);
+
+        } else {
+            toast.success("Catégories récupérées avec succès !");
+            setCategories(result.data);
+
+            // ✅ Transformation directe ici
+            const options = result.data.map((cat: GalleryCategory) => ({
+                id: String(cat.idcategories_gallery),
+                libelle: cat.libelle,
+            }));
+            // Utilise setOptions si tu stockes ces options dans un autre state
+            setSelectOptions(options);
+
+        }
+    };
+
+    useEffect(() => {
+        fetchDataCategory();
+    }, []);
+
+
     const handleSubmit = async () => {
         // Validation des fichiers avec Zod
         try {
-            filesValidationSchema.parse(selectedFiles);  // Si la validation échoue, une erreur sera levée
-
+            filesValidationSchema.parse(selectedFiles);
         } catch (error) {
             if (error instanceof z.ZodError) {
-
-                toast.error(error.errors[0].message);  // Afficher l'erreur de validation
+                toast.error(error.errors[0].message);
                 return;
             }
         }
 
-        // Préparer les fichiers à envoyer dans le FormData
+        // ⚠️ Vérifie qu'au moins une catégorie est sélectionnée
+        if (selectedSkills.length === 0) {
+            toast.error("Veuillez sélectionner au moins une catégorie.");
+            return;
+        }
+
         const formData = new FormData();
+
+        // Ajoute les fichiers au FormData
         selectedFiles.forEach((file) => formData.append("files", file));
+        const categoryIds = selectedSkills.map((cat) => Number(cat.id));
+        formData.append("categoryIds", JSON.stringify(categoryIds));
+        // 🔁 Ajoute les ID des catégories (en supposant que l'API accepte un tableau de `categoryIds`)
+        // selectedSkills.forEach((cat) => {
+        //     formData.append("categoryIds", cat.id); // ou "categories[]" selon ton backend
+        // });
+
         setIsUploading(true);
 
         try {
-            // Envoi des données pour créer une nouvelle commande
-            const result = await addGallery(token, formData);  // Appel à la fonction pour créer une commande
+            const result = await addGallery(token, formData);
 
             if (result.statusCode === 200) {
                 toast.success("Images téléchargées avec succès !");
-                onOpenChange(false);  // Fermer le dialog après le succès
+                onOpenChange(false);
             } else {
                 toast.error("Erreur lors de la soumission des images.");
             }
@@ -70,28 +113,48 @@ const ImageUploadDialog: React.FC<ImageUploadDialogProps> = ({ open, onOpenChang
             console.error("Erreur lors de l'envoi des données :", error);
             toast.error("Une erreur s'est produite pendant la soumission.");
         } finally {
-            setIsUploading(false);  // Restaure l'état de l'interface une fois l'upload terminé
+            setIsUploading(false);
         }
-
-        // try {
-        //     const res = await fetch("/api/images", {
-        //         method: "POST",
-        //         body: formData,
-        //     });
-
-        //     if (res.ok) {
-        //         toast.success("Images téléchargées avec succès !");
-        //         onOpenChange(false);  // Fermer le dialog après le succès
-        //     } else {
-        //         toast.error("Erreur lors du téléchargement des images.");
-        //     }
-        // } catch (error) {
-        //     toast.error("Erreur lors de la soumission des images.");
-        // } finally {
-        //     setIsUploading(false);
-        // }
-
     };
+
+    
+    // const handleSubmit2 = async () => {
+    //     // Validation des fichiers avec Zod
+    //     try {
+    //         filesValidationSchema.parse(selectedFiles);  // Si la validation échoue, une erreur sera levée
+
+    //     } catch (error) {
+    //         if (error instanceof z.ZodError) {
+
+    //             toast.error(error.errors[0].message);  // Afficher l'erreur de validation
+    //             return;
+    //         }
+    //     }
+
+    //     // Préparer les fichiers à envoyer dans le FormData
+    //     const formData = new FormData();
+    //     selectedFiles.forEach((file) => formData.append("files", file));
+    //     setIsUploading(true);
+
+    //     try {
+    //         // Envoi des données pour créer une nouvelle commande
+    //         const result = await addGallery(token, formData);  // Appel à la fonction pour créer une commande
+
+    //         if (result.statusCode === 200) {
+    //             toast.success("Images téléchargées avec succès !");
+    //             onOpenChange(false);  // Fermer le dialog après le succès
+    //         } else {
+    //             toast.error("Erreur lors de la soumission des images.");
+    //         }
+
+    //     } catch (error) {
+    //         console.error("Erreur lors de l'envoi des données :", error);
+    //         toast.error("Une erreur s'est produite pendant la soumission.");
+    //     } finally {
+    //         setIsUploading(false);  // Restaure l'état de l'interface une fois l'upload terminé
+    //     }
+
+    // };
 
     return (
         <>
@@ -109,6 +172,15 @@ const ImageUploadDialog: React.FC<ImageUploadDialogProps> = ({ open, onOpenChang
                     </DialogDescription>
                 </DialogHeader>
 
+
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 md:space-x-4 w-full">
+                        {/* MultiSelect */}
+                        <div className="flex-1 w-full">
+                            <MultiSelect options={selectOptions} selected={selectedSkills} onChange={setSelectedSkills} placeholder="Select skills..."
+                            />
+                        </div>
+                    </div>
+
                 {/* Section de téléchargement des fichiers */}
                 <div className="grid w-full items-center gap-1">
                     <Label className="font-bold" htmlFor="otherFiles">Télécharger une ou plusieurs images (png, jpg, jpeg)</Label>
@@ -117,19 +189,10 @@ const ImageUploadDialog: React.FC<ImageUploadDialogProps> = ({ open, onOpenChang
 
                 {/* Boutons d'action */}
                 <div className="mt-4 flex justify-end gap-2">
-                    <Button
-                        type="button"
-                        onClick={() => onOpenChange(false)}
-                        className="text-sm px-4 py-2 rounded-md"
-                    >
+                    <Button type="button" onClick={() => onOpenChange(false)} className="text-sm px-4 py-2 rounded-md" >
                         Annuler
                     </Button>
-                    <Button
-                        type="button"
-                        onClick={handleSubmit}
-                        disabled={isUploading || selectedFiles.length === 0}
-                        className={`text-sm px-4 py-2 rounded-md ${isUploading ? 'opacity-50' : ''}`}
-                    >
+                    <Button type="button" onClick={handleSubmit} disabled={isUploading || selectedFiles.length === 0} className={`text-sm px-4 py-2 rounded-md ${isUploading ? 'opacity-50' : ''}`}  >
                         {isUploading ? "Téléchargement..." : "Soumettre"}
                     </Button>
                 </div>

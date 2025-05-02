@@ -287,7 +287,6 @@ export interface TransactionDataGraphe {
     PieGraphByCategorieTransactions: GraphData[];
 }
 
-
 export interface GalleryCategory {
     idcategories_gallery: number;
     libelle: string;
@@ -296,7 +295,6 @@ export interface GalleryCategory {
 export interface GalleryCategoryResponse {
     data: GalleryCategory[];
 }
-
 
 export interface CategoryAssignment {
     id_image: number;

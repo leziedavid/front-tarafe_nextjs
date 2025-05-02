@@ -12,6 +12,7 @@ import { Suspense, useState } from 'react';
 import Transactionsliste from './_components/transactions-listing';
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/sonner';
+import CategorieModal from '@/components/modal/categorieModal';
 
 // export const metadata = {  title: 'Dashboard: comnandes'};
 
@@ -29,6 +30,7 @@ export default function Page() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Heading title="Liste des Transactions"  description="Gérer les Transactions (fonctionnalités de la table côté serveur)." />
+          <CategorieModal />
           <Button variant="secondary" size="sm" onClick={() => handleDialogOpenChange(true)}> <FileDown className='w-4 h-4' /> Importer en (excel,csv..)</Button>
         </div>
         <Toaster />

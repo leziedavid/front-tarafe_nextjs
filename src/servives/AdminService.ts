@@ -5,7 +5,8 @@ import { AllOptionsResponse, ApiDataCategories, ApiDataCategoriesByRealisation,
         ApiDataOders, CategorieTransaction, NewsletterResponse, OrderData, OrderDetails,
         RealisationData, TransactionData, GalleryCategoryResponse,
         TransactionTotalsResponse,TransactionDataGraphe, 
-        CategoryAssignment} from "@/interfaces/AdminInterface";
+        CategoryAssignment,
+        GalleryCategory} from "@/interfaces/AdminInterface";
 import { Filters } from "@/interfaces/Filters"; // Importation de l'interface Filters
 
 const getCsrfToken = async () => {
@@ -736,6 +737,84 @@ export const fetchCategorieTransaction = async ( token: string | null ): Promise
     }
 };
 
+// Service pour CRUD les catégories de transactions
+export const fetchAllCategorieTransaction = async ( token: string | null ): Promise<ApiResponse<CategorieTransaction[]>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/getCategorieTransaction`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la récupération des catégories de transactions.');
+        }
+
+        const result: ApiResponse<CategorieTransaction[]> = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error('Erreur dans getCategorieTransaction:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: [],
+        };
+    }
+};
+
+
+export const createCategoryTransaction  = async (token: string, data: any) => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/createCategorieTransaction`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error('Erreur lors de la création de la catégorie');
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const updateCategoryTransaction  = async (token: string, id: number, data: any) => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/updatecategoriesTransaction/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error('Erreur lors de la mise à jour de la catégorie');
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const deleteCategoryTransaction  = async (token: string, id: number) => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/deletecategoriesTransaction/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        if (!response.ok) throw new Error('Erreur lors de la suppression de la catégorie');
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+// FIN
 
 // Service pour récupérer les commandes avec des filtres
 export const getTransactionDataGraphe = async (
@@ -791,7 +870,6 @@ export const getTransactionDataGraphe = async (
 };
 
 
-
 // Service pour récupérer toutes les catégories de la galerie (sans pagination)
 export const fetchGalleryCategory = async (token: string | null): Promise<ApiResponse<any>> => {
     try {
@@ -818,6 +896,81 @@ export const fetchGalleryCategory = async (token: string | null): Promise<ApiRes
                 data: []
             }
         };
+    }
+};
+
+export const fetchAllGalleryCategory = async (token: string | null): Promise<ApiResponse<GalleryCategory[]>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/categories-gallery`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Erreur lors de la récupération des catégories de la galerie.");
+        }
+
+        const result: ApiResponse<any> = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("Erreur dans gallery Category :", error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: []
+        };
+    }
+};
+
+export const createGalleryCategory  = async (token: string, data: any) => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/createCategorieTransaction`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error('Erreur lors de la création de la catégorie');
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const updateGalleryCategory  = async (token: string, id: number, data: any) => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/updatecategoriesTransaction/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error('Erreur lors de la mise à jour de la catégorie');
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const deleteGalleryCategory  = async (token: string, id: number) => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/deletecategoriesTransaction/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        if (!response.ok) throw new Error('Erreur lors de la suppression de la catégorie');
+        return await response.json();
+    } catch (error) {
+        throw error;
     }
 };
 
