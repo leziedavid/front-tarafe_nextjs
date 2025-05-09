@@ -2,7 +2,7 @@ import React, { SVGProps } from 'react';
 
 const WhatsappFloatButton: React.FC = () => {
     // Le numéro de téléphone WhatsApp
-    const phoneNumber: string = '2250153686819';
+    const phoneNumber: string = '2250747003450';
     // Le message pré-écrit que tu veux envoyer
     const message: string = 'Bonjour, j\'aimerais en savoir plus sur vos services.';
     // Créer l'URL pour ouvrir WhatsApp avec le message
