@@ -193,8 +193,8 @@ export default function TransactionForm() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Type d'opération</label>
-                    <Select onValueChange={(value) => handleChange('type_operation', value)}>
+                <label className="block text-sm font-medium mb-1">Type d&apos;opération</label>
+                <Select onValueChange={(value) => handleChange('type_operation', value)}>
                         <SelectTrigger>
                             <SelectValue placeholder="Sélectionner le type" />
                         </SelectTrigger>
