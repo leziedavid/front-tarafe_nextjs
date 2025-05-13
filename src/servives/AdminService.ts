@@ -1,12 +1,14 @@
 
 import { getBaseUrl } from "./baseUrl";
 import { ApiResponse } from "@/interfaces/ApiResponse";
-import { AllOptionsResponse, ApiDataCategories, ApiDataCategoriesByRealisation,
-        ApiDataOders, CategorieTransaction, NewsletterResponse, OrderData, OrderDetails,
-        RealisationData, TransactionData, GalleryCategoryResponse,
-        TransactionTotalsResponse,TransactionDataGraphe, 
-        CategoryAssignment,
-        GalleryCategory} from "@/interfaces/AdminInterface";
+import {
+    AllOptionsResponse, ApiDataCategories, ApiDataCategoriesByRealisation,
+    ApiDataOders, CategorieTransaction, NewsletterResponse, OrderData, OrderDetails,
+    RealisationData, TransactionData, GalleryCategoryResponse,
+    TransactionTotalsResponse, TransactionDataGraphe,
+    CategoryAssignment,
+    GalleryCategory
+} from "@/interfaces/AdminInterface";
 import { Filters } from "@/interfaces/Filters"; // Importation de l'interface Filters
 
 const getCsrfToken = async () => {
@@ -164,7 +166,7 @@ export const getdetailCommandes = async (token: string | null, id: number): Prom
 
 
 // Service pour récupérer les catégories
-export const getCategoriesById = async (token: string | null, id: number ): Promise<ApiDataCategoriesByRealisation> => {
+export const getCategoriesById = async (token: string | null, id: number): Promise<ApiDataCategoriesByRealisation> => {
     try {
         // Appel de l'API pour récupérer les catégories
         const response = await fetch(`${getBaseUrl()}/option-realisation/${id}`, {
@@ -183,9 +185,9 @@ export const getCategoriesById = async (token: string | null, id: number ): Prom
         // Récupération des données sous forme JSON
         const result: ApiDataCategoriesByRealisation = await response.json();
         return result; // Retourne les catégories récupérées
-    } catch (error : any) {
+    } catch (error: any) {
         console.error('Erreur dans la récupération des catégories:', error.message);
-        
+
         // Retourne une réponse vide en cas d'erreur
         return {
             data: [],
@@ -214,9 +216,9 @@ export const getCategories = async (token: string | null, page: number = 1): Pro
         // Récupération des données sous forme JSON
         const result: ApiDataCategories = await response.json();
         return result; // Retourne les catégories récupérées
-    } catch (error : any) {
+    } catch (error: any) {
         console.error('Erreur dans la récupération des catégories:', error.message);
-        
+
         // Retourne une réponse vide en cas d'erreur
         return {
             data: [],
@@ -448,7 +450,7 @@ export const getAlltransactions = async (
     }
 };
 
-export const getAllImagesById = async ( token: string | null, id: number): Promise<ApiResponse<ImageData[]>> => {
+export const getAllImagesById = async (token: string | null, id: number): Promise<ApiResponse<ImageData[]>> => {
     try {
         const response = await fetch(`${getBaseUrl()}/realisations/${id}/images`, {
             method: 'GET',
@@ -563,7 +565,7 @@ export const DownloadFiles = async (
         return {
             statusCode: 500,
             message: error.message,
-            data: { }
+            data: {}
         };
     }
 }
@@ -711,7 +713,7 @@ export const geAllMessages = async (
 
 
 // Service pour récupérer les catégories de transactions en ordre décroissant
-export const fetchCategorieTransaction = async ( token: string | null ): Promise<ApiResponse<CategorieTransaction[]>> => {
+export const fetchCategorieTransaction = async (token: string | null): Promise<ApiResponse<CategorieTransaction[]>> => {
     try {
         const response = await fetch(`${getBaseUrl()}/getCategorieTransaction`, {
             method: 'GET',
@@ -738,7 +740,7 @@ export const fetchCategorieTransaction = async ( token: string | null ): Promise
 };
 
 // Service pour CRUD les catégories de transactions
-export const fetchAllCategorieTransaction = async ( token: string | null ): Promise<ApiResponse<CategorieTransaction[]>> => {
+export const fetchAllCategorieTransaction = async (token: string | null): Promise<ApiResponse<CategorieTransaction[]>> => {
     try {
         const response = await fetch(`${getBaseUrl()}/getCategorieTransaction`, {
             method: 'GET',
@@ -765,7 +767,7 @@ export const fetchAllCategorieTransaction = async ( token: string | null ): Prom
 };
 
 
-export const createCategoryTransaction  = async (token: string, data: any) => {
+export const createCategoryTransaction = async (token: string, data: any) => {
     try {
         const response = await fetch(`${getBaseUrl()}/createCategorieTransaction`, {
             method: 'POST',
@@ -782,7 +784,7 @@ export const createCategoryTransaction  = async (token: string, data: any) => {
     }
 };
 
-export const updateCategoryTransaction  = async (token: string, id: number, data: any) => {
+export const updateCategoryTransaction = async (token: string, id: number, data: any) => {
     try {
         const response = await fetch(`${getBaseUrl()}/updatecategoriesTransaction/${id}`, {
             method: 'PUT',
@@ -799,7 +801,7 @@ export const updateCategoryTransaction  = async (token: string, id: number, data
     }
 };
 
-export const deleteCategoryTransaction  = async (token: string, id: number) => {
+export const deleteCategoryTransaction = async (token: string, id: number) => {
     try {
         const response = await fetch(`${getBaseUrl()}/deletecategoriesTransaction/${id}`, {
             method: 'DELETE',
@@ -925,7 +927,7 @@ export const fetchAllGalleryCategory = async (token: string | null): Promise<Api
     }
 };
 
-export const createGalleryCategory  = async (token: string, data: any) => {
+export const createGalleryCategory = async (token: string, data: any) => {
     try {
         const response = await fetch(`${getBaseUrl()}/createCategorieTransaction`, {
             method: 'POST',
@@ -942,7 +944,7 @@ export const createGalleryCategory  = async (token: string, data: any) => {
     }
 };
 
-export const updateGalleryCategory  = async (token: string, id: number, data: any) => {
+export const updateGalleryCategory = async (token: string, id: number, data: any) => {
     try {
         const response = await fetch(`${getBaseUrl()}/updatecategoriesTransaction/${id}`, {
             method: 'PUT',
@@ -959,7 +961,7 @@ export const updateGalleryCategory  = async (token: string, id: number, data: an
     }
 };
 
-export const deleteGalleryCategory  = async (token: string, id: number) => {
+export const deleteGalleryCategory = async (token: string, id: number) => {
     try {
         const response = await fetch(`${getBaseUrl()}/deletecategoriesTransaction/${id}`, {
             method: 'DELETE',
@@ -975,7 +977,7 @@ export const deleteGalleryCategory  = async (token: string, id: number) => {
 };
 
 
-export const updateImageCategories = async ( token: string | null, categoryAssignments: CategoryAssignment[] ): Promise<ApiResponse<any>> => {
+export const updateImageCategories = async (token: string | null, categoryAssignments: CategoryAssignment[]): Promise<ApiResponse<any>> => {
     try {
         const response = await fetch(`${getBaseUrl()}/associateImages`, {
             method: 'POST',
@@ -999,6 +1001,32 @@ export const updateImageCategories = async ( token: string | null, categoryAssig
             statusCode: 500,
             message: error.message,
             data: null
+        };
+    }
+};
+
+
+
+export const submitTransaction = async ( token: string | null,data: any ): Promise<ApiResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/save-transactions`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error('Échec de la création de la transaction.');
+        }
+
+        const result: ApiResponse<any> = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error('Erreur lors de l\'enregistrement de la transaction:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: null,
         };
     }
 };

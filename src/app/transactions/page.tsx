@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,12 @@ import Header from '../_components/Header';
 import WhatsappFloatButton from '@/components/WhatsappFloatButton';
 import Footer from '../_components/Footer';
 import { Reglage } from '@/interfaces/HomeInterface';
+import { CategorieTransaction } from '@/interfaces/AdminInterface';
+import { DataTable as TransactionsTable } from '@/components/ui/table/data-table'; // Composant du tableau des commandes
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner"
+import { fetchCategorieTransaction, submitTransaction } from '@/servives/AdminService';
+import useAuth from '@/servives/useAuth';
 
 const categorieOptions = [
     { label: 'Alimentation', value: 'alimentation' },
@@ -33,30 +39,48 @@ const typeOperationOptions = [
 
 export default function TransactionForm() {
 
-
+    const [listecategorie, seListecategorie] = useState<CategorieTransaction[]>([]); // Données des commandes
     const [reglage, setReglages] = useState<Reglage[]>([]);
+    const token = useAuth();
+    const inputDateRef = useRef<HTMLInputElement | null>(null); // ⬅️ référence à l'input
 
     const [formData, setFormData] = useState({
         date: '',
         libelle: '',
         categorieTransactionsId: '',
         autreCategorie: '',
-        sortie_caisse: '',
-        sortie_banque: '',
-        entree_caisse: '',
-        entree_banque: '',
+        typeTransaction: '', // ex: "entree_caisse"
+        somme: '',           // ex: "50000"
         type_operation: '',
         details: "Transaction du jour faite par Bénédicte"
     });
 
+
     const [error, setError] = useState<string | null>(null);
 
-    const handleChange = (field: string, value: string) => {
-        setFormData({ ...formData, [field]: value });
+
+    const chargerCategories = async (token: string | null) => {
+        try {
+            const result = await fetchCategorieTransaction(token); // Renomme ici si ton service a un nom différent
+            if (result.statusCode !== 200) {
+                toast.error(result.message);
+            } else {
+                seListecategorie(result.data); // Met à jour la liste des catégories
+            }
+        } catch (error) {
+            toast.error("Erreur lors de la récupération des catégories.");
+        }
     };
 
+
+    const handleChange = (field: string, value: string) => {
+        setFormData((prev) => ({ ...prev, [field]: value }));
+    };
+
+    
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
 
         const dataToSave = {
             ...formData,
@@ -77,16 +101,55 @@ export default function TransactionForm() {
         }
 
         setError(null); // Réinitialiser l'erreur
-
         console.log('Données validées envoyées à la BD :', result.data);
 
-        // Exemple d'envoi API
-        // await fetch('/api/transactions', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(result.data),
-        // });
+        const response = await submitTransaction(token, result.data);
+        if (response.statusCode === 201) {
+
+            chargerCategories(token);
+            toast.success(response.message || "Transaction enregistrée avec succès!");
+            // Réinitialiser le formulaire
+                setFormData({
+                    date: '',
+                    libelle: '',
+                    categorieTransactionsId: '',
+                    autreCategorie: '',
+                    typeTransaction: '',
+                    somme: '',
+                    type_operation: '',
+                    details: 'Transaction du jour faite par Bénédicte'
+                });
+
+            const today = new Date().toISOString().split('T')[0];
+            setFormData((prev) => ({
+                ...prev,
+                date: today,
+            }));
+
+            } else {
+                toast.error(response.message || "Une erreur est survenue lors de l'enregistrement.");
+
+            const today = new Date().toISOString().split('T')[0];
+            setFormData((prev) => ({
+                ...prev,
+                date: today,
+            }));
+            
+        }
+
     };
+
+
+    useEffect(() => {
+        chargerCategories(token);
+
+        const today = new Date().toISOString().split('T')[0];
+        setFormData((prev) => ({
+            ...prev,
+            date: today,
+        }));
+
+    },[]);
 
 
     return (
@@ -94,6 +157,7 @@ export default function TransactionForm() {
         <>
         
         <Header />
+
         <div className={`min-h-[calc(100vh_-_56px)] py-3 px-3 lg:px-6 mt-[4rem] md:mt-[4rem]`}>
             <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-md space-y-4">
                 {error && <p className="text-red-600 text-sm">{error}</p>}
@@ -106,17 +170,23 @@ export default function TransactionForm() {
                 {/* Titre sous l'icône */}
                 <h2 className="text-3xl font-bold text-center mb-6 uppercase">Enregistrement de Transaction</h2>
 
-                <div>
-                    <label className="block text-sm font-medium mb-1">Date</label>
-                    <div className="relative">
-                        <Input
-                            type="date"
-                            value={formData.date}
-                            onChange={(e) => handleChange('date', e.target.value)}
-                        />
-                        <CalendarIcon className="absolute right-3 top-2.5 text-gray-400" size={20} />
+
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Date</label>
+                        <div className="relative">
+                            <Input
+                                ref={inputDateRef} // ⬅️ lier la référence
+                                type="date"
+                                value={formData.date}
+                                onChange={(e) => handleChange('date', e.target.value)}
+                            />
+                            <CalendarIcon
+                                className="absolute right-3 top-2.5 text-gray-400 cursor-pointer"
+                                size={20}
+                                onClick={() => inputDateRef.current?.showPicker()} // ⬅️ déclenche l'ouverture du picker
+                            />
+                        </div>
                     </div>
-                </div>
 
                 <div>
                     <label className="block text-sm font-medium mb-1">Libellé</label>
@@ -134,8 +204,8 @@ export default function TransactionForm() {
                             <SelectValue placeholder="Choisir une catégorie" />
                         </SelectTrigger>
                         <SelectContent>
-                            {categorieOptions.map((cat) => (
-                                <SelectItem key={cat.value} value={cat.value}>
+                            {listecategorie.map((cat) => (
+                                <SelectItem key={cat.id} value={String(cat.id)}>
                                     {cat.label}
                                 </SelectItem>
                             ))}
@@ -154,47 +224,37 @@ export default function TransactionForm() {
                     </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium mb-1">Sortie caisse</label>
-                        <Input
-                            type="number"
-                            value={formData.sortie_caisse}
-                            onChange={(e) => handleChange('sortie_caisse', e.target.value)}
-                        />
+                        <label className="block text-sm font-medium mb-1">Type de transaction</label>
+                        <Select onValueChange={(value) => handleChange('typeTransaction', value)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Choisir un type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="entree_caisse">Entrée caisse</SelectItem>
+                                <SelectItem value="entree_banque">Entrée banque</SelectItem>
+                                <SelectItem value="sortie_caisse">Sortie caisse</SelectItem>
+                                <SelectItem value="sortie_banque">Sortie banque</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Sortie banque</label>
-                        <Input
-                            type="number"
-                            value={formData.sortie_banque}
-                            onChange={(e) => handleChange('sortie_banque', e.target.value)}
-                        />
-                    </div>
+                    {formData.typeTransaction && (
+                        <div className="mt-4">
+                            <label className="block text-sm font-medium mb-1">Montant</label>
+                            <Input
+                                type="number"
+                                placeholder="Entrez le montant"
+                                value={formData.somme}
+                                onChange={(e) => handleChange('somme', e.target.value)}
+                            />
+                        </div>
+                    )}
 
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Entrée caisse</label>
-                        <Input
-                            type="number"
-                            value={formData.entree_caisse}
-                            onChange={(e) => handleChange('entree_caisse', e.target.value)}
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Entrée banque</label>
-                        <Input
-                            type="number"
-                            value={formData.entree_banque}
-                            onChange={(e) => handleChange('entree_banque', e.target.value)}
-                        />
-                    </div>
-                </div>
 
                 <div>
                 <label className="block text-sm font-medium mb-1">Type d&apos;opération</label>
-                <Select onValueChange={(value) => handleChange('type_operation', value)}>
+                    <Select onValueChange={(value) => handleChange('type_operation', value)}>
                         <SelectTrigger>
                             <SelectValue placeholder="Sélectionner le type" />
                         </SelectTrigger>
@@ -221,6 +281,8 @@ export default function TransactionForm() {
                 </Button>
             </form>
         </div>
+
+        <Toaster />
         <WhatsappFloatButton />
         </>
 
