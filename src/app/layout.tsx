@@ -3,11 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "./_components/Footer";
 import Providers from "@/components/Providers";
+import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/Providers/theme-provider";
-
-// 👇️ Ajouté : si tu utilises clsx comme utilitaire pour combiner les classes
-import { cn } from "@/lib/utils"; // Assure-toi que cette fonction existe dans ce chemin
-// 👇️ Exemple d'utilisation d'une police (remplace 'geist' par 'inter' si Geist n'existe pas)
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 // const inter = Inter({ subsets: ["latin"] });
 
