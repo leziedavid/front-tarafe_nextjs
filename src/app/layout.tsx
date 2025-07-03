@@ -4,7 +4,7 @@ import "./globals.css";
 import Footer from "./_components/Footer";
 import Providers from "@/components/Providers";
 import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/components/Providers/theme-provider";
+// import { ThemeProvider } from "@/components/Providers/theme-provider";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -28,9 +28,9 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className={cn(inter.variable)}>
         <Providers>
-          <ThemeProvider attribute="class" defaultTheme="system"  enableSystem  disableTransitionOnChange enableColorScheme  >
+          {/* <ThemeProvider attribute="class" defaultTheme="system"  enableSystem  disableTransitionOnChange enableColorScheme  > */}
               {children}
-          </ThemeProvider>
+          {/* </ThemeProvider> */}
         </Providers>
       </body>
     </html>
