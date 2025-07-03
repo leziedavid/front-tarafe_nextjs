@@ -571,10 +571,7 @@ export const DownloadFiles = async (
 }
 
 // Service pour récupérer les commandes avec des filtres
-export const geAllCategorie = async (
-    token: string | null,
-    filters: Filters
-): Promise<ApiResponse<AllOptionsResponse>> => {
+export const geAllCategorie = async (token: string | null,filters: Filters): Promise<ApiResponse<AllOptionsResponse>> => {
     try {
         // Construction de l'URL avec les paramètres de filtre
         const url = new URL(`${getBaseUrl()}/all-options-realisation`);
@@ -622,6 +619,7 @@ export const geAllCategorie = async (
     }
 };
 
+
 // Fonction pour ajouter ou mettre à jour une catégorie
 export const saveCategory = async (token: string | null, categoryNames: string[], categoryId?: number): Promise<ApiResponse<any>> => {
     try {
@@ -658,10 +656,7 @@ export const saveCategory = async (token: string | null, categoryNames: string[]
     }
 };
 
-export const geAllMessages = async (
-    token: string | null,
-    filters: Filters
-): Promise<ApiResponse<NewsletterResponse>> => {
+export const geAllMessages = async ( token: string | null, filters: Filters): Promise<ApiResponse<NewsletterResponse>> => {
     try {
         // Construction de l'URL avec les paramètres de filtre
         const url = new URL(`${getBaseUrl()}/geAllMessages`);
@@ -804,6 +799,21 @@ export const updateCategoryTransaction = async (token: string, id: number, data:
 export const deleteCategoryTransaction = async (token: string, id: number) => {
     try {
         const response = await fetch(`${getBaseUrl()}/deletecategoriesTransaction/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        if (!response.ok) throw new Error('Erreur lors de la suppression de la catégorie');
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const deleteGalleryImage = async (token: string | null, id: number): Promise<ApiResponse> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/gallery-image/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -976,6 +986,36 @@ export const deleteGalleryCategory = async (token: string, id: number) => {
     }
 };
 
+export const deleteRealisation = async (token: string | null, id: number): Promise<ApiResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/realisations/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        if (!response.ok) throw new Error('Erreur lors de la suppression de la catégorie');
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const deleteCategory = async (token: string | null, id: number): Promise<ApiResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/delete-option-realisation/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        if (!response.ok) throw new Error('Erreur lors de la suppression de la catégorie');
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
 
 export const updateImageCategories = async (token: string | null, categoryAssignments: CategoryAssignment[]): Promise<ApiResponse<any>> => {
     try {
@@ -1006,7 +1046,6 @@ export const updateImageCategories = async (token: string | null, categoryAssign
 };
 
 
-
 export const submitTransaction = async ( token: string | null,data: any ): Promise<ApiResponse<any>> => {
     try {
         const response = await fetch(`${getBaseUrl()}/save-transactions`, {
@@ -1023,6 +1062,53 @@ export const submitTransaction = async ( token: string | null,data: any ): Promi
         return result;
     } catch (error: any) {
         console.error('Erreur lors de l\'enregistrement de la transaction:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: null,
+        };
+    }
+};
+
+
+export const updateRealisationsActived = async ( id: number, status: string): Promise<ApiResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/realisations/${id}/actived/${status}/assign`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', },
+        });
+
+        if (!response.ok) {
+            throw new Error("Échec de la mise à jour du statut.");
+        }
+
+        const result: ApiResponse<any> = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("Erreur lors de la mise à jour du statut:", error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: null,
+        };
+    }
+};
+
+export const updateRealisationsStatus = async ( id: number, status: string): Promise<ApiResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/realisation/${id}/status/${status}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', },
+        });
+
+        if (!response.ok) {
+            throw new Error("Échec de la mise à jour du statut.");
+        }
+
+        const result: ApiResponse<any> = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("Erreur lors de la mise à jour du statut:", error.message);
         return {
             statusCode: 500,
             message: error.message,

@@ -5,14 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';  // Import de Image de Next.js
 import { LucideBell, LucideLoader, LucideMail, LucideUser2, LucideLogIn, LucideMenu, LucideTrash2, LucideHome, LucidePackage, LucideImage, LucideInfo } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+import { NavigationMenu,NavigationMenuContent,NavigationMenuItem,NavigationMenuLink,NavigationMenuList,NavigationMenuTrigger,} from "@/components/ui/navigation-menu";
 import { Menu, MoveRight, X } from "lucide-react";
 
 // Composant Header principal
@@ -56,10 +49,7 @@ const Header: React.FC = ({ }) => {
 
                     <div className="flex justify-start items-center gap-4 ">
                     <Link href="/" className="flex items-center">
-                        <Image src="/logos2.png" alt="Logo" className="h-10"
-                        width={100}
-                        height={90}
-                        />
+                        <Image src="/logos2.png" alt="Logo" className="h-10" width={100}height={90}/>
                     </Link>
                 </div>
 

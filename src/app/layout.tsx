@@ -2,8 +2,14 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "./_components/Footer";
+import Providers from "@/components/Providers";
+import { ThemeProvider } from "@/components/Providers/theme-provider";
 
-const inter = Inter({ subsets: ["latin"] });
+// 👇️ Ajouté : si tu utilises clsx comme utilitaire pour combiner les classes
+import { cn } from "@/lib/utils"; // Assure-toi que cette fonction existe dans ce chemin
+// 👇️ Exemple d'utilisation d'une police (remplace 'geist' par 'inter' si Geist n'existe pas)
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Tarafé",
@@ -21,10 +27,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className= {`${inter.className} `}>
-          {children}
+    // <html lang="en" >
+    //   <body className= {`${inter.className} `}>
+    //       {children}
+    //   </body>
+    // </html>
+
+    <html lang="fr" suppressHydrationWarning>
+      <body className={cn(inter.variable)}>
+        <Providers>
+          <ThemeProvider attribute="class" defaultTheme="system"  enableSystem  disableTransitionOnChange enableColorScheme  >
+              {children}
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
+
   );
 }

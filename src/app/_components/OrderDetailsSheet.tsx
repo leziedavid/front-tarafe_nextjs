@@ -87,7 +87,7 @@ export function OrderDetailsSheet({ isOpens, onClose, datas }: OrderDetailsSheet
                                 <div className="flex space-x-4">
                                     {/* Image 1 */}
                                     <div className="flex flex-col items-center">
-                                        <Image className="w-30 h-40 object-cover" 
+                                        <Image className="w-30 h-40 object-cover"
                                         src={`${getBaseUrlImg()}/${order.images_realisations}`} alt={order.libelle_realisations}
                                         width={150}
                                         height={100} />
@@ -96,7 +96,7 @@ export function OrderDetailsSheet({ isOpens, onClose, datas }: OrderDetailsSheet
 
                                     {/* Image 2 */}
                                     <div className="flex flex-col items-center">
-                                        <Image className="w-30 h-40 object-cover" 
+                                        <Image className="w-30 h-40 object-cover"
                                         src={`${getBaseUrlImg()}/${order.images_realisations}`} alt={order.libelle_realisations} 
                                         width={150}
                                         height={100}/>

@@ -17,7 +17,7 @@ import { ApiResponse } from "@/interfaces/ApiResponse";
 import PaginationComponent from "@/components/pagination/paginationComponent"
 import useAuth from "@/servives/useAuth";
 import { Filters } from "@/interfaces/Filters";
-import ImagePreviewDialog from "@/components/Dialog/ImagePreviewDialog";
+import ImagePreviewDialog from "@/components/Modals/ImagePreviewDialog";
 import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 import Image from 'next/image';
 import { GalleryCategory, GalleryCategoryResponse } from "@/interfaces/AdminInterface";

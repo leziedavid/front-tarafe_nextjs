@@ -1,32 +1,9 @@
-import KBar from '@/components/kbar';
-import AppSidebar from '@/components/layout/app-sidebar';
-import Header from '@/components/layout/header';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
+// app/dashboard/layout.tsx
 
-export const metadata: Metadata = {
-  title: 'Tarafe Dashboard Starter',
-  description: 'Tarafe dashboard starter',
-};
+import DashboardLayout from '@/components/layout2/dashboard-layout';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { ReactNode } from 'react';
 
-export default async function DashboardLayout({  children}: { children: React.ReactNode;}) {
-  // Persisting the sidebar state in the cookie.
-
-  const cookieStore = cookies();
-  const defaultOpen = (await cookieStore).get('sidebar:state')?.value === 'true';
-  
-  return (
-    <KBar>
-      <SidebarProvider defaultOpen={defaultOpen}>
-        <AppSidebar />
-        <SidebarInset>
-          <Header />
-          {/* page main content */}
-          {children}
-          {/* page main content ends */}
-        </SidebarInset>
-      </SidebarProvider>
-    </KBar>
-  );
+export default function DashboardRouteLayout({children,}: {children: ReactNode;}) {
+  return <DashboardLayout> {children} </DashboardLayout>;
 }

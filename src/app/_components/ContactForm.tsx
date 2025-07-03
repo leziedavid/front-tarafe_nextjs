@@ -153,22 +153,22 @@ const ContactForm: React.FC<Props> = ({ data }) => {
                                             <div className="bg-gray-50 md:w-4/5 space-y-6 p-4 rounded-lg mt-4 shadow-sm">
                                                 
                                                     <div className="flex gap-4 border-b ">
-                                                        <MapPin className="w-8 h-8 mt-0 text-primary" />
+                                                        <MapPin className="w-8 h-8 mt-0 text-orange-500" />
                                                         <div className="font-extrabold font-title pb-4 w-80">  {data[0]?.localisation_reglages} </div>
                                                     </div>
 
                                                     <div className="flex gap-4 border-b">
-                                                        <Phone className="w-8 h-8 mt-0 text-primary" />
+                                                        <Phone className="w-8 h-8 mt-0 text-orange-500" />
                                                         <div className=" font-extrabold font-title pb-4 w-80">{data[0]?.phone1_reglages}  {data[0]?.phone2_reglages} </div>
                                                     </div>
 
                                                     <div className="flex gap-4  ">
-                                                        <Mail className="w-8 h-8 mt-0 text-primary" />
+                                                        <Mail className="w-8 h-8 mt-0 text-orange-500" />
                                                         <div className=" font-extrabold font-title pb-4 w-80">{data[0]?.email_reglages}</div>
                                                     </div>
 
                                                     <div className="flex gap-4  ">
-                                                        <CalendarClock className="w-8 h-8 mt-2 text-primary" />
+                                                        <CalendarClock className="w-8 h-8 mt-2 text-orange-500" />
                                                         <div className="font-extrabold font-title pb-4 w-80">{data[0]?.ouverture_reglages}</div>
                                                     </div>
 
@@ -244,18 +244,29 @@ const ContactForm: React.FC<Props> = ({ data }) => {
                                                                     </SelectTrigger>
                                                                 </FormControl>
                                                                 <SelectContent>
-                                                                    <div className="flex gap-4">
-                                                                        <SelectItem value="Evaluate Bird for my company">
-                                                                            Evaluate Bird for my company
-                                                                        </SelectItem>
-                                                                    </div>
-                                                                    <SelectItem value="Learn More">Learn More</SelectItem>
-                                                                    <SelectItem value="Get a Quote">Get a Quote</SelectItem>
-                                                                    <SelectItem value="How to use Bird">
-                                                                        How to use Bird
+                                                                    <SelectItem value="Personnalisation produit pour particulier">
+                                                                        Je souhaite personnaliser un produit (particulier)
                                                                     </SelectItem>
-                                                                    <SelectItem value="Other">Other</SelectItem>
+                                                                    <SelectItem value="Commande en gros pour entreprise">
+                                                                        Je veux passer une commande en gros pour mon entreprise
+                                                                    </SelectItem>
+                                                                    <SelectItem value="Demande de devis">
+                                                                        J’aimerais obtenir un devis
+                                                                    </SelectItem>
+                                                                    <SelectItem value="Création sur-mesure avec tissus locaux">
+                                                                        Je veux créer un produit sur-mesure avec des tissus africains
+                                                                    </SelectItem>
+                                                                    <SelectItem value="Collaboration ou partenariat">
+                                                                        Je suis intéressé(e) par un partenariat ou une collaboration
+                                                                    </SelectItem>
+                                                                    <SelectItem value="Plus d’informations sur Tarafé">
+                                                                        Je veux en savoir plus sur Tarafé
+                                                                    </SelectItem>
+                                                                    <SelectItem value="Autre">
+                                                                        Autre demande
+                                                                    </SelectItem>
                                                                 </SelectContent>
+
                                                             </Select>
                                                         </FormItem>
                                                     )}

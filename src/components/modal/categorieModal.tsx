@@ -17,6 +17,7 @@ import { Input } from '../ui/input';
 
 
 const CategorieModal = () => {
+    
     const [showModal, setShowModal] = useState(false);
     const [categories, setCategories] = useState<CategorieTransaction[]>([]);
     const [inputs, setInputs] = useState([{ label: '', defautPrice: '' }]);

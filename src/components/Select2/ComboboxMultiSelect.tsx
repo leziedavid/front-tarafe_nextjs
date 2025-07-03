@@ -52,12 +52,7 @@ export function ComboboxMultiSelect<T>({
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-full justify-between"  // Prendre toute la largeur
-                >
+                <Button variant="outline" role="combobox"  aria-expanded={open}  className="w-full justify-between"  >
                     <div className="flex items-center space-x-2 flex-wrap">
                         {/* Affichage du nombre d'éléments sélectionnés */}
                         <div className="flex flex-wrap gap-1">
@@ -67,7 +62,7 @@ export function ComboboxMultiSelect<T>({
                                     <Badge key={selectedItem} className="text-sm flex items-center gap-1">
                                         {label}
                                         {/* Bouton pour supprimer un élément sélectionné */}
-                                        <CircleX className="cursor-pointer text-black h-4 w-4" onClick={() => handleRemoveSelection(selectedItem)} />
+                                        <CircleX className="cursor-pointer text-black h-4 w-4 text-white" onClick={() => handleRemoveSelection(selectedItem)} />
                                     </Badge>
                                 );
                             })}
@@ -77,7 +72,7 @@ export function ComboboxMultiSelect<T>({
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0">  {/* S'assurer que le popover prend toute la largeur */}
-                <Command>
+                <Command className="w-full">
                     <CommandInput placeholder="Rechercher..." className="h-9" />
                     <CommandList>
                         <CommandEmpty>Aucune option trouvée.</CommandEmpty>
@@ -86,7 +81,7 @@ export function ComboboxMultiSelect<T>({
                                 const value = valueExtractor(option);
                                 const label = labelExtractor(option);
                                 return (
-                                    <CommandItem key={value} onSelect={() => handleSelection(value)}>
+                                    <CommandItem className="w-full" key={value} onSelect={() => handleSelection(value)}>
                                         {label}
                                         <Check className={cn( "ml-auto", selectedItems.includes(value) ? "opacity-100" : "opacity-0" )}/>
                                     </CommandItem>

@@ -16,6 +16,6 @@ export const getBaseUrlImg = (): string => {
     return BASE_URL_IMGAE_PROD;
 };
 export const getBaseSiteUrl = (): string => {
-    return BASE_URL_SITE;
+    return BASE_URL_SITE_PROD;
 };
 
