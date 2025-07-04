@@ -54,7 +54,7 @@ export default function Page() {
                 document.cookie = `token=${apiResponse.data.token}; path=/`; // Stocke le token dans les cookies
                 const role = apiResponse.data.user;
                 // Redirige en fonction du rôle (admin ou user)
-                router.push(role === "Admin" ? '/dashboard/overview' : '/compte');
+                router.push(role === "Admin" ? '/dashboard' : '/compte');
                 reset();
             } else if (apiResponse.statusCode === 400 || apiResponse.statusCode === 401) {
                 toast.error(apiResponse.message);

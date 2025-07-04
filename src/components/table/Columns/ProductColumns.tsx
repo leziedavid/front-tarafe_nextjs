@@ -12,6 +12,60 @@ import React, { useState } from 'react';
 import { updateRealisationsActived, updateRealisationsStatus } from '@/servives/AdminService';
 
 
+
+const StatutCell: React.FC<{ row: any }> = ({ row }) => {
+    const initialStatut = Number(row.original.statut_realisations) === 1;
+    const id = row.original.id_realisations;
+
+    const [checked, setChecked] = useState(initialStatut);
+
+    const handleToggleStatut = (value: boolean) => {
+        setChecked(value);
+        console.log("Nouveau statut pour l'id", id, ":", value ? "Publié" : "En attente");
+        updateRealisationsStatus(id, value ? "1" : "0");
+    };
+
+    return (
+        <div className="flex items-center space-x-2">
+            <Switch
+                checked={checked}
+                onCheckedChange={handleToggleStatut}
+                id={`statut-${id}`}
+            />
+            <Label htmlFor={`statut-${id}`} className="text-xs">
+                {checked ? "Publié" : "En attente"}
+            </Label>
+        </div>
+    );
+};
+
+const VedetteCell: React.FC<{ row: any }> = ({ row }) => {
+    const initialVedette = row.original.isActive === 1;
+    const id = row.original.id_realisations;
+
+    const [checked, setChecked] = useState(initialVedette);
+
+    const handleToggleVedette = (value: boolean) => {
+        setChecked(value);
+        console.log("Nouveau statut vedette pour l'id", id, ":", value);
+        updateRealisationsActived(id, value ? "1" : "0");
+    };
+
+    return (
+        <div className="flex items-center space-x-2">
+            <Switch
+                checked={checked}
+                onCheckedChange={handleToggleVedette}
+                id={`vedette-${id}`}
+            />
+            <Label htmlFor={`vedette-${id}`} className="text-xs">
+                {checked ? "En vedette" : "Non en vedette"}
+            </Label>
+        </div>
+    );
+};
+
+
 export const columns: ColumnDef<Realisation>[] = [
 
 
@@ -60,66 +114,70 @@ export const columns: ColumnDef<Realisation>[] = [
     {
         id: "switch-statut",
         header: "Statut",
-        cell: ({ row }) => {
+        cell: ({ row }) => <StatutCell row={row} />, // ✅ c’est maintenant un composant React
 
-            const initialStatut = Number(row.original.statut_realisations) === 1;
-            const id = row.original.id_realisations;
+        // cell: ({ row }) => {
 
-            const [checked, setChecked] = useState(initialStatut);
+        //     const initialStatut = Number(row.original.statut_realisations) === 1;
+        //     const id = row.original.id_realisations;
 
-            const handleToggleStatut = (value: boolean) => {
-                setChecked(value); // 👈 Change localement l’état du Switch
-                console.log("Nouveau statut pour l'id", id, ":", value ? "Publié" : "En attente");
-                // Optionnel : appel API ici
-                updateRealisationsStatus(id, value ? "1" : "0");
-            };
+        //     const [checked, setChecked] = useState(initialStatut);
 
-            return (
-                <div className="flex items-center space-x-2">
-                    <Switch
-                        checked={checked}
-                        onCheckedChange={handleToggleStatut}
-                        id={`statut-${id}`}
-                    />
-                    <Label htmlFor={`statut-${id}`} className="text-xs">
-                        {checked ? "Publié" : "En attente"}
-                    </Label>
-                </div>
-            );
-        },
+        //     const handleToggleStatut = (value: boolean) => {
+        //         setChecked(value); // 👈 Change localement l’état du Switch
+        //         console.log("Nouveau statut pour l'id", id, ":", value ? "Publié" : "En attente");
+        //         // Optionnel : appel API ici
+        //         updateRealisationsStatus(id, value ? "1" : "0");
+        //     };
+
+        //     return (
+        //         <div className="flex items-center space-x-2">
+        //             <Switch
+        //                 checked={checked}
+        //                 onCheckedChange={handleToggleStatut}
+        //                 id={`statut-${id}`}
+        //             />
+        //             <Label htmlFor={`statut-${id}`} className="text-xs">
+        //                 {checked ? "Publié" : "En attente"}
+        //             </Label>
+        //         </div>
+        //     );
+        // },
     },
 
     // ✅ Switch pour vedette ou non
     {
         id: "switch-vedette",
         header: "Vedette",
-        cell: ({ row }) => {
-            const initialVedette = row.original.isActive === 1;
-            const id = row.original.id_realisations;
+        cell: ({ row }) => <VedetteCell row={row} />, // ✅ aussi un composant React
 
-            const [checked, setChecked] = useState(initialVedette);
+        // cell: ({ row }) => {
+        //     const initialVedette = row.original.isActive === 1;
+        //     const id = row.original.id_realisations;
 
-            const handleToggleVedette = (value: boolean) => {
-                setChecked(value);
-                console.log("Nouveau statut vedette pour l'id", id, ":", value);
-                // Optionnel : appel API ici
-                updateRealisationsActived(id, value ? "1" : "0");
+        //     const [checked, setChecked] = useState(initialVedette);
 
-            };
+        //     const handleToggleVedette = (value: boolean) => {
+        //         setChecked(value);
+        //         console.log("Nouveau statut vedette pour l'id", id, ":", value);
+        //         // Optionnel : appel API ici
+        //         updateRealisationsActived(id, value ? "1" : "0");
 
-            return (
-                <div className="flex items-center space-x-2">
-                    <Switch
-                        checked={checked}
-                        onCheckedChange={handleToggleVedette}
-                        id={`vedette-${id}`}
-                    />
-                    <Label htmlFor={`vedette-${id}`} className="text-xs">
-                        {checked ? "En vedette" : "Non en vedette"}
-                    </Label>
-                </div>
-            );
-        },
+        //     };
+
+        //     return (
+        //         <div className="flex items-center space-x-2">
+        //             <Switch
+        //                 checked={checked}
+        //                 onCheckedChange={handleToggleVedette}
+        //                 id={`vedette-${id}`}
+        //             />
+        //             <Label htmlFor={`vedette-${id}`} className="text-xs">
+        //                 {checked ? "En vedette" : "Non en vedette"}
+        //             </Label>
+        //         </div>
+        //     );
+        // },
     },
 
     {
