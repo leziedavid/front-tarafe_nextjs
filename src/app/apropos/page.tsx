@@ -32,7 +32,6 @@ import { getBaseUrlImg } from "@/servives/baseUrl";
 import SkeletonDemo from "../_components/SkeletonDemo";
 import { ApiResponse } from "@/interfaces/ApiResponse";
 import PaginationComponent from "@/components/pagination/paginationComponent"
-import CategoryFilter from "@/components/features/CategoryFilter"; // Importation du composant de filtre
 import useAuth from "@/servives/useAuth";
 import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 

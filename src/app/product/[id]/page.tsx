@@ -25,7 +25,6 @@ import { Label } from "@/components/ui/label"
 import {Filter, MoveRight, SearchIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import LuxuryWatchProductPage from "../../_components/WatchProductCard";
-import { BreadcrumbDemo } from "../../_components/BreadcrumbDemo";
 import { useRouter,useParams } from 'next/navigation';
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
