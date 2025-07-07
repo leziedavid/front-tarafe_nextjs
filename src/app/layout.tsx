@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Footer from "./_components/Footer";
-import Providers from "@/components/Providers";
 import { cn } from "@/lib/utils";
-// import { ThemeProvider } from "@/components/Providers/theme-provider";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Tarafé",
@@ -27,11 +23,7 @@ export default function RootLayout({
 
     <html lang="fr" suppressHydrationWarning>
       <body className={cn(inter.variable)}>
-        <Providers>
-          {/* <ThemeProvider attribute="class" defaultTheme="system"  enableSystem  disableTransitionOnChange enableColorScheme  > */}
               {children}
-          {/* </ThemeProvider> */}
-        </Providers>
       </body>
     </html>
 
