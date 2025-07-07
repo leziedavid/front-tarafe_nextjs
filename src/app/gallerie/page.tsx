@@ -149,7 +149,6 @@ const Page: React.FC = () => {
 
               {categories.map((category) => (
                 <button key={category.idcategories_gallery}  onClick={() => handleCategoryClick(category.idcategories_gallery)} className={`p-2 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 text-sm ${selectedCategory === category.idcategories_gallery  ? 'bg-[#242078] text-white' : 'bg-gray-200'}`} >
-
                   {selectedCategory === category.idcategories_gallery && loading ? (
                     <Loader2 className="animate-spin w-5 h-5" />
                   ) : (
