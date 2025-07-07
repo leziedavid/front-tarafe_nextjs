@@ -10,20 +10,7 @@ import { redirect } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import Header from '../_components/Header';
 import Footer from "../_components/Footer";
-
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import {Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle,} from "@/components/ui/card"
 import { ApiData, Equipe, Reglage } from "@/interfaces/HomeInterface";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
@@ -31,7 +18,6 @@ import { getreglages } from "@/servives/HomeService";
 import { getBaseUrlImg } from "@/servives/baseUrl";
 import SkeletonDemo from "../_components/SkeletonDemo";
 import { ApiResponse } from "@/interfaces/ApiResponse";
-import PaginationComponent from "@/components/pagination/paginationComponent"
 import useAuth from "@/servives/useAuth";
 import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 
