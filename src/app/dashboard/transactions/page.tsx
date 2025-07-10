@@ -6,7 +6,7 @@ import { Searchs } from "@/components/layout2/dash/searchs";
 import { DataTable } from "@/components/table/dataTable";
 import { Order, OrderDetails } from "@/interfaces/AdminInterface";
 import { Filters } from '@/interfaces/Filters'; // Importation de l'interface Filters
-import { getAllorders, getdetailCommandes } from "@/servives/AdminService";
+import { deleteTransaction, getAllorders, getdetailCommandes } from "@/servives/AdminService";
 import useAuth from '@/servives/useAuth';
 import { toast } from "sonner";
 import { columns as TransactionColumns } from "@/components/table/Columns/TransactionColumns";
@@ -36,6 +36,8 @@ import { BarGraph } from './bar-graph';
 import { AreaGraph } from './area-graph';
 import { PieGraph } from './pie-graph';
 import CategorieModal from "@/components/Modals/CategorieModal";
+import DeleteDialog from "@/components/Modals/DeleteDialog";
+import TransacModal from "@/components/Modals/TransacModal";
 
 export default function Page() {
 
@@ -68,6 +70,12 @@ export default function Page() {
     const [pieGraphByTypeOperation, setPieGraphByTypeOperation] = useState<GraphData[]>([]);
     const [pieGraphByCategorieTransactions, setPieGraphByCategorieTransactions] = useState<GraphData[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const [isFormUpdateOpen, setIsUpdateFormOpen] = useState(false);
+    const [isAssignFormOpen, setIsAssignFormOpen] = useState(false);
+    const [initialValues, setInitialValues] = useState<Transaction>();
+    const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
 
     // Fonction pour générer les années depuis 2010 jusqu'à l'année actuelle
@@ -130,8 +138,6 @@ export default function Page() {
     const handleDialogOpenChange = (open: boolean) => {
         setIsDialogOpen(open);
     };
-
-    
     
         // Fonction pour récupérer les données des graphiques
     const fetchGraphData = async () => { const filters: Filters = {  page: currentPage, limit: 10, search: search || undefined, // Ajouter la recherche si elle est définie
@@ -189,10 +195,10 @@ export default function Page() {
         };
     
         const result = await DownloadFiles(token, filters, category, payment, selectedYears);
-        if (result.statusCode !== 200) {
+        if (result && result.statusCode !== 200) {
             toast.error(result.message);
-        } else {
-            toast.error("Fichier téléchargé avec succès !");
+        } else if (result) {
+            toast.success("Fichier téléchargé avec succès !");
         }
     };
 
@@ -252,6 +258,33 @@ export default function Page() {
         }
     }
 
+
+    function handleUpdate(row: Transaction) {
+        console.log(row);
+        setIsUpdateFormOpen(true);
+        setInitialValues(row);
+    }
+
+    function closehandleUpdate() {
+        setIsUpdateFormOpen(false);
+    }
+    async function handleDelete(row: any) {
+        setSelectedId(row.id);
+        setDialogOpen(true);
+    }
+
+
+        const handleDeleteClick = async (id: string): Promise<void> => {
+
+            const result = await deleteTransaction(token, Number(id));
+            if (result.statusCode !== 200) {
+                toast.error(result.message);
+                fetchData();
+            } else {
+                toast.success("Transaction supprimé avec succès !");
+                fetchData();
+            }
+        };
 
     return (
 
@@ -476,6 +509,8 @@ export default function Page() {
                     <DataTable columns={TransactionColumns}
                         data={donnees}
                         onChangeState={handleChangeState}
+                        onUpdateData={handleUpdate}
+                        onDeleteData={handleDelete}
                         onNextPage={handleNextPage}          // optionnel : gère la page suivante
                         onPreviousPage={handlePreviousPage}  // optionnel : gère la page précédente
                         currentPage={currentPage}
@@ -486,10 +521,18 @@ export default function Page() {
                 {isFormOpen && (
                     <CategorieModal isOpen={isFormOpen} onClose={closeForm} />
                 )}
+
+                {isFormUpdateOpen && (
+                    <TransacModal isOpen={isFormUpdateOpen} onClose={closehandleUpdate} fetchData={fetchData} initialValues={initialValues} />
+                )}
                 
                 {isDialogOpen && (
                     <ImportData open={isDialogOpen} onOpenChange={handleDialogOpenChange} />
                 )}
+
+                <DeleteDialog open={dialogOpen} onClose={() => setDialogOpen(false)} onConfirm={() => {  if (selectedId) handleDeleteClick(selectedId);}}/>
+                
+                <Toaster />
 
             </>
         </div>

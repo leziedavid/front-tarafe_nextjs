@@ -15,7 +15,7 @@ export function User() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-                    <Image src={imageUrl || '/logo/Logo-Tarafé-slogan-principal.png'} width={36} height={36}  alt="Avatar" className="overflow-hidden rounded-full object-cover" />
+                    <Image src={imageUrl || '/Logo-Tarafé-slogan-principal.png'} width={36} height={36}  alt="Avatar" className="overflow-hidden rounded-full object-cover" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

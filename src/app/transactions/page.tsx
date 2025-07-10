@@ -20,6 +20,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
 import { fetchCategorieTransaction, submitTransaction } from '@/servives/AdminService';
 import useAuth from '@/servives/useAuth';
+import { useRouter } from 'next/navigation';
 
 const categorieOptions = [
     { label: 'Alimentation', value: 'alimentation' },
@@ -43,6 +44,7 @@ export default function TransactionForm() {
     const [reglage, setReglages] = useState<Reglage[]>([]);
     const token = useAuth();
     const inputDateRef = useRef<HTMLInputElement | null>(null); // ⬅️ référence à l'input
+    const router = useRouter();
 
     const [formData, setFormData] = useState({
         date: '',
@@ -77,7 +79,7 @@ export default function TransactionForm() {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
-    
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -104,38 +106,28 @@ export default function TransactionForm() {
         console.log('Données validées envoyées à la BD :', result.data);
 
         const response = await submitTransaction(token, result.data);
-        if (response.statusCode === 201) {
 
+
+        if (response.statusCode === 201) {
             chargerCategories(token);
             toast.success(response.message || "Transaction enregistrée avec succès!");
-            // Réinitialiser le formulaire
-                setFormData({
-                    date: '',
-                    libelle: '',
-                    categorieTransactionsId: '',
-                    autreCategorie: '',
-                    typeTransaction: '',
-                    somme: '',
-                    type_operation: '',
-                    details: 'Transaction du jour faite par Bénédicte'
-                });
-
-            const today = new Date().toISOString().split('T')[0];
-            setFormData((prev) => ({
-                ...prev,
-                date: today,
-            }));
-
-            } else {
-                toast.error(response.message || "Une erreur est survenue lors de l'enregistrement.");
-
-            const today = new Date().toISOString().split('T')[0];
-            setFormData((prev) => ({
-                ...prev,
-                date: today,
-            }));
-            
+        } else {
+            toast.error(response.message || "Une erreur est survenue lors de l'enregistrement.");
         }
+        // Réinitialiser le formulaire dans les deux cas
+        const today = new Date().toISOString().split('T')[0];
+        setFormData({
+            date: today,
+            libelle: '',
+            categorieTransactionsId: '',
+            autreCategorie: '',
+            typeTransaction: '',
+            somme: '',
+            type_operation: '',
+            details: 'Transaction du jour faite par Bénédicte'
+        });
+
+        router.push('/transactions');
 
     };
 

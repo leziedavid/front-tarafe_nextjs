@@ -1046,7 +1046,7 @@ export const updateImageCategories = async (token: string | null, categoryAssign
 };
 
 
-export const submitTransaction = async ( token: string | null,data: any ): Promise<ApiResponse<any>> => {
+export const submitTransaction = async (token: string | null, data: any): Promise<ApiResponse<any>> => {
     try {
         const response = await fetch(`${getBaseUrl()}/save-transactions`, {
             method: 'POST',
@@ -1062,6 +1062,53 @@ export const submitTransaction = async ( token: string | null,data: any ): Promi
         return result;
     } catch (error: any) {
         console.error('Erreur lors de l\'enregistrement de la transaction:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: null,
+        };
+    }
+};
+
+// updateTransaction
+
+export const updateTransaction = async (token: string | null, id: number, data: any): Promise<ApiResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/update-transactions/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            throw new Error('Échec de la mise à jour de la transaction.');
+        }
+        const result: ApiResponse<any> = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error('Erreur lors de la mise à jour de la transaction:', error.message);
+        return {
+            statusCode: 500,
+            message: error.message,
+            data: null,
+        };
+    }
+};
+
+// deleteTransaction
+
+export const deleteTransaction = async (token: string | null, id: number): Promise<ApiResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/delete-transactions/${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, },
+        });
+        if (!response.ok) {
+            throw new Error('Échec de la suppression de la transaction.');
+        }
+        const result: ApiResponse<any> = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error('Erreur lors de la suppression de la transaction:', error.message);
         return {
             statusCode: 500,
             message: error.message,
