@@ -259,10 +259,9 @@ export default function Page() {
     }
 
 
-    function handleUpdate(row: Transaction) {
-        console.log(row);
+    function handleUpdate(row:any) {
         setIsUpdateFormOpen(true);
-        setInitialValues(row);
+        setInitialValues(row)
     }
 
     function closehandleUpdate() {
