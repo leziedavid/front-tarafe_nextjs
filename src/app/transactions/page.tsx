@@ -45,6 +45,8 @@ export default function TransactionForm() {
     const token = useAuth();
     const inputDateRef = useRef<HTMLInputElement | null>(null); // ⬅️ référence à l'input
     const router = useRouter();
+    const [categorieFilter, setCategorieFilter] = useState("");
+
 
     const [formData, setFormData] = useState({
         date: '',
@@ -188,7 +190,8 @@ export default function TransactionForm() {
                         placeholder="Ex: Achat essence"
                     />
                 </div>
-
+                
+                {/*
                 <div>
                     <label className="block text-sm font-medium mb-1">Catégorie</label>
                     <Select onValueChange={(value) => handleChange('categorieTransactionsId', value)}>
@@ -203,18 +206,61 @@ export default function TransactionForm() {
                             ))}
                         </SelectContent>
                     </Select>
-                </div>
+                </div> */}
 
-                {formData.categorieTransactionsId === 'autre' && (
+
                     <div>
-                        <label className="block text-sm font-medium mb-1">Autre catégorie (optionnel)</label>
-                        <Input
-                            value={formData.autreCategorie}
-                            onChange={(e) => handleChange('autreCategorie', e.target.value)}
-                            placeholder="Nom de la catégorie"
-                        />
+                        <label className="block text-sm font-medium mb-1">Catégorie</label>
+                        <Select onValueChange={(value) => handleChange('categorieTransactionsId', value)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Choisir une catégorie" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {/* Barre de recherche */}
+                                <div className="p-2">
+                                    <Input
+                                        type="text"
+                                        placeholder="Rechercher une catégorie..."
+                                        value={categorieFilter}
+                                        onChange={(e) => setCategorieFilter(e.target.value)}
+                                        className="w-full px-2 py-1 border rounded text-sm"
+                                    />
+                                </div>
+
+                                {/* Liste filtrée */}
+                                {listecategorie
+                                    .filter((cat) =>
+                                        cat.label.toLowerCase().includes(categorieFilter.toLowerCase())
+                                    )
+                                    .map((cat) => (
+                                        <SelectItem key={cat.id} value={String(cat.id)}>
+                                            {cat.label}
+                                        </SelectItem>
+                                    ))}
+
+                                {/* Option "Autre" */}
+                                <SelectItem value="autre">Autre</SelectItem>
+
+                                {/* Aucun résultat */}
+                                {listecategorie.filter((cat) =>
+                                    cat.label.toLowerCase().includes(categorieFilter.toLowerCase())
+                                ).length === 0 && (
+                                        <div className="px-4 py-2 text-sm text-gray-500">Aucune catégorie trouvée</div>
+                                    )}
+                            </SelectContent>
+                        </Select>
                     </div>
-                )}
+
+                    {formData.categorieTransactionsId === 'autre' && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Autre catégorie (optionnel)</label>
+                            <Input
+                                value={formData.autreCategorie}
+                                onChange={(e) => handleChange('autreCategorie', e.target.value)}
+                                placeholder="Nom de la catégorie"
+                            />
+                        </div>
+                    )}
 
                     <div>
                         <label className="block text-sm font-medium mb-1">Type de transaction</label>

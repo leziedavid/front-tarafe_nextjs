@@ -28,6 +28,8 @@ export default function TransacModal({ initialValues, isOpen, onClose, fetchData
     const inputDateRef = useRef<HTMLInputElement | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [searchCategorie, setSearchCategorie] = useState("");
+
     const [formData, setFormData] = useState({
         id: initialValues?.id || undefined,
         date: initialValues?.date || '',
@@ -146,13 +148,37 @@ export default function TransacModal({ initialValues, isOpen, onClose, fetchData
                     <Input placeholder="Libellé" value={formData.libelle} onChange={e => handleChange('libelle', e.target.value)} />
 
                     {/* Catégorie */}
-                    <Select value={formData.categorieTransactionsId} onValueChange={v => handleChange('categorieTransactionsId', v)}>
+
+                    {/* <Select value={formData.categorieTransactionsId} onValueChange={v => handleChange('categorieTransactionsId', v)}>
                         <SelectTrigger><SelectValue placeholder="Catégorie" /></SelectTrigger>
                         <SelectContent>
                             {listecategorie.map(c => <SelectItem key={c.id} value={c.id.toString()}>{c.label}</SelectItem>)}
                             <SelectItem value="autre">Autre</SelectItem>
                         </SelectContent>
+                    </Select> */}
+
+                    <Select value={formData.categorieTransactionsId} onValueChange={v => handleChange('categorieTransactionsId', v)}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Catégorie" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <div className="p-2">
+                                <Input type="text" placeholder="Rechercher..." value={searchCategorie} onChange={(e) => setSearchCategorie(e.target.value)} className="w-full px-2 py-1 border rounded text-sm" />
+                            </div>
+
+                            {listecategorie
+                                .filter((c) => c.label.toLowerCase().includes(searchCategorie.toLowerCase()))
+                                .map((c) => (
+                                    <SelectItem key={c.id} value={c.id.toString()}>
+                                        {c.label}
+                                    </SelectItem>
+                                ))
+                            }
+
+                            <SelectItem value="autre">Autre</SelectItem>
+                        </SelectContent>
                     </Select>
+
                     {formData.categorieTransactionsId === 'autre' && <Input placeholder="Autre catégorie" value={formData.autreCategorie} onChange={e => handleChange('autreCategorie', e.target.value)} />}
 
                     {/* Type transaction */}
