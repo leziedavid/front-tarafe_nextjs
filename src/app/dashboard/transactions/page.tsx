@@ -99,8 +99,11 @@ export default function Page() {
     // Types de paiement possibles
     const paymentTypes = [
         { value: 'wave', label: 'Wave' },
-        { value: 'Orange Money', label: 'Orange Money' },
-        { value: 'Moov Money', label: 'Moov Money' }
+        { value: 'orange Money', label: 'Orange money' },
+        { value: 'moov Money', label: 'Moov money' },
+        { value: 'espèces', label: 'Espèces' },
+        { value: 'chèque', label: 'Chèque' },
+        { value: 'virement', label: 'Virement' }
     ];
 
 
@@ -145,7 +148,6 @@ export default function Page() {
         try {
             const result = await getTransactionDataGraphe(token, filters, category, payment, selectedYears, selectedCategorie);
             if (result.statusCode === 200) {
-    
                 setBarGraphByDate(result.data.BarGraphByDate);
                 setBarGraphByTypeOperation(result.data.BarGraphByTypeOperation);
                 setBarGraphByCategorieTransactions(result.data.BarGraphByCategorieTransactions);
@@ -195,10 +197,13 @@ export default function Page() {
         };
     
         const result = await DownloadFiles(token, filters, category, payment, selectedYears);
+
         if (result && result.statusCode !== 200) {
             toast.error(result.message);
+
         } else if (result) {
             toast.success("Fichier téléchargé avec succès !");
+            window.open(result.data.url, '_blank');
         }
     };
 

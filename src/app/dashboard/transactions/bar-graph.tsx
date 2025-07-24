@@ -44,6 +44,13 @@ function generateColor(index: number): string {
   return colors[index % colors.length];
 }
 
+// Fonction utilitaire pour parser une date "YYYY-MM-DD" en date sans décalage
+function parseLocalDate(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day); // mois commence à 0
+}
+
+
 export function BarGraph({ data, title, types }: BarGraphProps) {
   if (!data || data.length === 0) {
     return <div>No data available</div>;
@@ -77,7 +84,7 @@ export function BarGraph({ data, title, types }: BarGraphProps) {
               tickFormatter={(value) => {
                 if (types === 'date') {
                   // Si le type est "date", formater la date en français
-                  const date = new Date(value);
+                  const date = parseLocalDate(value);
                   return date.toLocaleDateString('fr-FR', {
                     month: 'short',
                     day: 'numeric',
@@ -94,7 +101,7 @@ export function BarGraph({ data, title, types }: BarGraphProps) {
                   nameKey="value"
                   labelFormatter={(value) => {
                     if (types === 'date') {
-                      const date = new Date(value);
+                    const date = parseLocalDate(value);
                       return date.toLocaleDateString('fr-FR', {
                         month: 'short',
                         day: 'numeric',

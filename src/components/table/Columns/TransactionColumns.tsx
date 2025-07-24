@@ -18,12 +18,16 @@ export const columns: ColumnDef<Transaction>[] = [
         cell: ({ row }) => {
             const libelle = row.getValue('libelle');
             if (typeof libelle === 'string') {
-                return libelle.length > 10 ? `${libelle.substring(0, 20)}...` : libelle;
+                return libelle.length > 10 ? `${libelle.substring(0, 50)}...` : libelle;
             }
             return ''; // Ou retourner une valeur par défaut si ce n'est pas une chaîne
         }
-
     },
+    {
+        accessorKey: 'categorie_label', // Catégorie de la transaction
+        header: 'Catégorie'
+    },
+
     {
         accessorKey: 'sortie_caisse', // Montant sorti de la caisse
         header: 'Sortie Caisse'

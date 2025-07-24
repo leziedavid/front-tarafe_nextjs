@@ -206,11 +206,7 @@ const Page: React.FC = () => {
       </div>
 
       {/* Intégration du Dialog */}
-      <ImagePreviewDialog
-        imageUrl={imageLink}
-        open={dialogOpen}
-        onOpenChange={handleCloseDialog} // Fonction pour fermer le Dialog
-      />
+      <ImagePreviewDialog imageUrl={imageLink} open={dialogOpen} onOpenChange={handleCloseDialog} />
 
       <WhatsappFloatButton />
       <Footer data={reglage} />

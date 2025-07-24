@@ -7,7 +7,8 @@ import {
     RealisationData, TransactionData, GalleryCategoryResponse,
     TransactionTotalsResponse, TransactionDataGraphe,
     CategoryAssignment,
-    GalleryCategory
+    GalleryCategory,
+    CategorieTransactionParginate
 } from "@/interfaces/AdminInterface";
 import { Filters } from "@/interfaces/Filters"; // Importation de l'interface Filters
 
@@ -735,9 +736,10 @@ export const fetchCategorieTransaction = async (token: string | null): Promise<A
 };
 
 // Service pour CRUD les catégories de transactions
-export const fetchAllCategorieTransaction = async (token: string | null): Promise<ApiResponse<CategorieTransaction[]>> => {
+export const fetchAllCategorieTransaction = async (token: string | null ,filters: Filters,): Promise<ApiResponse<CategorieTransactionParginate>> => {
     try {
-        const response = await fetch(`${getBaseUrl()}/getCategorieTransaction`, {
+        
+        const response = await fetch(`${getBaseUrl()}/getCategorieTransactionParginate?page=${filters.page}&limit=${filters.limit}&search=${filters.search}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -749,14 +751,29 @@ export const fetchAllCategorieTransaction = async (token: string | null): Promis
             throw new Error('Échec de la récupération des catégories de transactions.');
         }
 
-        const result: ApiResponse<CategorieTransaction[]> = await response.json();
+        const result: ApiResponse<CategorieTransactionParginate> = await response.json();
         return result;
+
     } catch (error: any) {
         console.error('Erreur dans getCategorieTransaction:', error.message);
         return {
             statusCode: 500,
             message: error.message,
-            data: [],
+            data: {
+                data: [],
+                current_page: 1,
+                last_page: 1,
+                total: 0,
+                links: [],
+                first_page_url: "",
+                last_page_url: "",
+                next_page_url: null,
+                prev_page_url: null,
+                path: "",
+                per_page: 0,
+                from: 0,
+                to: 0
+            }
         };
     }
 };
@@ -881,7 +898,6 @@ export const getTransactionDataGraphe = async (
 
 };
 
-
 // Service pour récupérer toutes les catégories de la galerie (sans pagination)
 export const fetchGalleryCategory = async (token: string | null): Promise<ApiResponse<any>> => {
     try {
@@ -939,7 +955,7 @@ export const fetchAllGalleryCategory = async (token: string | null): Promise<Api
 
 export const createGalleryCategory = async (token: string, data: any) => {
     try {
-        const response = await fetch(`${getBaseUrl()}/createCategorieTransaction`, {
+        const response = await fetch(`${getBaseUrl()}/addCategory`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,

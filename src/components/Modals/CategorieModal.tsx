@@ -13,6 +13,7 @@ import React, { useState, useEffect } from 'react';
 import { CirclePlus, CircleX, Pencil, Plus, Trash2 } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+import DeleteDialog from "@/components/Modals/DeleteDialog";
 
 
 type OrderDetail = {
@@ -73,20 +74,33 @@ export default function CategorieModal({ isOpen, onClose }: CategorieProps) {
     const [totalItems, setTotalItems] = useState(0);
     const [limit] = useState(10);
     const itemsPerPage = limit; // pour affichage dans l’UI
+    const [search, setSearch] = useState(''); // Recherche
+    const [totalPages, setTotalPages] = useState(1); // Nombre total de pages
+
+    const [deleteDialog, setDeleteDialogOpen] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
     
-    const loadCategories = async () => {
+    const loadCategories = async ( page: number, limit: number, search: string | null) => {
 
         try {
-            const result = await fetchAllCategorieTransaction(token);
-            setCategories(result.data);
-
+            const result = await fetchAllCategorieTransaction(token,{ page: page, limit: limit, search: search || undefined });
+           setCategories(result.data.data); // Mettre à jour les commandes
+          setTotalPages(result.data.last_page); // Mettre à jour le nombre total de pages
+          setTotalItems(result.data.total); // Mettre à jour le total des commandes
         } catch (error) {
             toast.error('Erreur lors du chargement des catégories');
         }
     };
 
-    useEffect(() => { loadCategories();}, []);
+    useEffect(() => {
+
+        loadCategories(currentPage, limit, search);
+    }, [
+        currentPage,
+        limit,
+        search
+    ]);
 
     const handleAddInput = () => {
         setInputs([...inputs, { label: '', defautPrice: '' }]);
@@ -118,8 +132,9 @@ export default function CategorieModal({ isOpen, onClose }: CategorieProps) {
                     toast.error(result.message);
                 } else {
                     toast.success('Catégorie mise à jour');
-                    loadCategories();
+                    loadCategories(currentPage, limit, search);
                 }
+
             } else {
                 const payload = inputs.map((input) => ({
                     label: input.label,
@@ -128,9 +143,11 @@ export default function CategorieModal({ isOpen, onClose }: CategorieProps) {
                 const result = await createCategoryTransaction(token, payload);
                 if (result.statusCode !== 200) {
                     toast.error(result.message);
+                    loadCategories(currentPage, limit, search);
+
                 } else {
                     toast.success('Catégories créées');
-                    loadCategories();
+                    loadCategories(currentPage, limit, search);
                 }
             }
 
@@ -149,21 +166,20 @@ export default function CategorieModal({ isOpen, onClose }: CategorieProps) {
         setShowModal(true);
     };
 
-    const handleDeleteClick = (index: number) => {
-        setSelectedIndexToDelete(index);
-        setShowAlert(true);
+    const handleDeleteClick = (id: number) => {
+        setSelectedIndexToDelete(id);
+        setDialogOpen(true);
     };
 
-    const confirmDelete = async () => {
+    const confirmDelete = async (id: number) => {
         try {
             if (selectedIndexToDelete !== null) {
-                const cat = categories[selectedIndexToDelete];
-                const result = await deleteCategoryTransaction(token, cat.id);
+                const result = await deleteCategoryTransaction(token,id);
                 if (result.statusCode !== 200) {
                     toast.error(result.message);
                 } else {
                     toast.success('Catégorie supprimée');
-                    loadCategories();
+                    loadCategories(currentPage, limit, search);
                 }
             }
             setShowAlert(false);
@@ -173,8 +189,7 @@ export default function CategorieModal({ isOpen, onClose }: CategorieProps) {
         }
     };
 
-
-        function onPreviousPage() {
+    function onPreviousPage() {
         if (currentPage > 1) {
             setCurrentPage((prev) => prev - 1);
         }
@@ -186,8 +201,9 @@ export default function CategorieModal({ isOpen, onClose }: CategorieProps) {
         }
     }
 
-
     return (
+
+        <>
 
         <div className={`fixed inset-0 bg-black/50 z-50 ${!isOpen && 'hidden'}`}>
             <div className={`fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform transform ${isOpen ? 'translate-x-0 w-full md:w-[50vw]' : 'translate-x-full'} bg-white dark:bg-gray-800 shadow-xl duration-300 ease-in-out`}
@@ -261,7 +277,7 @@ export default function CategorieModal({ isOpen, onClose }: CategorieProps) {
                                 {categories.length > 0 ? (
                                     categories.map((cat, index) => (
                                         <TableRow key={cat.id}>
-                                            <TableCell>{index}</TableCell>
+                                            <TableCell>{cat.id}</TableCell>
                                             <TableCell>{cat.label}</TableCell>
                                             <TableCell>{cat.defautPrice} FCFA</TableCell>
                                             <TableCell className="text-center space-x-2">
@@ -276,9 +292,8 @@ export default function CategorieModal({ isOpen, onClose }: CategorieProps) {
                                                 <Button
                                                     variant="secondary"
                                                     size="sm"
-                                                    onClick={() => handleDeleteClick(index)}
-                                                    className="text-gray-400 hover:text-gray-900"
-                                                >
+                                                    onClick={() => handleDeleteClick(cat.id)}
+                                                    className="text-gray-400 hover:text-gray-900">
                                                     <Trash2 className="w-3 h-3" />
                                                 </Button>
                                             </TableCell>
@@ -315,6 +330,10 @@ export default function CategorieModal({ isOpen, onClose }: CategorieProps) {
                 </div>
             </div>
         </div>
+
+        <DeleteDialog open={dialogOpen} onClose={() => setDialogOpen(false)} onConfirm={() => {  if (selectedIndexToDelete) confirmDelete(selectedIndexToDelete);}}/>
+
+        </>
 
     );
 }
