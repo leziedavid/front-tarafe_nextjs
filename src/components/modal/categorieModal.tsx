@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { CategorieTransaction } from '@/interfaces/AdminInterface';
 import { CirclePlus, CircleX, Pencil, Plus, Trash2 } from 'lucide-react';
 import { Input } from '../ui/input';
+import { Filters } from '@/interfaces/Filters';
 
 
 const CategorieModal = () => {
@@ -25,13 +26,19 @@ const CategorieModal = () => {
     const [showAlert, setShowAlert] = useState(false);
     const [selectedIndexToDelete, setSelectedIndexToDelete] = useState<number | null>(null);
     const token = 'votre_token'; // Remplace ceci par ton système d'auth
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+    const [limit] = useState(10);
+    const [search, setSearch] = useState(''); // Recherche
+    const [totalPages, setTotalPages] = useState(1); // Nombre total de pages
 
     const loadCategories = async () => {
 
         try {
-            const result = await fetchAllCategorieTransaction(token);
-            setCategories(result.data);
-
+            const result = await fetchAllCategorieTransaction(token, {  page: currentPage, limit: 10, search: search || undefined, } as Filters);
+            setCategories(result.data.data);
+            setTotalPages(result.data.last_page); // Mettre à jour le nombre total de pages
+            setTotalItems(result.data.total); // Mettre à jour le total des commandes;
         } catch (error) {
             toast.error('Erreur lors du chargement des catégories');
         }
