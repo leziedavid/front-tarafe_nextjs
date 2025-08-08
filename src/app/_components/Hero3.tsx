@@ -64,7 +64,6 @@ const Hero3: React.FC<Props> = ({ data }) => {
                         <div className="">
                             <div className="relative flex flex-col text-center bg-[url('/hero.jpg')] bg-cover bg-center rounded-md p-4 lg:p-14 gap-8 items-center" style={{ backgroundImage: `url(${getBaseUrlImg()}/${photoUrl})` }}>
                                 {/* Superposition noire */}
-
                                 <div className="absolute inset-0 bg-black opacity-50 rounded-md"></div>
                                     <div className="grid grid-cols-1 gap-8 items-center lg:grid-cols-2">
 

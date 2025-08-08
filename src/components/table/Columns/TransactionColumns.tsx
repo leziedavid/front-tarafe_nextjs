@@ -2,9 +2,18 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
-import {Transaction } from '@/interfaces/AdminInterface';
+import { Transaction } from '@/interfaces/AdminInterface';
 
 export const columns: ColumnDef<Transaction>[] = [
+
+    {
+        accessorKey: 'date', // Date de la transaction
+        header: 'Date',
+        cell: ({ row }) => {
+            const formattedDate = formatDate(row.getValue('date'));
+            return formattedDate;
+        }
+    },
     {
         accessorKey: 'id', // Transaction ID
         header: 'Transaction ID',
@@ -43,14 +52,6 @@ export const columns: ColumnDef<Transaction>[] = [
     {
         accessorKey: 'entree_banque', // Montant entré dans la banque
         header: 'Entrée Banque'
-    },
-    {
-        accessorKey: 'date', // Date de la transaction
-        header: 'Date',
-        cell: ({ row }) => {
-            const formattedDate = formatDate(row.getValue('date'));
-            return formattedDate;
-        }
     },
     {
         accessorKey: 'type_operation', // Type d'opération
