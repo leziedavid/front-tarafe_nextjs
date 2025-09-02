@@ -1,17 +1,13 @@
 "use client";
 
-import { Auth } from "@/components/auth";
-import { Logo } from "@/components/logo";
-import Image from 'next/image';
 
+import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import Header from '../_components/Header';
 import Footer from "../_components/Footer";
-
 import { Button } from "@/components/ui/button"
 import { MoveRight } from "lucide-react";
 import { ApiAllDataResponse, OptionRealisation, Realisation, RealisationData, Reglage } from "@/interfaces/HomeInterface";
-import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
 import { getAllRealisations } from "@/servives/HomeService";
 import { getBaseUrlImg } from "@/servives/baseUrl";
@@ -22,6 +18,8 @@ import useAuth from "@/servives/useAuth";
 import { useRouter } from 'next/navigation';
 import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 import CategoryFilter from "@/components/Modals/CategoryFilter";
+import { Card, CardContent } from "@/components/ui/card";
+import WebSkeletons from '@/components/MySkeleton';
 
 
 const Page: React.FC = () => {
@@ -29,7 +27,6 @@ const Page: React.FC = () => {
   const token = useAuth();  // Récupérer le token à l'aide du hook
   // Déclaration d'un état pour stocker les données
   const [reglage, setReglages] = useState<Reglage[]>([]);
-  const [realisation, setRealisation] = useState<RealisationData[]>([]);
   const [option, setOption] = useState<OptionRealisation[]>([]);
   const router = useRouter();
 
@@ -106,13 +103,7 @@ const Page: React.FC = () => {
       <div className={`min-h-[calc(100vh_-_56px)] py-5 px-3 lg:px-6 mt-[4rem] md:mt-[4rem]`}>
 
         <div className="bg-muted rounded-md relative h-[40vh] mb-2">
-          <Image
-            src="/hero.jpg"
-            alt="Hero Image"
-            layout="fill"
-            objectFit="cover"
-            className="rounded-md"
-          />
+          <Image src="/hero.jpg" alt="Hero Image" layout="fill" objectFit="cover" className="rounded-md" />
         </div>
 
         <div className="w-full py-10 lg:py-10">
@@ -130,29 +121,40 @@ const Page: React.FC = () => {
             <CategoryFilter options={option} onFilterChange={handleFilterChange} />
 
             {isDataEmpty ? (
-              <SkeletonDemo />
+              <WebSkeletons count={8} />
             ) : (
 
               <>
 
+                <div className="container mx-auto px-4 w-full py-5 lg:py-5">
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {realisations.map((item, i) => (
+
+                      <Card key={i} className="overflow-hidden border-none shadow-none" onClick={() => navigateTo(item.libelle_realisations)} >
+                        <CardContent className="p-0 flex flex-col h-full">
+                          {/* Image plus grande */}
+                          <div className="w-full h-48 sm:h-64 md:h-72 lg:h-96 relative">
+                            <Image src={`${getBaseUrlImg()}/${item.images_realisations}`} alt={item.libelle_realisations} fill className="object-cover" />
+                          </div>
+
+                          {/* Titre + lien alignés en bas */}
+                          <div className="flex flex-col justify-between flex-1 p-4">
+                            <h3 className="font-bold text-sm text-muted-foreground  uppercase tracking-tighter">{item.libelle_realisations}</h3>
+
+                            <p onClick={() => navigateTo(item.libelle_realisations)} className="text-sm text-muted-foreground mt-auto cursor-pointer hover:text-[#ffb44b]">
+                              Je découvre →
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                    ))}
+                  </div>
+
+                </div>
 
                 {/* Grid de produits */}
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-                  {realisations.map((item, index) => (
-                    <div key={index} className="cursor-pointer">
-                      {/* Image en arrière-plan */}
-                      <div className="bg-muted rounded-md aspect-video mb-2">
-                        <Image src={`${getBaseUrlImg()}/${item.images_realisations}`} alt={item.libelle_realisations}  width={500} height={300} className="object-cover rounded-md" layout="intrinsic" />
-                      </div>
-                      {/* Informations du produit */}
-                      <h3 className="text-xl font-bold truncate mb-2">{item.libelle_realisations}</h3>
-                      <p className="text-muted-foreground text-sm md:text-base line-clamp-3 mb-2" dangerouslySetInnerHTML={{ __html: truncateDescription(item.descript_real, 20) }} />
-                      <Button className="gap-4 w-full cursor-pointer bg-white text-black hover:text-white border-2 border-gray-500 hover:border-white" onClick={() => navigateTo(item.libelle_realisations)}>
-                        Commander <MoveRight className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
 
                 {/* Pagination */}
                 <PaginationComponent

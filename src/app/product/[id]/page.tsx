@@ -1,31 +1,9 @@
 "use client";
-
-import { Auth } from "@/components/auth";
-import { Logo } from "@/components/logo";
-import ProductCard from "../../_components/productCard";
-import Image from 'next/image';
-
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import Header from '../../_components/Header';
 import Footer from "../../_components/Footer";
-
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {Filter, MoveRight, SearchIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import LuxuryWatchProductPage from "../../_components/WatchProductCard";
-import { useRouter,useParams } from 'next/navigation';
+import {useParams } from 'next/navigation';
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner"
 import {DetailRealisation,Reglage,Realisation,Images} from "@/interfaces/HomeInterface";
@@ -75,17 +53,12 @@ const Page: React.FC = () => {
   return (
     <>
       <Header />
-
       <div className={`min-h-[calc(100vh_-_56px)] py-5 px-3 lg:px-6 mt-[4rem] md:mt-[4rem]`}>
-          {/* <div className="flex items-center gap-2 px-4">
-            <Breadcrumbs />
-          </div> */}
           <LuxuryWatchProductPage data={realisations} image={images}  />
       </div>
       <WhatsappFloatButton />
       <Footer data={reglage} />
       <Toaster />
-
     </>
   );
 };
