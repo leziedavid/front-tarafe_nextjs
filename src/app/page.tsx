@@ -13,6 +13,7 @@ import Pub from "./_components/Pub";
 import useAuth from "@/servives/useAuth";
 import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 import WaxPrintInterface from "@/components/WaxPrintInterface";
+import FavoriteBrand from '@/components/FavoriteBrands';
 
 const Home: React.FC = () => {
   const token = useAuth();  // Récupérer le token à l'aide du hook
@@ -53,7 +54,8 @@ const Home: React.FC = () => {
         <div className="w-full py-1 md:py-1 lg:py-1">
           <div className="md:container md:mx-auto">
             <Hero3 data={reglages} />
-            <Feature5 data={realisation} reglage={reglages} />
+            <FavoriteBrand data={realisation} reglage={reglages}/>
+            {/* <Feature5 data={realisation} reglage={reglages} /> */}
             <WaxPrintInterface />
             {/* <Pub data={publicites} /> */}
             {/* <Partenaire data={partenaire}/> */}

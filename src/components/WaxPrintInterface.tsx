@@ -8,7 +8,7 @@ const WaxPrintInterface = () => {
     return (
         <>
 
-            <div className="w-full py-5 lg:py-5">
+            <div className="w-full py-2 lg:py-2">
                 <div className="md:container md:mx-auto">
                     <div className="w-full min-h-[500px] flex flex-col py-6">
 
