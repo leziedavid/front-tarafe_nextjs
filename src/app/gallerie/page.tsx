@@ -23,6 +23,7 @@ import Image from 'next/image';
 import { GalleryCategory, GalleryCategoryResponse } from "@/interfaces/AdminInterface";
 import { fetchGalleryCategory } from "@/servives/AdminService";
 import { Loader2 } from "lucide-react";
+import WebSkeletons from "@/components/MySkeleton";
 
 const Page: React.FC = () => {
 
@@ -161,15 +162,13 @@ const Page: React.FC = () => {
             </div>
 
               {isDataEmpty ? (
-
-                <SkeletonDemo />
-
+                <WebSkeletons count={8} />
               ) : (
 
                 <>
 
                   {/* Grid de produits */}
-                  <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-6">
+                  <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-4">
                     {dataImages.map((item, index) => (
                       <div key={index} className="cursor-pointer">
                         {/* Image en arrière-plan */}
