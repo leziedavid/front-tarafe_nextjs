@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Badge, CalendarClock, Computer, Mail, MapPin, MoveDownLeft, MoveRight, MoveUpRight, Phone, ScreenShare, Share, Smile } from "lucide-react";
-import Image from "next/image";
+import {
+    CalendarClock,
+    Mail,
+    MapPin,
+    Phone,
+    MoveRight,
+} from "lucide-react";
 import { PhoneInput, getPhoneData } from "@/components/phone-input";
-import useAuth from '@/servives/useAuth';
-import { Toaster } from '@/components/ui/sonner';
+import useAuth from "@/servives/useAuth";
+import { toast } from "sonner";
 
 import {
     Select,
@@ -19,26 +24,22 @@ import {
 } from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
-
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
+    FormDescription,
     FormMessage,
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PiCheckLight } from "react-icons/pi";
 import { Reglage } from "@/interfaces/HomeInterface";
-import Skeleton from "react-loading-skeleton";
-import { toast } from "sonner";
 import { addContacts } from "@/servives/HomeService";
+import { Skeleton } from "@/components/ui/skeleton"; // ✅ Skeleton shadcn
 
 const FormSchema = z.object({
     phone: z.string(),
@@ -46,9 +47,22 @@ const FormSchema = z.object({
     email: z.string().email(),
     job_title: z.string(),
     company_name: z.string(),
-    objets: z.enum(["Evaluate Bird for my company", "Learn More", "Get a Quote", "How to use Bird", "Other",
+    objets: z.enum([
+        "Evaluate Bird for my company",
+        "Learn More",
+        "Get a Quote",
+        "How to use Bird",
+        "Other",
     ]),
-    company_size: z.enum(["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+",]), contents: z.string(),
+    company_size: z.enum([
+        "1-10",
+        "11-50",
+        "51-200",
+        "201-500",
+        "501-1000",
+        "1000+",
+    ]),
+    contents: z.string(),
 });
 
 interface FormValues {
@@ -57,18 +71,28 @@ interface FormValues {
     email: string;
     job_title: string;
     company_name: string;
-    objets: | "Evaluate Bird for my company" | "Learn More" | "Get a Quote" | "How to use Bird" | "Other";
-    company_size: "1-10" | "11-50" | "51-200" | "201-500" | "501-1000" | "1000+";
+    objets:
+    | "Evaluate Bird for my company"
+    | "Learn More"
+    | "Get a Quote"
+    | "How to use Bird"
+    | "Other";
+    company_size:
+    | "1-10"
+    | "11-50"
+    | "51-200"
+    | "201-500"
+    | "501-1000"
+    | "1000+";
     contents: string;
     terms: boolean;
-};
+}
 
 interface Props {
     data: Reglage[];
 }
 
 const ContactForm: React.FC<Props> = ({ data }) => {
-
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const isDataEmpty = data.length <= 0;
@@ -88,10 +112,9 @@ const ContactForm: React.FC<Props> = ({ data }) => {
         },
     });
 
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
+    async function onSubmit(values: z.infer<typeof FormSchema>) {
         try {
-
-            const phoneData = getPhoneData(data.phone);
+            const phoneData = getPhoneData(values.phone);
             if (!phoneData.isValid) {
                 form.setError("phone", {
                     type: "manual",
@@ -99,220 +122,250 @@ const ContactForm: React.FC<Props> = ({ data }) => {
                 });
                 return;
             }
-            // toast.success("Phone number is valid");
 
             setLoading(true);
-            const result = await addContacts(token, JSON.stringify(data));
+            const result = await addContacts(token, JSON.stringify(values));
             if (result.statusCode !== 200) {
                 toast.error(result.message);
             } else {
-                toast.error("Votre messages a bien été envoyé avec succès !");
+                toast.success("Votre message a bien été envoyé !");
             }
-
             setSubmitted(true);
         } catch (error) {
+            toast.error("Une erreur est survenue.");
         } finally {
             setLoading(false);
         }
     }
 
     return (
-
-
         <>
-
-            {/* <Toaster /> */}
-
             {isDataEmpty ? (
+                // ✅ Skeleton Loader
+                <div className="w-full py-10 lg:py-20">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Left Skeleton */}
+                        <div className="bg-white rounded-lg px-4 py-6">
+                            <div className="bg-gray-100 w-full h-full rounded-xl p-6 md:p-12 flex flex-col gap-6">
+                                <Skeleton className="h-8 w-2/3" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-5/6" />
+                                <div className="flex gap-4 mt-4">
+                                    <Skeleton className="h-10 w-10 rounded-full" />
+                                    <Skeleton className="h-6 w-2/3" />
+                                </div>
+                                <div className="flex gap-4">
+                                    <Skeleton className="h-10 w-10 rounded-full" />
+                                    <Skeleton className="h-6 w-2/3" />
+                                </div>
+                                <div className="flex gap-4">
+                                    <Skeleton className="h-10 w-10 rounded-full" />
+                                    <Skeleton className="h-6 w-2/3" />
+                                </div>
+                            </div>
+                        </div>
 
-                <div className="w-full py-1 md:py-1 lg:py-1">
-                    <div className="">
-                        <div className=" w-full flex flex-col text-center bg-muted rounded-md p-4 lg:p-14 gap-8 items-center">
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
-                            <Skeleton className="bg-muted rounded-md aspect-video mb-2" />
+                        {/* Right Skeleton (form) */}
+                        <div className="bg-white rounded-lg px-4 py-6">
+                            <div className="bg-gray-100 w-full h-full rounded-xl p-6 md:p-12 flex flex-col gap-4">
+                                <Skeleton className="h-8 w-1/2" />
+                                <Skeleton className="h-4 w-3/4" />
+                                <Skeleton className="h-10 w-full mt-4" />
+                                <Skeleton className="h-10 w-full" />
+                                <Skeleton className="h-24 w-full" />
+                                <Skeleton className="h-10 w-1/3 mt-4" />
+                            </div>
                         </div>
                     </div>
                 </div>
             ) : (
+                // ✅ Form réel
+                <div className="w-full py-10 lg:py-20">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Left - Infos */}
+                        <div className="flex flex-col gap-4 cursor-pointer">
+                            <div className="bg-white rounded-lg px-4 py-6">
+                                <div className="bg-gray-100 w-full h-full rounded-xl p-6 md:p-12">
+                                    <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-tight mb-2">
+                                        Contactez-nous
+                                    </h2>
+                                    <p className="text-gray-600">
+                                        Votre adresse électronique ne sera pas publiée.
+                                    </p>
+                                    <p className="text-gray-600 font-bold text-sm">
+                                        Les champs obligatoires sont marqués (*)
+                                    </p>
 
-                <>
-
-                    <div className="w-full py-10 lg:py-20">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="flex flex-col gap-4 cursor-pointer">
-                                <div className="bg-white rounded-lg px-4 py-6">
-                                    <div className="bg-gray-100 w-full h-full rounded-xl p-6 md:p-12">
-                                        <div>
-                                            <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-tight mb-2">Contactez-nous</h2>
-                                            <p className="text-gray-600">Votre adresse électronique ne sera pas publiée.</p>
-                                            <p className="text-gray-600 font-bold text-sm">Les champs obligatoires sont marqués (*)</p>
-                                            <div className="bg-gray-50 md:w-4/5 space-y-6 p-4 rounded-lg mt-4 shadow-sm">
-                                                
-                                                    <div className="flex gap-4 border-b ">
-                                                        <MapPin className="w-8 h-8 mt-0 text-orange-500" />
-                                                        <div className="font-extrabold font-title pb-4 w-80">  {data[0]?.localisation_reglages} </div>
-                                                    </div>
-
-                                                    <div className="flex gap-4 border-b">
-                                                        <Phone className="w-8 h-8 mt-0 text-orange-500" />
-                                                        <div className=" font-extrabold font-title pb-4 w-80">{data[0]?.phone1_reglages}  {data[0]?.phone2_reglages} </div>
-                                                    </div>
-
-                                                    <div className="flex gap-4  ">
-                                                        <Mail className="w-8 h-8 mt-0 text-orange-500" />
-                                                        <div className=" font-extrabold font-title pb-4 w-80">{data[0]?.email_reglages}</div>
-                                                    </div>
-
-                                                    <div className="flex gap-4  ">
-                                                        <CalendarClock className="w-8 h-8 mt-2 text-orange-500" />
-                                                        <div className="font-extrabold font-title pb-4 w-80">{data[0]?.ouverture_reglages}</div>
-                                                    </div>
-
+                                    <div className="bg-gray-50 md:w-4/5 space-y-6 p-4 rounded-lg mt-4 shadow-sm">
+                                        <div className="flex gap-4 border-b">
+                                            <MapPin className="w-8 h-8 text-orange-500" />
+                                            <div className="font-extrabold font-title pb-4 w-80">
+                                                {data[0]?.localisation_reglages}
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-4 border-b">
+                                            <Phone className="w-8 h-8 text-orange-500" />
+                                            <div className="font-extrabold font-title pb-4 w-80">
+                                                {data[0]?.phone1_reglages} {data[0]?.phone2_reglages}
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <Mail className="w-8 h-8 text-orange-500" />
+                                            <div className="font-extrabold font-title pb-4 w-80">
+                                                {data[0]?.email_reglages}
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <CalendarClock className="w-8 h-8 text-orange-500" />
+                                            <div className="font-extrabold font-title pb-4 w-80">
+                                                {data[0]?.ouverture_reglages}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div className="flex flex-col gap-4 cursor-pointer">
-                                <div className="bg-white rounded-lg px-4 py-6">
-                                    <div className="bg-gray-100 w-full h-full rounded-xl p-6 md:p-12">
-                                        <Form {...form}>
-                                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mb-6" >
-
-                                                <div className="flex flex-col lg:flex-row gap-4 w-full">
-                                                    {/* FormField pour le Nom et Prénom */}
-                                                    <FormField
-                                                        control={form.control}
-                                                        name="nomPrenom"
-                                                        render={({ field }) => (
-                                                            <FormItem className="w-full lg:w-1/2">
-                                                                <FormLabel className="text-sm font-extrabold font-title">Non & Prénom *</FormLabel>
-                                                                <FormControl>
-                                                                    <Input {...field} />
-                                                                </FormControl>
-                                                            </FormItem>
-                                                        )}
-                                                    />
-
-                                                    {/* FormField pour l'Email */}
-                                                    <FormField
-                                                        control={form.control}
-                                                        name="email"
-                                                        render={({ field }) => (
-                                                            <FormItem className="w-full lg:w-1/2">
-                                                                <FormLabel className="text-sm font-extrabold font-title">Email *</FormLabel>
-                                                                <FormControl>
-                                                                    <Input {...field} />
-                                                                </FormControl>
-                                                            </FormItem>
-                                                        )}
-                                                    />
-                                                </div>
-
+                        {/* Right - Form */}
+                        <div className="flex flex-col gap-4 cursor-pointer">
+                            <div className="bg-white rounded-lg px-4 py-6">
+                                <div className="bg-gray-100 w-full h-full rounded-xl p-6 md:p-12">
+                                    <Form {...form}>
+                                        <form
+                                            onSubmit={form.handleSubmit(onSubmit)}
+                                            className="space-y-4 mb-6"
+                                        >
+                                            <div className="flex flex-col lg:flex-row gap-4 w-full">
                                                 <FormField
                                                     control={form.control}
-                                                    name="phone"
+                                                    name="nomPrenom"
                                                     render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Phone</FormLabel>
+                                                        <FormItem className="w-full lg:w-1/2">
+                                                            <FormLabel>Nom & Prénom *</FormLabel>
                                                             <FormControl>
-                                                                <PhoneInput {...field} />
-                                                            </FormControl>
-                                                            <FormDescription>
-                                                                Entrez un numéro de téléphone valide avec le pays
-                                                            </FormDescription>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-
-                                                <FormField
-                                                    control={form.control}
-                                                    name="objets"
-                                                    render={({ field }) => (
-                                                        <FormItem className="items-center justify-center  w-full">
-                                                            <FormLabel className="w-60 text-sm font-extrabold font-title"> Comment pouvons-nous vous aider ? </FormLabel>
-                                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                                <FormControl>
-                                                                    <SelectTrigger>
-                                                                        <SelectValue placeholder="Select an option" />
-                                                                    </SelectTrigger>
-                                                                </FormControl>
-                                                                <SelectContent>
-                                                                    <SelectItem value="Personnalisation produit pour particulier">
-                                                                        Je souhaite personnaliser un produit (particulier)
-                                                                    </SelectItem>
-                                                                    <SelectItem value="Commande en gros pour entreprise">
-                                                                        Je veux passer une commande en gros pour mon entreprise
-                                                                    </SelectItem>
-                                                                    <SelectItem value="Demande de devis">
-                                                                        J’aimerais obtenir un devis
-                                                                    </SelectItem>
-                                                                    <SelectItem value="Création sur-mesure avec tissus locaux">
-                                                                        Je veux créer un produit sur-mesure avec des tissus africains
-                                                                    </SelectItem>
-                                                                    <SelectItem value="Collaboration ou partenariat">
-                                                                        Je suis intéressé(e) par un partenariat ou une collaboration
-                                                                    </SelectItem>
-                                                                    <SelectItem value="Plus d’informations sur Tarafé">
-                                                                        Je veux en savoir plus sur Tarafé
-                                                                    </SelectItem>
-                                                                    <SelectItem value="Autre">
-                                                                        Autre demande
-                                                                    </SelectItem>
-                                                                </SelectContent>
-
-                                                            </Select>
-                                                        </FormItem>
-                                                    )}
-                                                />
-
-                                                <FormField
-                                                    control={form.control}
-                                                    name="contents"
-                                                    render={({ field }) => (
-                                                        <FormItem className="items-center justify-center w-full">
-                                                            <FormLabel className="w-60 text-sm font-extrabold font-title">Autre chose ? </FormLabel>
-                                                            <FormControl>
-                                                                <Textarea style={{ height: "100px" }} {...field} />
+                                                                <Input {...field} />
                                                             </FormControl>
                                                         </FormItem>
                                                     )}
                                                 />
+                                                <FormField
+                                                    control={form.control}
+                                                    name="email"
+                                                    render={({ field }) => (
+                                                        <FormItem className="w-full lg:w-1/2">
+                                                            <FormLabel>Email *</FormLabel>
+                                                            <FormControl>
+                                                                <Input {...field} />
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
 
-                                                <div className="flex gap-4 items-center">
-                                                    <div>
-                                                        <Checkbox className="text-[#6c6684]" />
-                                                    </div>
-                                                    <div className="text-xs font-extrabold font-title  md:w-3/4 mb-1">
-                                                        {"J'accepte que tarafé m'envoie des communications marketing relatives à tarafé"}
-                                                    </div>
+                                            <FormField
+                                                control={form.control}
+                                                name="phone"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Téléphone</FormLabel>
+                                                        <FormControl>
+                                                            <PhoneInput {...field} />
+                                                        </FormControl>
+                                                        <FormDescription>
+                                                            Entrez un numéro de téléphone valide avec le pays
+                                                        </FormDescription>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+
+                                            <FormField
+                                                control={form.control}
+                                                name="objets"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Comment pouvons-nous vous aider ?
+                                                        </FormLabel>
+                                                        <Select
+                                                            onValueChange={field.onChange}
+                                                            defaultValue={field.value}
+                                                        >
+                                                            <FormControl>
+                                                                <SelectTrigger>
+                                                                    <SelectValue placeholder="Sélectionnez une option" />
+                                                                </SelectTrigger>
+                                                            </FormControl>
+                                                            <SelectContent>
+                                                                <SelectItem value="Personnalisation produit pour particulier">
+                                                                    Je souhaite personnaliser un produit
+                                                                    (particulier)
+                                                                </SelectItem>
+                                                                <SelectItem value="Commande en gros pour entreprise">
+                                                                    Je veux passer une commande en gros pour mon
+                                                                    entreprise
+                                                                </SelectItem>
+                                                                <SelectItem value="Demande de devis">
+                                                                    J’aimerais obtenir un devis
+                                                                </SelectItem>
+                                                                <SelectItem value="Création sur-mesure avec tissus locaux">
+                                                                    Je veux créer un produit sur-mesure avec des
+                                                                    tissus africains
+                                                                </SelectItem>
+                                                                <SelectItem value="Collaboration ou partenariat">
+                                                                    Je suis intéressé(e) par un partenariat ou une
+                                                                    collaboration
+                                                                </SelectItem>
+                                                                <SelectItem value="Plus d’informations sur Tarafé">
+                                                                    Je veux en savoir plus sur Tarafé
+                                                                </SelectItem>
+                                                                <SelectItem value="Autre">
+                                                                    Autre demande
+                                                                </SelectItem>
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </FormItem>
+                                                )}
+                                            />
+
+                                            <FormField
+                                                control={form.control}
+                                                name="contents"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Autre chose ?</FormLabel>
+                                                        <FormControl>
+                                                            <Textarea style={{ height: "100px" }} {...field} />
+                                                        </FormControl>
+                                                    </FormItem>
+                                                )}
+                                            />
+
+                                            <div className="flex gap-4 items-center">
+                                                <Checkbox />
+                                                <div className="text-xs font-extrabold font-title md:w-3/4">
+                                                    J'accepte que Tarafé m'envoie des communications
+                                                    marketing relatives à Tarafé
                                                 </div>
+                                            </div>
 
-                                                <Button className="gap-4 w-full" disabled={loading} onClick={() => form.handleSubmit(onSubmit)}>
-                                                    Envoyer le message <MoveRight className="w-4 h-4" />
-                                                </Button>
-
-                                            </form>
-                                        </Form>
-                                    </div>
+                                            <Button
+                                                className="gap-4 w-full"
+                                                disabled={loading}
+                                                type="submit"
+                                            >
+                                                Envoyer le message <MoveRight className="w-4 h-4" />
+                                            </Button>
+                                        </form>
+                                    </Form>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
-                </>
+                </div>
             )}
-
         </>
     );
-
 };
 
 export default ContactForm;
