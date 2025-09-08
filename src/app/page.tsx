@@ -14,6 +14,7 @@ import useAuth from "@/servives/useAuth";
 import WhatsappFloatButton from "@/components/WhatsappFloatButton";
 import WaxPrintInterface from "@/components/WaxPrintInterface";
 import FavoriteBrand from '@/components/FavoriteBrands';
+import PochonCarousel from '@/components/PochonCarousel';
 
 const Home: React.FC = () => {
   const token = useAuth();  // Récupérer le token à l'aide du hook
@@ -55,6 +56,7 @@ const Home: React.FC = () => {
           <div className="md:container md:mx-auto">
             <Hero3 data={reglages} />
             <FavoriteBrand data={realisation} reglage={reglages}/>
+            <PochonCarousel />
             {/* <Feature5 data={realisation} reglage={reglages} /> */}
             <WaxPrintInterface />
             {/* <Pub data={publicites} /> */}

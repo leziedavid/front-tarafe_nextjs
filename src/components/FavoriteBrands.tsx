@@ -50,7 +50,7 @@ const FavoriteBrand: React.FC<datasProps> = ({ data, reglage }) => {
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {data.map((item, i) => (
-                            <Card key={i} className="overflow-hidden border-none shadow-none" onClick={() => navigateTo(item.libelle_realisations)} >
+                            <Card key={i} className="overflow-hidden border-none shadow-none rounded-none" onClick={() => navigateTo(item.libelle_realisations)} >
                                 <CardContent className="p-0 flex flex-col h-full">
                                     {/* Image plus grande */}
                                     <div className="w-full h-48 sm:h-64 md:h-72 lg:h-96 relative">
@@ -60,7 +60,6 @@ const FavoriteBrand: React.FC<datasProps> = ({ data, reglage }) => {
                                     {/* Titre + lien alignés en bas */}
                                     <div className="flex flex-col justify-between flex-1 p-4">
                                         <h3 className="font-bold text-sm text-muted-foreground  uppercase tracking-tighter">{item.libelle_realisations}</h3>
-
                                         <p onClick={() => navigateTo(item.libelle_realisations)} className="text-sm text-muted-foreground mt-auto cursor-pointer hover:text-[#ffb44b]">
                                             Je découvre →
                                         </p>
