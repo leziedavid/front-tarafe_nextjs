@@ -339,7 +339,7 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className={`${isMobile ? 'max-w-full h-full p-2 overflow-auto' : 'max-w-4xl p-4'} mx-auto bg-white rounded-lg shadow-lg`}>
                 <DialogHeader>
-                    <DialogTitle className={`${isMobile ? 'text-base' : 'text-2xl'} font-bold tracking-tight`}>Éditeur d'image avancé</DialogTitle>
+                    <DialogTitle className={`${isMobile ? 'text-base' : 'text-2xl'} font-bold tracking-tight`}> {` Éditeur d'image avancé `}</DialogTitle>
                     <DialogDescription className={`${isMobile ? 'text-sm' : ''}`}>Personnalisez votre image avec texte, logos, etc.</DialogDescription>
                 </DialogHeader>
 
