@@ -131,7 +131,7 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
             setFontFamily(savedState.fontFamily);
             setFontWeight(savedState.fontWeight);
             setTextAlign(savedState.textAlign);
-            
+
             setIsLoading(true);
             const timeout = setTimeout(() => setIsLoading(false), 500);
             return () => clearTimeout(timeout);
@@ -163,7 +163,7 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
     // Appliquer automatiquement les modifications de style à l'élément sélectionné
     useEffect(() => {
         if (selectedElement) {
-            setTextElements(prev => prev.map(t => 
+            setTextElements(prev => prev.map(t =>
                 t.id === selectedElement ? {
                     ...t,
                     fontSize,
@@ -230,7 +230,7 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
         e.preventDefault();
         setSelectedElement(elementId);
         setIsDragging(true);
-        
+
         // Mettre à jour les contrôles avec les propriétés de l'élément sélectionné
         if (type === 'text') {
             const element = textElements.find(t => t.id === elementId);
@@ -242,7 +242,7 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
                 setTextAlign(element.textAlign);
             }
         }
-        
+
         const element = type === 'text' ? textElements.find(t => t.id === elementId) : logoElements.find(l => l.id === elementId);
         const position = getEventPosition(e);
         if (element && canvasRef.current) {
@@ -262,8 +262,8 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
         setLogoElements(prev => prev.map(l => l.id === selectedElement ? { ...l, x, y } : l));
     }, [isDragging, selectedElement, dragOffset, getEventPosition]);
 
-    const handleEnd = useCallback(() => { 
-        setIsDragging(false); 
+    const handleEnd = useCallback(() => {
+        setIsDragging(false);
         // Ne pas désélectionner l'élément pour permettre les modifications continues
     }, []);
 
@@ -275,11 +275,11 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
     };
 
     const resetCanvas = () => {
-        setTextElements([]); 
-        setLogoElements([]); 
+        setTextElements([]);
+        setLogoElements([]);
         setSelectedElement(null);
-        setClientEmail(""); 
-        setClientPhone(""); 
+        setClientEmail("");
+        setClientPhone("");
         setNotes("");
         setNewText("");
         setTextColor("#000000");
@@ -315,7 +315,7 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...clientData, finalImage: finalImageDataUrl, projectId: id })
             });
-            
+
             if (response.ok) {
                 toast.success("Image et données envoyées !");
                 // Réinitialiser tout après envoi réussi
@@ -325,11 +325,11 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
             } else {
                 throw new Error('Erreur lors de l\'envoi');
             }
-        } catch (error) { 
-            console.error(error); 
-            toast.error("Erreur lors de l'envoi."); 
-        } finally { 
-            setIsSending(false); 
+        } catch (error) {
+            console.error(error);
+            toast.error("Erreur lors de l'envoi.");
+        } finally {
+            setIsSending(false);
         }
     };
 
@@ -388,7 +388,8 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
                                             top: l.y,
                                             width: isMobile ? l.width * 0.8 : l.width,
                                             height: isMobile ? l.height * 0.8 : l.height,
-                                            touchAction: 'none' }}
+                                            touchAction: 'none'
+                                        }}
                                         onMouseDown={e => handleStart(e, l.id, 'logo')}
                                         onTouchStart={e => handleStart(e, l.id, 'logo')}
                                         onDoubleClick={() => deleteElement(l.id, 'logo')} >
@@ -402,19 +403,27 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
                     {/* Panel contrôle */}
                     <div className={`${isMobile ? 'order-2' : 'w-80 flex-shrink-0 order-1'}`}>
                         <Tabs defaultValue="text" className="w-full">
-                            <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3 mb-10' : 'grid-cols-3'}`}>
-                                <TabsTrigger value="text"><Type className="w-4 h-4" /></TabsTrigger>
-                                <TabsTrigger value="logo"><ImageIcon className="w-4 h-4" /></TabsTrigger>
-                                {/* {!isMobile && <TabsTrigger value="style"><Palette className="w-4 h-4" /></TabsTrigger>} */}
-                                <TabsTrigger value="client"><Mail className="w-4 h-4" /></TabsTrigger>
+                            <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3 mb-10' : 'grid-cols-3'} bg-transparent border-none gap-1`}>
+                                <TabsTrigger value="text" className="data-[state=active]:bg-gray-50 data-[state=active]:rounded-md flex items-center justify-center p-2" >
+                                    <Type className="w-4 h-4" />
+                                </TabsTrigger>
+
+                                <TabsTrigger  value="logo" className="data-[state=active]:bg-gray-50 data-[state=active]:rounded-md flex items-center justify-center p-2" >
+                                    <ImageIcon className="w-4 h-4" />
+                                </TabsTrigger>
+
+                                <TabsTrigger value="client" className="data-[state=active]:bg-gray-50 data-[state=active]:rounded-md flex items-center justify-center p-2" >
+                                    <Mail className="w-4 h-4" />
+                                </TabsTrigger>
                             </TabsList>
 
+
                             {/* Texte */}
-                            <TabsContent value="text" className="space-y-2 max-h-60 overflow-auto">
+                            <TabsContent value="text" className="space-y-2 overflow-auto">
                                 <Card>
                                     <CardHeader><CardTitle className="text-sm">Ajouter du texte</CardTitle></CardHeader>
                                     <CardContent className="space-y-2">
-                                        <Textarea value={newText} onChange={e => setNewText(e.target.value)} placeholder="Entrez votre texte..." rows={isMobile ? 2 : 3} className="text-sm" />
+                                        <Textarea value={newText} onChange={e => setNewText(e.target.value)} placeholder="Entrez votre texte..." rows={isMobile ? 2 : 3} className="text-sm outline-none" />
                                         <div className="grid grid-cols-2 gap-1">
                                             <Input type="number" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} min={8} max={72} className="text-sm py-1" />
                                             <Input type="color" value={textColor} onChange={e => setTextColor(e.target.value)} className="h-8 p-0" />
@@ -458,12 +467,12 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
                             </TabsContent>
 
                             {/* Client */}
-                            <TabsContent value="client" className="space-y-2 max-h-60 overflow-auto">
+                            <TabsContent value="client" className="space-y-2  overflow-auto">
                                 <Card>
                                     <CardHeader><CardTitle className="text-sm">Infos client</CardTitle></CardHeader>
                                     <CardContent className="space-y-2">
                                         <Input type="email" value={clientEmail} onChange={e => setClientEmail(e.target.value)} placeholder="client@example.com" className="text-sm py-1" />
-                                        <Input type="tel" value={clientPhone} onChange={e => setClientPhone(e.target.value)} placeholder="+33 1 23 45 67 89" className="text-sm py-1" />
+                                        <Input type="tel" value={clientPhone} onChange={e => setClientPhone(e.target.value)} placeholder="+225 01 23 45 67 89" className="text-sm py-1" />
                                         <Textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Notes..." rows={isMobile ? 2 : 3} className="text-sm" />
                                     </CardContent>
                                 </Card>
@@ -471,13 +480,13 @@ const FormImageDialog: React.FC<FormImageDialogProps> = ({ imageUrl, open, onOpe
                         </Tabs>
 
                         {/* Actions */}
-                        <div className={`${isMobile ? 'flex flex-col gap-2 mt-2' : 'space-y-2 mt-2'}`}>
-                            <Button onClick={sendToAPI} disabled={isSending || !clientEmail.trim()} className="w-full text-sm py-1">
-                                {isSending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Send className="w-4 h-4 mr-1" />} Envoyer
+                        {/* Actions */}
+                        <div className={`${isMobile ? 'flex flex-col gap-2 mt-2' : 'absolute bottom-0 left-0 w-80 flex flex-col space-y-2 p-2 bg-white/90 border-t border-gray-200'}`}>
+                            <Button onClick={sendToAPI} disabled={isSending || !clientEmail.trim()} className="w-full text-sm py-1" >
+                                {isSending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Send className="w-4 h-4 mr-1" />}
+                                Envoyer
                             </Button>
-                            <div className={`${isMobile ? 'flex gap-2' : 'space-y-2'}`}>
-                                <Button onClick={resetCanvas} className={`${isMobile ? 'flex-1 text-sm py-1' : 'w-full text-sm py-1'}`}>Réinitialiser</Button>
-                            </div>
+                            <Button onClick={resetCanvas} className="w-full text-sm py-1">Réinitialiser</Button>
                         </div>
                     </div>
                 </div>
